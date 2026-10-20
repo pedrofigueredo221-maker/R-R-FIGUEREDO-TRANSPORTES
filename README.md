@@ -1,3 +1,4 @@
+[README.md](https://github.com/user-attachments/files/33737453/README.md)
 # R&R Figueredo Transportes — Gestão de Fretes
 
 Protótipo responsivo para controle de fretes, motoristas, comissão, pedágio, despesas de manutenção, contas parceladas e relatórios.
@@ -25,6 +26,7 @@ Não é necessário instalar dependências para a versão inicial.
 - Cadastro, edição e exclusão de fretes.
 - Motorista, origem, destino, valor, pedágio, percentual de comissão e opção de descontar pedágio.
 - Registro de recebimentos totais ou parciais dos clientes.
+- **Contas a receber:** todo frete com saldo pendente gera automaticamente uma conta a receber (com cliente e vencimento opcionais). Também é possível lançar contas avulsas de clientes ou fornecedores e registrar recebimentos parciais ou totais.
 - Cadastro de despesas por categoria, fornecedor e caminhão.
 - Contas à vista ou parceladas, com geração automática de parcelas mensais.
 - Registro de pagamentos parciais ou integrais por parcela.
