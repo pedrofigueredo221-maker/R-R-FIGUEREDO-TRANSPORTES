@@ -1,18 +1,30 @@
--- Rode este script UMA vez em Supabase → SQL Editor → New query → Run
+-- Execute no SQL Editor do Supabase.
+-- Atenção: as políticas abaixo deixam TODOS os visitantes anônimos lerem e alterarem
+-- o registro financeiro completo. Use somente se aceitar conscientemente esse risco.
 create table if not exists public.app_state (
-  id         int primary key check (id = 1),
-  data       jsonb not null default '{}'::jsonb,
-  version    int not null default 0,
+  id integer primary key check (id = 1),
+  data jsonb not null default '{}'::jsonb,
+  version bigint not null default 0,
   updated_at timestamptz not null default now()
 );
 
-insert into public.app_state (id) values (1) on conflict do nothing;
-
 alter table public.app_state enable row level security;
 
-drop policy if exists "logados leem"      on public.app_state;
-drop policy if exists "logados atualizam" on public.app_state;
+grant select, insert, update on public.app_state to anon;
 
-create policy "logados leem"      on public.app_state for select to authenticated using (true);
-create policy "logados atualizam" on public.app_state for update to authenticated using (true) with check (true);
--- Sem política para "anon": quem não fez login não lê nem grava nada.
+drop policy if exists "public_read_app_state" on public.app_state;
+create policy "public_read_app_state"
+on public.app_state for select to anon using (id = 1);
+
+drop policy if exists "public_insert_app_state" on public.app_state;
+create policy "public_insert_app_state"
+on public.app_state for insert to anon with check (id = 1);
+
+drop policy if exists "public_update_app_state" on public.app_state;
+create policy "public_update_app_state"
+on public.app_state for update to anon using (id = 1) with check (id = 1);
+
+-- Cria o registro inicial, sem apagar um registro existente.
+insert into public.app_state (id, data, version)
+values (1, '{"freights":[],"expenses":[],"receivables":[],"employees":[],"trucks":[]}'::jsonb, 0)
+on conflict (id) do nothing;

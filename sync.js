@@ -1,469 +1,167 @@
-
-/* =========================================================
-   R&R FIGUEREDO TRANSPORTES
-   Sincronização na nuvem com Supabase, sem tela de login.
-   ========================================================= */
-
+// Sincronização na nuvem (Supabase), sem tela de login.
+// Depende do app.js existente definir `db`, `renderAll()` e, se aplicável, `ensureDefaults()`.
 const cloud = (() => {
-  const KEYS = [
-    "freights",
-    "expenses",
-    "receivables",
-    "employees",
-    "trucks"
-  ];
-
-  const OLD_KEY = "estrada_gestao_v1";
-  const CACHE_KEY = "estrada_cache_v2";
-  const MIG_KEY = "estrada_migrated_v2";
-
-  let sb = null;
-  let db = {};
-  let version = 0;
-  let base = {};
-  let queue = Promise.resolve();
-  let busy = false;
-  let pending = false;
-  let timer = null;
-  let started = false;
-
-  const clone = value => JSON.parse(JSON.stringify(value));
-
+  const cfg = window.APP_CONFIG || {};
+  const KEYS = ["freights", "expenses", "receivables", "employees", "trucks"];
+  const OLD_KEY = "estrada_gestao_v1", CACHE_KEY = "estrada_cache_v2", MIG_KEY = "estrada_migrated_v2";
+  let sb, version = 0, base = {}, queue = Promise.resolve(), busy = false, pending = false, timer;
+  const clone = o => JSON.parse(JSON.stringify(o));
   const el = id => document.getElementById(id);
 
-  function status(message, cls = "") {
-    let element = el("syncStatus");
-
-    if (!element) {
-      const container = document.querySelector(".top-actions");
-
-      if (container) {
-        element = document.createElement("span");
-        element.id = "syncStatus";
-        element.className = "sync-status";
-        container.prepend(element);
-      }
+  function ensureStatus() {
+    let s = el("syncStatus");
+    if (!s) {
+      s = document.createElement("span");
+      s.id = "syncStatus";
+      s.className = "sync-status";
+      const ta = document.querySelector(".top-actions");
+      (ta || document.body).prepend(s);
     }
-
-    if (element) {
-      element.textContent = message;
-      element.className = "sync-status " + cls;
-    }
+    return s;
   }
-
-  function normalize(data) {
-    data = data && typeof data === "object" ? data : {};
-
-    for (const key of KEYS) {
-      if (!Array.isArray(data[key])) {
-        data[key] = [];
-      }
-    }
-
-    return data;
+  function status(message, cls) {
+    const s = ensureStatus();
+    s.textContent = message;
+    s.className = "sync-status " + (cls || "");
   }
-
-  function writeCache() {
-    try {
-      localStorage.setItem(
-        CACHE_KEY,
-        JSON.stringify({
-          db,
-          base,
-          version,
-          pending
-        })
-      );
-    } catch (error) {
-      console.warn("Não foi possível salvar o cache local:", error);
-    }
+  function normalize(d) {
+    d = d || {};
+    KEYS.forEach(k => { if (!Array.isArray(d[k])) d[k] = []; });
+    return d;
   }
-
-  function render() {
-    if (typeof window.renderAll === "function") {
-      window.renderAll();
-    } else if (typeof renderAll === "function") {
-      renderAll();
-    } else {
-      console.warn(
-        "renderAll() não foi encontrada. Confira a integração com app.js."
-      );
-    }
-  }
-
-  function ensureDefaults() {
-    if (typeof window.ensureDefaults === "function") {
-      window.ensureDefaults();
-    } else if (typeof ensureDefaults === "function") {
-      ensureDefaults();
-    }
-  }
-
   async function fetchRemote() {
-    const { data, error } = await sb
-      .from("app_state")
-      .select("data, version")
-      .eq("id", 1)
-      .maybeSingle();
-
+    const { data, error } = await sb.from("app_state")
+      .select("data,version").eq("id", 1).single();
     if (error) throw error;
-
-    // A tabela ainda não possui o registro compartilhado.
-    if (!data) {
-      return {
-        data: normalize({}),
-        version: 0,
-        exists: false
-      };
-    }
-
-    return {
-      data: normalize(data.data),
-      version: Number(data.version) || 0,
-      exists: true
-    };
+    return { data: normalize(data.data), version: Number(data.version || 0) };
   }
-
-  /*
-   * Mescla as alterações locais com as remotas.
-   * Registros precisam ter um id único e estável.
-   */
-  function merge3(previous, local, remote) {
-    const result = { ...remote };
-
-    for (const key of KEYS) {
-      const oldMap = new Map(
-        (previous[key] || []).map(item => [item.id, item])
-      );
-
-      const localMap = new Map(
-        (local[key] || []).map(item => [item.id, item])
-      );
-
-      const output = [];
-      const seen = new Set();
-
-      for (const remoteItem of remote[key] || []) {
-        const id = remoteItem.id;
-        seen.add(id);
-
-        const oldItem = oldMap.get(id);
-        const localItem = localMap.get(id);
-
-        // Foi excluído localmente desde a última sincronização.
-        if (oldItem && !localItem) continue;
-
-        // Foi criado ou alterado localmente.
-        if (
-          localItem &&
-          (!oldItem ||
-            JSON.stringify(localItem) !== JSON.stringify(oldItem))
-        ) {
-          output.push(localItem);
-        } else {
-          output.push(remoteItem);
-        }
+  function merge3(b, local, remote) {
+    const out = { ...remote };
+    for (const k of KEYS) {
+      const bm = new Map((b[k] || []).map(x => [x.id, x]));
+      const lm = new Map((local[k] || []).map(x => [x.id, x]));
+      const res = [], seen = new Set();
+      for (const x of remote[k] || []) {
+        seen.add(x.id);
+        const bx = bm.get(x.id), lx = lm.get(x.id);
+        if (bx && !lx) continue; // exclusão local em relação à base
+        res.push(lx && (!bx || JSON.stringify(lx) !== JSON.stringify(bx)) ? lx : x);
       }
-
-      // Registros novos que ainda não existem na nuvem.
-      for (const [id, localItem] of localMap) {
-        if (!seen.has(id) && !oldMap.has(id)) {
-          output.push(localItem);
-        }
-      }
-
-      result[key] = output;
+      for (const [id, lx] of lm) if (!seen.has(id) && !bm.has(id)) res.push(lx);
+      out[k] = res;
     }
-
-    result.defaultsV = remote.defaultsV || local.defaultsV;
-
-    return result;
+    out.defaultsV = remote.defaultsV || local.defaultsV;
+    return out;
   }
-
+  function writeCache() {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ db, base, version, pending })); }
+    catch (e) { console.warn("Não foi possível gravar o cache local.", e); }
+  }
   async function doPush() {
     if (!sb) return;
-
-    busy = true;
-    status("Salvando na nuvem…", "busy");
-
+    busy = true; status("Salvando na nuvem…", "busy");
     try {
-      for (let attempt = 0; attempt < 5; attempt++) {
-        const snapshot = clone(db);
-
-        /*
-         * Atualização otimista: só grava se a versão
-         * remota continuar igual à versão conhecida.
-         */
-        const { data, error } = await sb
-          .from("app_state")
-          .update({
-            data: snapshot,
-            version: version + 1,
-            updated_at: new Date().toISOString()
-          })
-          .eq("id", 1)
-          .eq("version", version)
-          .select("version");
-
+      for (let i = 0; i < 5; i++) {
+        const snap = clone(db);
+        const { data, error } = await sb.from("app_state")
+          .update({ data: snap, version: version + 1, updated_at: new Date().toISOString() })
+          .eq("id", 1).eq("version", version).select("version");
         if (error) throw error;
-
-        if (data && data.length > 0) {
-          version = Number(data[0].version);
-          base = clone(snapshot);
-          pending = false;
-          writeCache();
-          status("✓ Dados sincronizados", "ok");
-          return;
+        if (data && data.length) {
+          version = data[0].version; base = clone(snap); pending = false;
+          writeCache(); status("✓ Sincronizado", "ok"); return;
         }
-
-        // O registro pode ainda não existir na primeira execução.
-        const remote = await fetchRemote();
-
-        if (!remote.exists) {
-          const { error: insertError } = await sb
-            .from("app_state")
-            .insert({
-              id: 1,
-              data: snapshot,
-              version: 1,
-              updated_at: new Date().toISOString()
-            });
-
-          if (!insertError) {
-            version = 1;
-            base = clone(snapshot);
-            pending = false;
-            writeCache();
-            status("✓ Dados sincronizados", "ok");
-            return;
-          }
-        }
-
-        // Outro aparelho pode ter gravado primeiro.
-        const latest = await fetchRemote();
-
-        if (!latest.exists) {
-          throw new Error("O registro compartilhado não foi criado.");
-        }
-
-        db = merge3(base, db, latest.data);
-        version = latest.version;
-        base = clone(latest.data);
-        writeCache();
-        render();
+        const rem = await fetchRemote();
+        db = merge3(base, db, rem.data); version = rem.version; base = clone(rem.data);
+        if (typeof renderAll === "function") renderAll();
       }
-
-      throw new Error("Muitas alterações simultâneas. Tente novamente.");
-    } catch (error) {
-      pending = true;
-      writeCache();
-
-      console.error("Falha ao sincronizar:", error);
-
-      status("⚠ Falha ao salvar — confira a conexão", "err");
-    } finally {
-      busy = false;
-    }
+      throw new Error("Conflito de atualização: tente salvar novamente.");
+    } catch (e) {
+      pending = true; writeCache(); status("⚠ Falha ao sincronizar", "err");
+      console.error("Erro ao salvar no Supabase:", e);
+    } finally { busy = false; }
   }
-
   function push() {
-    queue = queue
-      .catch(() => {})
-      .then(() => doPush());
-
+    queue = queue.then(doPush, doPush);
     return queue;
   }
-
-  /*
-   * Chame cloud.save() depois de alterações nos dados.
-   */
   function save() {
-    pending = true;
-    writeCache();
-
-    if (sb) {
-      return push();
-    }
+    pending = true; writeCache();
+    if (sb) return push();
   }
-
   async function pull() {
     if (!sb || busy) return;
-
-    if (pending) {
-      await push();
-      return;
-    }
-
+    if (pending) { await push(); return; }
     try {
-      const remote = await fetchRemote();
-
-      if (!remote.exists) return;
-
-      if (remote.version > version) {
-        db = remote.data;
-        version = remote.version;
-        base = clone(remote.data);
-
+      const { data, error } = await sb.from("app_state").select("version").eq("id", 1).single();
+      if (error) throw error;
+      if (Number(data.version || 0) > version) {
+        const rem = await fetchRemote();
+        db = rem.data; version = rem.version; base = clone(rem.data);
         writeCache();
-        render();
+        if (typeof renderAll === "function") renderAll();
       }
-
-      status("✓ Dados sincronizados", "ok");
-    } catch (error) {
-      console.error("Erro ao consultar a nuvem:", error);
-      status("⚠ Nuvem indisponível", "err");
-    }
+      status("✓ Sincronizado", "ok");
+    } catch (e) { status("⚠ Sem conexão ou sem permissão", "err"); console.error(e); }
   }
-
   async function boot() {
     status("Carregando dados…", "busy");
-
     try {
-      let cache = null;
+      let cache = null, old = null;
+      try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "null"); } catch {}
+      try { old = JSON.parse(localStorage.getItem(OLD_KEY) || "null"); } catch {}
+      const rem = await fetchRemote();
+      const hasOld = old && KEYS.some(k => Array.isArray(old[k]) && old[k].length);
+      const migrated = localStorage.getItem(MIG_KEY);
 
-      try {
-        cache = JSON.parse(
-          localStorage.getItem(CACHE_KEY) || "null"
-        );
-      } catch {
-        cache = null;
-      }
-
-      let old = null;
-
-      try {
-        old = JSON.parse(
-          localStorage.getItem(OLD_KEY) || "null"
-        );
-      } catch {
-        old = null;
-      }
-
-      const remote = await fetchRemote();
-
-      // Recupera alterações que não chegaram à nuvem.
-      if (cache && cache.pending && cache.db) {
-        db = normalize(cache.db);
-        base = normalize(cache.base || {});
-        version = Number(cache.version) || 0;
-        pending = true;
-
-        // Não sobrescreve dados remotos cegamente.
-        if (remote.exists) {
-          db = merge3(base, db, remote.data);
-          version = remote.version;
-          base = clone(remote.data);
-        }
-
-        writeCache();
+      if (cache && cache.pending) {
+        db = normalize(cache.db); base = normalize(cache.base); version = Number(cache.version || 0); pending = true;
         await push();
-      } else if (
-        remote.exists &&
-        remote.data.defaultsV
-      ) {
-        // A nuvem já possui os dados oficiais.
-        db = remote.data;
-        version = remote.version;
-        base = clone(remote.data);
-        pending = false;
+      } else if (!rem.data.defaultsV && KEYS.every(k => !(rem.data[k] || []).length)) {
+        db = normalize(hasOld ? old : {});
+        if (typeof ensureDefaults === "function") ensureDefaults();
+        version = rem.version; base = clone(rem.data); pending = true;
+        localStorage.setItem(MIG_KEY, "1");
+        await push();
       } else {
-        // Primeira inicialização da nuvem.
-        db = normalize({});
-
-        const hasOld = old && KEYS.some(
-          key => Array.isArray(old[key]) && old[key].length > 0
-        );
-
-        if (hasOld) {
-          const migrate = confirm(
-            "Foram encontrados dados antigos neste aparelho.\n\n" +
-            "Deseja enviá-los para a nuvem compartilhada?"
-          );
-
-          if (migrate) {
-            db = normalize(old);
+        db = rem.data; version = rem.version; base = clone(rem.data); pending = false;
+        if (hasOld && !migrated) {
+          const ids = new Set(); KEYS.forEach(k => db[k].forEach(x => ids.add(x.id)));
+          let additions = 0;
+          for (const k of KEYS) {
+            const names = (k === "employees" || k === "trucks")
+              ? new Set(db[k].map(x => String(x.name || "").toLowerCase())) : null;
+            const extra = (old[k] || []).filter(x => !ids.has(x.id) && !(names && names.has(String(x.name || "").toLowerCase())));
+            db[k] = db[k].concat(extra); additions += extra.length;
           }
-        }
-
-        ensureDefaults();
-
-        /*
-         * Mantém defaultsV para indicar que a inicialização
-         * já ocorreu, se o app não definir esse campo.
-         */
-        if (!db.defaultsV) {
-          db.defaultsV = 1;
-        }
-
-        version = remote.version;
-        base = clone(remote.data);
-        pending = true;
-
-        writeCache();
-        await push();
-
-        try {
+          if (additions && window.confirm(`Este aparelho tem ${additions} registro(s) antigos que não estão na nuvem. Mesclar com os dados compartilhados?`)) {
+            pending = true; await push();
+          }
           localStorage.setItem(MIG_KEY, "1");
-        } catch {}
+        }
       }
-
       writeCache();
-      render();
-
-      if (timer) clearInterval(timer);
-
-      timer = setInterval(pull, 15000);
-
-      status("✓ Dados carregados", "ok");
-    } catch (error) {
-      console.error("Erro ao carregar os dados:", error);
+      if (typeof renderAll === "function") renderAll();
+      else console.warn("A função renderAll() não foi encontrada no app.js.");
+      clearInterval(timer); timer = setInterval(pull, 15000);
+      status("✓ Sincronizado", "ok");
+    } catch (e) {
       status("⚠ Erro ao carregar dados", "err");
+      console.error("Falha ao iniciar sincronização. Confira tabela, políticas e colunas do Supabase.", e);
     }
   }
-
   async function start() {
-    if (started) return;
-    started = true;
-
-    const cfg = window.APP_CONFIG || {};
-
-    if (
-      !cfg.SUPABASE_URL ||
-      !cfg.SUPABASE_ANON_KEY ||
-      !window.supabase
-    ) {
-      started = false;
-      status("Erro na configuração do Supabase", "err");
-      console.error(
-        "Confira APP_CONFIG no config.js e a biblioteca Supabase."
-      );
+    ensureStatus();
+    if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY ||
+        cfg.SUPABASE_ANON_KEY.includes("COLE_SUA") || !window.supabase) {
+      status("⚠ Configure o Supabase", "err");
+      console.error("Configure config.js e carregue a biblioteca do Supabase antes de sync.js.");
       return;
     }
-
-    try {
-      sb = window.supabase.createClient(
-        cfg.SUPABASE_URL,
-        cfg.SUPABASE_ANON_KEY
-      );
-
-      // Sem tela de login e sem autenticação obrigatória.
-      await boot();
-    } catch (error) {
-      started = false;
-      console.error("Erro ao iniciar:", error);
-      status("Erro ao conectar com a nuvem", "err");
-    }
+    sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+    await boot();
   }
-
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) pull();
-  });
-
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) pull(); });
   window.addEventListener("online", pull);
-
-  return {
-    start,
-    save,
-    pull
-  };
+  return { start, save, pull };
 })();

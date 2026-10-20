@@ -1,0 +1,10 @@
+R&R FIGUEREDO TRANSPORTES — versão sem login
+
+1. No painel do Supabase, abra SQL Editor e execute supabase.sql.
+2. Publique TODOS os arquivos deste pacote juntos no mesmo diretório/serviço de hospedagem.
+3. Abra o endereço publicado e confira o indicador de sincronização.
+4. Abra o mesmo endereço em outro aparelho para testar.
+
+IMPORTANTE: esta configuração não exige login. Como consequência, qualquer pessoa com acesso ao site e à chave publicável poderá ler e alterar os dados se as políticas SQL estiverem abertas como neste pacote. Não use para dados financeiros confidenciais em um site público. Para proteger os dados, seria necessário autenticação ou restrição de acesso.
+
+A versão mantém as funcionalidades já presentes no app.js. Ela não cria automaticamente uma tela de contas a receber se essa funcionalidade ainda não estiver implementada no arquivo.

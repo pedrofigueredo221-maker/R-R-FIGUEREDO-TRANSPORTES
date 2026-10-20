@@ -1,21 +1,6 @@
-
-/* Supabase - R&R Figueredo Transportes */
-
-window.SUPABASE_URL =
-  "https://feevzqkqruyzoskowxrw.supabase.co";
-
-window.SUPABASE_ANON_KEY =
-  "sb_publishable_jXoGdEwcHd2VYaca2nPKKg_4_OUztoN";
-
-if (!window.supabase) {
-  throw new Error(
-    "A biblioteca JavaScript do Supabase não foi carregada."
-  );
-}
-
-window.supabaseClient = window.supabase.createClient(
-  window.SUPABASE_URL,
-  window.SUPABASE_ANON_KEY
-);
-
-console.info("Configuração do Supabase carregada.");
+/* Configuração pública do Supabase para R&R Figueredo Transportes.
+   Esta chave é publicável (frontend). Nunca coloque a chave service_role aqui. */
+window.APP_CONFIG = {
+  SUPABASE_URL: "https://feevzqkqruyzoskowxrw.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_jXoGdEwcHd2VYaca2nPKKg_4_OUztoN"
+};

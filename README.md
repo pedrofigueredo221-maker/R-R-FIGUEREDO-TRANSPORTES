@@ -18,7 +18,6 @@ Não é necessário instalar dependências para a versão inicial.
 3. No repositório, abra **Settings → Pages**.
 4. Em *Build and deployment*, escolha **Deploy from a branch**, branch `main`, pasta `/ (root)`, e clique em **Save**.
 5. Aguarde a publicação e abra o endereço indicado pelo GitHub Pages.
-6. Depois de atualizar os arquivos, abra o site e pressione **Ctrl+F5** (no celular, limpe o cache do navegador) para carregar a versão nova.
 
 ## Funcionalidades incluídas
 
@@ -26,10 +25,6 @@ Não é necessário instalar dependências para a versão inicial.
 - Cadastro, edição e exclusão de fretes.
 - Motorista, origem, destino, valor, pedágio, percentual de comissão e opção de descontar pedágio.
 - Registro de recebimentos totais ou parciais dos clientes.
-- **Contas a receber:** todo frete com saldo pendente gera automaticamente uma conta a receber (com cliente e vencimento opcionais). Também é possível lançar contas avulsas de clientes ou fornecedores e registrar recebimentos parciais ou totais.
-- **Cadastros:** funcionários e caminhões com inclusão, edição e inativação (sem perder o histórico). Por padrão só os ativos aparecem; a opção "Mostrar inativos" exibe os demais. Motoristas ativos alimentam o cadastro de fretes e caminhões ativos alimentam as despesas.
-- **Comissão com duas opções:** regra padrão por funcionário (lupa 🔍 em Cadastros, com % e opção de descontar pedágio), puxada automaticamente ao escolher o motorista no frete; ou informada manualmente na viagem. Motorista sem regra puxa 0% e a % pode ser digitada na hora.
-- **Caminhão com motorista vinculado** (um motorista por caminhão).
 - Cadastro de despesas por categoria, fornecedor e caminhão.
 - Contas à vista ou parceladas, com geração automática de parcelas mensais.
 - Registro de pagamentos parciais ou integrais por parcela.
@@ -53,3 +48,11 @@ Não é necessário instalar dependências para a versão inicial.
 ## Próxima etapa recomendada
 
 Antes de usar com dados reais, evoluir para Supabase/PostgreSQL com autenticação, regras de acesso e backup. Assim, o mesmo dado poderá ser acessado com segurança em diferentes dispositivos. Nunca coloque chaves secretas ou senhas no repositório público.
+
+
+## Recursos adicionados
+- **Cadastros:** acesse Cadastros para adicionar/editar funcionários e caminhões. É possível desativar e reativar sem apagar o histórico. Renomear um cadastro atualiza as referências antigas de fretes/despesas.
+- **Importar fretes:** em Fretes, baixe o modelo Excel, preencha uma linha por frete e importe `.xlsx`, `.xls` ou `.csv`. Revise e valide antes de salvar.
+- **Fotografar o caderno:** escolha a opção de foto no celular ou selecione uma imagem. O reconhecimento de texto é uma ajuda, não uma garantia: escrita à mão e números podem ser lidos errado. Confira a prévia manualmente.
+- Os leitores Excel e OCR dependem de conexão à internet para carregar as bibliotecas.
+- **Limitação importante:** os dados continuam salvos somente no navegador/dispositivo atual. Para uso profissional com acesso no celular e computador, será necessário adicionar banco de dados online, autenticação, permissões e backup.
