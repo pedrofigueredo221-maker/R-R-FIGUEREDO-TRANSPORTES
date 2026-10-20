@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/33737453/README.md)
 # R&R Figueredo Transportes — Gestão de Fretes
 
 Protótipo responsivo para controle de fretes, motoristas, comissão, pedágio, despesas de manutenção, contas parceladas e relatórios.
