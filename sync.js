@@ -140,14 +140,29 @@ const cloud = (() => {
   }
 
   async function start() {
-    ensureUI();
-    if (!cfg.SUPABASE_URL || cfg.SUPABASE_URL.startsWith("COLE") || !window.supabase) { showLogin("Configure o arquivo config.js com os dados do Supabase."); return; }
-    sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session) { showLogin(); return; }
-    boot();
+  const cfg = window.APP_CONFIG || {};
+
+  // Verifica se a configuração e a biblioteca estão disponíveis.
+  if (
+    !cfg.SUPABASE_URL ||
+    !cfg.SUPABASE_ANON_KEY ||
+    !window.supabase
+  ) {
+    console.error("Confira o config.js e a biblioteca do Supabase.");
+    status("Erro na configuração do Supabase", "err");
+    return;
   }
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) pull(); });
-  window.addEventListener("online", pull);
-  return { start, save };
-})();
+
+  try {
+    sb = window.supabase.createClient(
+      cfg.SUPABASE_URL,
+      cfg.SUPABASE_ANON_KEY
+    );
+
+    // Inicia a sincronização sem exigir login.
+    await boot();
+  } catch (error) {
+    console.error("Erro ao iniciar a sincronização:", error);
+    status("Erro ao conectar com a nuvem", "err");
+  }
+}
