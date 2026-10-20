@@ -37,14 +37,28 @@ document.addEventListener('DOMContentLoaded', () => {
     renderizarMotoristas();
     renderizarFrota();
     inicializarTabelaLote();
+    renderizarDashboard();
 });
 
 function mudarAba(nomeAba) {
     document.querySelectorAll('.aba-conteudo').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
 
     document.getElementById(`conteudo-${nomeAba}`).classList.remove('hidden');
     document.getElementById(`tab-${nomeAba}`).classList.add('active');
+
+    const titulos = {
+        dashboard: 'Visão Geral do Sistema',
+        fretes: 'Gestão de Fretes & Viagens',
+        lote: 'Lançamento em Lote de Viagens',
+        despesas: 'Controle de Despesas & Manutenção',
+        pagamentos: 'Contas a Pagar & Parcelas',
+        frota: 'Gestão de Frota & Veículos',
+        motoristas: 'Gestão de Motoristas',
+        relatorios: 'Relatórios Operacionais'
+    };
+
+    document.getElementById('tituloPagina').innerText = titulos[nomeAba] || 'Gestão de Transportes';
 
     if (nomeAba === 'dashboard') renderizarDashboard();
 }
@@ -113,7 +127,6 @@ function calcularPreviaFrete() {
     document.getElementById('prevLiquido').innerText = `R$ ${liquido.toFixed(2)}`;
 }
 
-// Cadastro e Edição de Frete
 document.getElementById('formFrete').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -240,7 +253,6 @@ function editarFrete(id) {
     document.getElementById('descontarPedagio').checked = f.descontarPedagio;
 
     calcularPreviaFrete();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function excluirFrete(id) {
@@ -252,7 +264,6 @@ function excluirFrete(id) {
     }
 }
 
-// Lançamento em Lote
 function inicializarTabelaLote() {
     const tbody = document.getElementById('tabelaLoteBody');
     tbody.innerHTML = '';
@@ -327,14 +338,13 @@ function salvarLote() {
         salvarFretes();
         renderizarTabelaFretes();
         inicializarTabelaLote();
-        alert(`${adicionados} fretes foram cadastrados com sucesso!`);
+        alert(`${adicionados} fretes cadastrados com sucesso!`);
         mudarAba('fretes');
     } else {
-        alert('Preencha os campos obrigatórios (Veículo, Origem, Destino e Valor) das linhas que deseja salvar.');
+        alert('Preencha os campos obrigatórios nas linhas que deseja salvar.');
     }
 }
 
-// Módulo de Despesas & Manutenção
 function alternarParcelas() {
     const tipo = document.getElementById('expTipo').value;
     document.getElementById('expParcelas').disabled = (tipo === 'avista');
@@ -366,7 +376,7 @@ document.getElementById('formDespesa').addEventListener('submit', function(e) {
         });
     }
 
-    const novaDespesa = {
+    despesas.push({
         id: Date.now(),
         descricao: document.getElementById('expDescricao').value,
         categoria: document.getElementById('expCategoria').value,
@@ -377,16 +387,15 @@ document.getElementById('formDespesa').addEventListener('submit', function(e) {
         tipo: tipo,
         parcelas: parcelas,
         notas: document.getElementById('expNotas').value
-    };
+    });
 
-    despesas.push(novaDespesa);
     salvarDespesas();
     renderizarTabelaDespesas();
     renderizarContasPagar();
     renderizarDashboard();
     this.reset();
     document.getElementById('expPrimeiroVenc').valueAsDate = new Date();
-    alert('Despesa cadastrada com sucesso!');
+    alert('Despesa cadastrada!');
 });
 
 function renderizarTabelaDespesas() {
@@ -418,7 +427,7 @@ function renderizarTabelaDespesas() {
 }
 
 function excluirDespesa(id) {
-    if (confirm('Deseja excluir esta despesa e todas as suas parcelas?')) {
+    if (confirm('Deseja excluir esta despesa e suas parcelas?')) {
         despesas = despesas.filter(d => d.id !== id);
         salvarDespesas();
         renderizarTabelaDespesas();
@@ -427,7 +436,6 @@ function excluirDespesa(id) {
     }
 }
 
-// Módulo de Contas a Pagar
 function renderizarContasPagar() {
     const tbody = document.getElementById('tabelaContasPagar');
     tbody.innerHTML = '';
@@ -481,10 +489,9 @@ function darBaixaParcela(despesaId, parcelaId) {
     const p = d.parcelas.find(x => x.id === parcelaId);
     if (!p) return;
 
-    const resp = prompt(`Informe o valor pago para a parcela (Valor integral: R$ ${p.valor.toFixed(2)}):`, p.valor.toFixed(2));
+    const resp = prompt(`Valor pago (Valor da parcela: R$ ${p.valor.toFixed(2)}):`, p.valor.toFixed(2));
     if (resp !== null) {
-        const valorPago = parseFloat(resp.replace(',', '.')) || 0;
-        p.pago = valorPago;
+        p.pago = parseFloat(resp.replace(',', '.')) || 0;
         salvarDespesas();
         renderizarTabelaDespesas();
         renderizarContasPagar();
@@ -492,7 +499,6 @@ function darBaixaParcela(despesaId, parcelaId) {
     }
 }
 
-// Dashboard
 function renderizarDashboard() {
     let totalFrete = 0, totalRecebido = 0;
     fretes.forEach(f => {
@@ -516,7 +522,6 @@ function renderizarDashboard() {
     document.getElementById('dashDespesasAberto').innerText = `R$ ${totalDespesasAberto.toFixed(2)} a pagar`;
     document.getElementById('dashResultado').innerText = `R$ ${(totalRecebido - totalDespesasPagas).toFixed(2)}`;
 
-    // Tabela Recentes Dashboard
     const tbodyR = document.getElementById('dashRecentFreights');
     tbodyR.innerHTML = '';
     const ultimos = [...fretes].sort((a,b) => new Date(b.data) - new Date(a.data)).slice(0, 5);
@@ -534,7 +539,6 @@ function renderizarDashboard() {
         tbodyR.appendChild(tr);
     });
 
-    // Próximos Vencimentos
     const divB = document.getElementById('dashUpcomingBills');
     divB.innerHTML = '';
     const pendentes = [];
@@ -561,7 +565,6 @@ function renderizarDashboard() {
     });
 }
 
-// Motoristas & Frota
 document.getElementById('formMotorista').addEventListener('submit', function(e) {
     e.preventDefault();
     motoristas.push({
