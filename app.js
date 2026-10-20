@@ -8,7 +8,19 @@ const escapeHtml = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&
 const parseDate = s => s ? new Date(s+"T12:00:00") : null;
 const dateBR = s => {const d=parseDate(s);return d?d.toLocaleDateString("pt-BR"):"—";};
 const monthName = s => {const d=parseDate((s||todayISO()).slice(0,7)+"-01");return d.toLocaleDateString("pt-BR",{month:"short"}).replace(".","").toUpperCase();};
-let db = loadDB();db.receivables=db.receivables||[];if(!db.employees)db.employees=[1,2,3,4,5].map(n=>({id:uid(),name:"Motorista "+n,role:"Motorista",phone:"",notes:"",active:true}));if(!db.trucks)db.trucks=[1,2,3,4,5].map(n=>({id:uid(),name:"Caminhão 0"+n,plate:"",model:"",notes:"",active:true}));
+let db = loadDB();db.receivables=db.receivables||[];ensureDefaults();
+function ensureDefaults(){
+  if(db.defaultsV===2)return;
+  db.employees=db.employees||[];db.trucks=db.trucks||[];
+  const has=(list,name)=>list.some(x=>String(x.name).toLowerCase()===name.toLowerCase());
+  const person=(name,role)=>({id:uid(),name,role,phone:"",notes:"",active:true});
+  const drivers=db.employees.filter(x=>String(x.role).trim().toLowerCase()==="motorista").length;
+  for(let n=drivers+1;n<=5;n++)db.employees.push(person("Motorista "+n,"Motorista"));
+  [["Rafael","Diretor"],["Rosilaine","Diretora"],["Pedro","Gerente"]].forEach(([n,r])=>{if(!has(db.employees,n))db.employees.push(person(n,r))});
+  for(let n=db.trucks.length+1;n<=5;n++){const name="Caminhão 0"+n;if(!has(db.trucks,name))db.trucks.push({id:uid(),name,plate:"",model:"",notes:"",active:true})}
+  db.defaultsV=2;
+  try{localStorage.setItem(DB_KEY,JSON.stringify(db))}catch{}
+}
 function loadDB(){try{return JSON.parse(localStorage.getItem(DB_KEY))||{freights:[],expenses:[]}}catch{return{freights:[],expenses:[]}}}
 function saveDB(){localStorage.setItem(DB_KEY,JSON.stringify(db));renderAll();}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
@@ -33,11 +45,11 @@ document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",
 $("today").textContent=new Date().toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"short"}).replace(".","");
 $("dashMonth").value=monthISO();$("freightMonth").value=monthISO();$("expenseMonth").value=monthISO();$("paymentMonth").value=monthISO();$("reportMonth").value=monthISO();
 $("quickAdd").addEventListener("click",()=>openFreight());$("addFreight").addEventListener("click",()=>openFreight());$("addExpense").addEventListener("click",()=>openExpense());$("addPaymentExpense").addEventListener("click",()=>openExpense());
-function openFreight(f=null){$("freightForm").reset();$("freightId").value=f?.id||"";$("freightModalTitle").textContent=f?"Editar frete":"Cadastrar frete";$("fDate").value=f?.date||todayISO();$("fDriver").value=f?.driver||"";$("fClient").value=f?.client||"";$("fDue").value=f?.due||"";$("fOrigin").value=f?.origin||"";$("fDestination").value=f?.destination||"";$("fValue").value=f?.value??"";$("fToll").value=f?.toll??0;$("fCommission").value=f?.commission??10;$("fStatus").value=f?freightStatus(f):"Pendente";$("fReceived").value=f?.received??0;$("fDeductToll").checked=!!f?.deductToll;$("fNotes").value=f?.notes||"";updateFreightCalc();openDialog("freightDialog")}
+function openFreight(f=null){$("freightForm").reset();$("freightId").value=f?.id||"";$("freightModalTitle").textContent=f?"Editar frete":"Cadastrar frete";$("fDate").value=f?.date||todayISO();$("fDriver").value=f?.driver||"";$("fClient").value=f?.client||"";$("fDue").value=f?.due||"";$("fOrigin").value=f?.origin||"";$("fDestination").value=f?.destination||"";$("fValue").value=f?.value??"";$("fToll").value=f?.toll??0;$("fCommission").value=f?.commission??10;$("fStatus").value=f?freightStatus(f):"Pendente";$("fReceived").value=f?.received??0;$("fDeductToll").checked=!!f?.deductToll;$("fNotes").value=f?.notes||"";$("fCommMode").value=f?(f.commissionMode||"manual"):"padrao";syncCommission(!f);openDialog("freightDialog")}
 ["fValue","fToll","fCommission","fDeductToll"].forEach(id=>$(id).addEventListener("input",updateFreightCalc));
 function updateFreightCalc(){const v=num("fValue"),t=num("fToll"),c=num("fCommission");const commission=v*c/100,net=v-commission-($("fDeductToll").checked?t:0);$("freightCalc").innerHTML=`Comissão estimada: <strong>${money(commission)}</strong><br>Pedágio descontado do motorista: <strong>${money($("fDeductToll").checked?t:0)}</strong><br>Líquido estimado do motorista: <strong>${money(net)}</strong>`}
-$("freightForm").addEventListener("submit",e=>{e.preventDefault();const id=$("freightId").value;const f={id:id||uid(),date:$("fDate").value,driver:$("fDriver").value.trim(),client:$("fClient").value.trim(),due:$("fDue").value,origin:$("fOrigin").value.trim(),destination:$("fDestination").value.trim(),value:num("fValue"),toll:num("fToll"),commission:num("fCommission"),received:$("fStatus").value==="Pago"?num("fValue"):Math.min(num("fReceived"),num("fValue")),deductToll:$("fDeductToll").checked,notes:$("fNotes").value.trim()};if(f.value<=0){toast("Informe um valor de frete válido.",true);return}if(id)db.freights=db.freights.map(x=>x.id===id?f:x);else db.freights.unshift(f);saveDB();closeDialog("freightDialog");toast(id?"Frete atualizado.":"Frete cadastrado.")});
-function openExpense(exp=null){$("expenseForm").reset();$("expenseId").value=exp?.id||"";$("expenseModalTitle").textContent=exp?"Editar despesa":"Nova despesa";$("eDescription").value=exp?.description||"";$("eCategory").value=exp?.category||"Manutenção";fillTruckOptions(exp?.truck);$("eSupplier").value=exp?.supplier||"";$("eValue").value=exp?.value??"";$("eType").value=exp?.type||"avista";$("eInstallments").value=exp?.installments?.length||1;$("eFirstDue").value=exp?.installments?.[0]?.due||todayISO();$("ePaidInitial").value=exp?paidAmount(exp):0;$("eNotes").value=exp?.notes||"";$("eInstallments").disabled=!!exp;$("eType").disabled=!!exp;$("ePaidInitial").disabled=!!exp;openDialog("expenseDialog")}
+$("freightForm").addEventListener("submit",e=>{e.preventDefault();const id=$("freightId").value;const f={id:id||uid(),date:$("fDate").value,driver:$("fDriver").value.trim(),client:$("fClient").value.trim(),commissionMode:$("fCommMode").value,due:$("fDue").value,origin:$("fOrigin").value.trim(),destination:$("fDestination").value.trim(),value:num("fValue"),toll:num("fToll"),commission:num("fCommission"),received:$("fStatus").value==="Pago"?num("fValue"):Math.min(num("fReceived"),num("fValue")),deductToll:$("fDeductToll").checked,notes:$("fNotes").value.trim()};if(f.value<=0){toast("Informe um valor de frete válido.",true);return}if(id)db.freights=db.freights.map(x=>x.id===id?f:x);else db.freights.unshift(f);saveDB();closeDialog("freightDialog");toast(id?"Frete atualizado.":"Frete cadastrado.")});
+function openExpense(exp=null){$("expenseForm").reset();$("expenseId").value=exp?.id||"";$("expenseModalTitle").textContent=exp?"Editar despesa":"Nova despesa";$("eDescription").value=exp?.description||"";$("eCategory").value=exp?.category||"Manutenção";fillTruckOptions(exp?.truck);$("eSupplier").value=exp?.supplier||"";$("eValue").value=exp?.value??"";$("eType").value=exp?.type||"avista";$("eInstallments").value=exp?.installments?.length||1;$("eFirstDue").value=exp?.installments?.[0]?.due||todayISO();$("ePaidInitial").value=exp?paidAmount(exp):0;$("eNotes").value=exp?.notes||"";$("eInstallments").disabled=true;$("eValue").disabled=!!exp;$("eFirstDue").disabled=!!exp;$("eType").disabled=!!exp;$("ePaidInitial").disabled=!!exp;openDialog("expenseDialog")}
 $("eType").addEventListener("change",()=>{$("eInstallments").disabled=$("eType").value==="avista";if($("eType").value==="avista")$("eInstallments").value="1"});
 $("expenseForm").addEventListener("submit",e=>{e.preventDefault();const id=$("expenseId").value,v=num("eValue"),n=$("eType").value==="avista"?1:Number($("eInstallments").value);if(v<=0){toast("Informe um valor válido.",true);return}if(id){const old=db.expenses.find(x=>x.id===id);if(old){old.description=$("eDescription").value.trim();old.category=$("eCategory").value;old.truck=$("eTruck").value;old.supplier=$("eSupplier").value.trim();old.notes=$("eNotes").value.trim();} }else{const base=Math.floor(v/n*100)/100;let remaining=Math.round(v*100);const installments=[];for(let i=0;i<n;i++){const val=i===n-1?remaining/100:base;remaining-=Math.round(val*100);installments.push({value:val,paid:0,due:dateAddMonths($("eFirstDue").value,i),payments:[]})}let initial=Math.min(num("ePaidInitial"),v);for(let i=0;i<n&&initial>0;i++){const pay=Math.min(installments[i].value,initial);installments[i].paid=pay;installments[i].payments.push({amount:pay,date:todayISO(),method:"Pagamento inicial"});initial-=pay}db.expenses.unshift({id:uid(),description:$("eDescription").value.trim(),category:$("eCategory").value,truck:$("eTruck").value,supplier:$("eSupplier").value.trim(),value:v,type:n===1?"avista":"parcelado",installments,notes:$("eNotes").value.trim(),created:todayISO()})}saveDB();closeDialog("expenseDialog");toast(id?"Despesa atualizada.":"Despesa cadastrada.")});
 function openPay(expId,index){const exp=db.expenses.find(x=>x.id===expId),i=exp?.installments[index];if(!exp||!i)return;const remaining=Math.max(0,i.value-i.paid);$("payExpenseId").value=expId;$("payInstallmentIndex").value=index;$("paySubtitle").textContent=`${exp.description} · parcela ${Number(index)+1}/${exp.installments.length} · falta ${money(remaining)}`;$("payAmount").value=remaining.toFixed(2);$("payAmount").max=remaining;$("payDate").value=todayISO();$("payMethod").value="Pix";openDialog("payDialog")}
@@ -113,7 +125,7 @@ function fillTruckOptions(current){
   $("eTruck").value=current||opts[0];
 }
 function refreshRegisterOptions(){
-  $("driverOptions").innerHTML=activeEmployees().filter(x=>x.role==="Motorista").map(x=>`<option value="${escapeHtml(x.name)}">`).join("");
+  $("driverOptions").innerHTML=activeEmployees().filter(x=>String(x.role).trim().toLowerCase()==="motorista").map(x=>`<option value="${escapeHtml(x.name)}">`).join("");
   const f=$("expenseTruckFilter"),old=f.value;
   f.innerHTML='<option value="">Todos os caminhões</option>'+optionList([...new Set([...db.trucks.map(t=>t.name),...db.expenses.map(e=>e.truck).filter(Boolean),"Não definido"])]);
   if([...f.options].some(o=>o.value===old))f.value=old;
@@ -122,11 +134,12 @@ function findRegister(key){const [kind,id]=key.split(":");return {kind,item:(kin
 function renderRegisters(){
   const showInactive=$("regShowInactive").checked;
   const visible=list=>list.filter(x=>showInactive||x.active!==false);
-  const row=(kind,x,a,b)=>{const off=x.active===false;return `<tr class="${off?"is-inactive":""}"><td><strong>${escapeHtml(x.name)}</strong></td><td>${escapeHtml(a||"—")}</td><td>${escapeHtml(b||"—")}</td><td>${escapeHtml(x.notes||"")}</td><td><span class="pill ${off?"":"paid"}">${off?"Inativo":"Ativo"}</span></td><td><div class="row-actions"><button class="icon-btn" title="Editar" data-reg-edit="${kind}:${x.id}">✎</button><button class="btn btn-secondary" data-reg-toggle="${kind}:${x.id}">${off?"Reativar":"Inativar"}</button></div></td></tr>`};
+  const row=(kind,x,a,b,c,extra="")=>{const off=x.active===false;return `<tr class="${off?"is-inactive":""}"><td><strong>${escapeHtml(x.name)}</strong></td><td>${escapeHtml(a||"—")}</td><td>${escapeHtml(b||"—")}</td><td>${escapeHtml(c||"—")}</td><td>${escapeHtml(x.notes||"")}</td><td><span class="pill ${off?"":"paid"}">${off?"Inativo":"Ativo"}</span></td><td><div class="row-actions">${extra}<button class="icon-btn" title="Editar" data-reg-edit="${kind}:${x.id}">✎</button><button class="btn btn-secondary" data-reg-toggle="${kind}:${x.id}">${off?"Reativar":"Inativar"}</button></div></td></tr>`};
   const emps=visible(db.employees),trks=visible(db.trucks);
-  $("employeeRows").innerHTML=emps.map(x=>row("employee",x,x.role,x.phone)).join("");
-  $("truckRows").innerHTML=trks.map(x=>row("truck",x,x.plate,x.model)).join("");
+  $("employeeRows").innerHTML=emps.map(x=>row("employee",x,x.role,x.phone,ruleLabel(x),`<button class="icon-btn" title="Regra de comissão" data-reg-rule="${x.id}">🔍</button>`)).join("");
+  $("truckRows").innerHTML=trks.map(x=>row("truck",x,x.plate,x.model,truckDriverLabel(x))).join("");
   $("employeeEmpty").hidden=emps.length>0;$("truckEmpty").hidden=trks.length>0;
+  document.querySelectorAll("[data-reg-rule]").forEach(b=>b.onclick=()=>openRule(b.dataset.regRule));
   document.querySelectorAll("[data-reg-edit]").forEach(b=>b.onclick=()=>{const {kind,item}=findRegister(b.dataset.regEdit);if(item)openRegister(kind,item)});
   document.querySelectorAll("[data-reg-toggle]").forEach(b=>b.onclick=()=>{
     const {item}=findRegister(b.dataset.regToggle);if(!item)return;
@@ -141,9 +154,10 @@ function openRegister(kind,item=null){
   $("regTitle").textContent=(item?"Editar ":"Novo ")+(emp?"funcionário":"caminhão");
   $("regNameLabel").textContent=emp?"Nome *":"Identificação *";
   $("rName").placeholder=emp?"Nome completo":"Ex.: Caminhão 01";
-  $("regRoleWrap").hidden=!emp;$("regPhoneWrap").hidden=!emp;$("regPlateWrap").hidden=emp;$("regModelWrap").hidden=emp;
+  $("regDriverWrap").hidden=emp;$("regRoleWrap").hidden=!emp;$("regPhoneWrap").hidden=!emp;$("regPlateWrap").hidden=emp;$("regModelWrap").hidden=emp;
   $("rName").value=item?.name||"";$("rRole").value=item?.role||"Motorista";$("rPhone").value=item?.phone||"";
   $("rPlate").value=item?.plate||"";$("rModel").value=item?.model||"";$("rNotes").value=item?.notes||"";
+  if(!emp){const cur=item?.driverId||"";const ds=db.employees.filter(e=>(e.active!==false&&isDriver(e))||e.id===cur);$("rDriver").innerHTML='<option value="">Sem motorista vinculado</option>'+ds.map(e=>`<option value="${escapeHtml(e.id)}">${escapeHtml(e.name)}${e.active===false?" (inativo)":""}</option>`).join("");$("rDriver").value=cur}
   openDialog("regDialog");
 }
 $("addEmployee").addEventListener("click",()=>openRegister("employee"));
@@ -153,10 +167,42 @@ $("regForm").addEventListener("submit",e=>{
   e.preventDefault();
   const kind=$("regKind").value,id=$("regId").value,emp=kind==="employee",list=emp?db.employees:db.trucks,name=$("rName").value.trim();
   if(list.some(x=>x.name.toLowerCase()===name.toLowerCase()&&String(x.id)!==id)){toast("Já existe um cadastro com esse nome.",true);return}
+  if(!emp&&$("rDriver").value&&db.trucks.some(t=>t.driverId===$("rDriver").value&&String(t.id)!==id)){toast("Esse motorista já está vinculado a outro caminhão.",true);return}
   const notes=$("rNotes").value.trim();
-  const data=emp?{name,role:$("rRole").value,phone:$("rPhone").value.trim(),notes}:{name,plate:$("rPlate").value.trim().toUpperCase(),model:$("rModel").value.trim(),notes};
+  const data=emp?{name,role:$("rRole").value.trim(),phone:$("rPhone").value.trim(),notes}:{name,plate:$("rPlate").value.trim().toUpperCase(),model:$("rModel").value.trim(),notes,driverId:$("rDriver").value};
   if(id)Object.assign(list.find(x=>String(x.id)===id),data);else list.unshift({id:uid(),active:true,...data});
   saveDB();closeDialog("regDialog");toast(id?"Cadastro atualizado.":"Cadastro adicionado.");
+});
+
+
+const isDriver=e=>String(e.role).trim().toLowerCase()==="motorista";
+const ruleLabel=e=>e.commission==null?"Sem regra":`${e.commission}%${e.deductToll?" · desconta pedágio":""}`;
+function truckDriverLabel(t){const e=db.employees.find(x=>x.id===t.driverId);return e?e.name+(e.active===false?" (inativo)":""):""}
+function driverRule(name){const n=String(name||"").trim().toLowerCase();const e=n&&db.employees.find(x=>x.name.toLowerCase()===n);return e&&e.commission!=null?e:null}
+function syncCommission(pull){
+  const padrao=$("fCommMode").value==="padrao",rule=driverRule($("fDriver").value),emp=db.employees.find(x=>x.name.toLowerCase()===$("fDriver").value.trim().toLowerCase()),truck=emp&&db.trucks.find(t=>t.driverId===emp.id&&t.active!==false);
+  if(padrao){
+    if(pull){$("fCommission").value=rule?rule.commission:0;$("fDeductToll").checked=rule?!!rule.deductToll:false}
+    $("fCommission").disabled=!!rule;
+    $("fCommHint").textContent=rule?`Regra padrão de ${rule.name}: ${rule.commission}%.`:"Motorista sem regra cadastrada: informe a % desta viagem ou cadastre a regra em Cadastros.";
+  }else{$("fCommission").disabled=false;$("fCommHint").textContent="Comissão informada manualmente nesta viagem."}
+  if(truck)$("fCommHint").textContent+=` Caminhão vinculado: ${truck.name}.`;
+  updateFreightCalc();
+}
+$("fDriver").addEventListener("input",()=>syncCommission(true));
+$("fCommMode").addEventListener("change",()=>syncCommission($("fCommMode").value==="padrao"));
+function openRule(id){
+  const e=db.employees.find(x=>String(x.id)===String(id));if(!e)return;
+  $("ruleId").value=e.id;$("ruleTitle").textContent="Regra de comissão: "+e.name;$("ruPercent").value=e.commission??"";$("ruToll").checked=!!e.deductToll;$("ruleRemove").hidden=e.commission==null;openDialog("ruleDialog");
+}
+$("ruleForm").addEventListener("submit",ev=>{
+  ev.preventDefault();const e=db.employees.find(x=>String(x.id)===$("ruleId").value),p=num("ruPercent");
+  if(!e)return;if($("ruPercent").value===""||p<0||p>100){toast("Informe uma porcentagem entre 0 e 100.",true);return}
+  e.commission=p;e.deductToll=$("ruToll").checked;saveDB();closeDialog("ruleDialog");toast("Regra de comissão salva.");
+});
+$("ruleRemove").addEventListener("click",()=>{
+  const e=db.employees.find(x=>String(x.id)===$("ruleId").value);if(!e)return;
+  delete e.commission;delete e.deductToll;saveDB();closeDialog("ruleDialog");toast("Regra removida.");
 });
 
 renderAll();
