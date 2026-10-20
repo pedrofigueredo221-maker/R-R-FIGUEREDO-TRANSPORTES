@@ -26,6 +26,7 @@ Não é necessário instalar dependências para a versão inicial.
 - Motorista, origem, destino, valor, pedágio, percentual de comissão e opção de descontar pedágio.
 - Registro de recebimentos totais ou parciais dos clientes.
 - **Contas a receber:** todo frete com saldo pendente gera automaticamente uma conta a receber (com cliente e vencimento opcionais). Também é possível lançar contas avulsas de clientes ou fornecedores e registrar recebimentos parciais ou totais.
+- **Cadastros:** funcionários e caminhões com inclusão, edição e inativação (sem perder o histórico). Por padrão só os ativos aparecem; a opção "Mostrar inativos" exibe os demais. Motoristas ativos alimentam o cadastro de fretes e caminhões ativos alimentam as despesas.
 - Cadastro de despesas por categoria, fornecedor e caminhão.
 - Contas à vista ou parceladas, com geração automática de parcelas mensais.
 - Registro de pagamentos parciais ou integrais por parcela.

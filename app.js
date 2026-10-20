@@ -8,7 +8,7 @@ const escapeHtml = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&
 const parseDate = s => s ? new Date(s+"T12:00:00") : null;
 const dateBR = s => {const d=parseDate(s);return d?d.toLocaleDateString("pt-BR"):"—";};
 const monthName = s => {const d=parseDate((s||todayISO()).slice(0,7)+"-01");return d.toLocaleDateString("pt-BR",{month:"short"}).replace(".","").toUpperCase();};
-let db = loadDB();db.receivables=db.receivables||[];
+let db = loadDB();db.receivables=db.receivables||[];if(!db.employees)db.employees=[1,2,3,4,5].map(n=>({id:uid(),name:"Motorista "+n,role:"Motorista",phone:"",notes:"",active:true}));if(!db.trucks)db.trucks=[1,2,3,4,5].map(n=>({id:uid(),name:"Caminhão 0"+n,plate:"",model:"",notes:"",active:true}));
 function loadDB(){try{return JSON.parse(localStorage.getItem(DB_KEY))||{freights:[],expenses:[]}}catch{return{freights:[],expenses:[]}}}
 function saveDB(){localStorage.setItem(DB_KEY,JSON.stringify(db));renderAll();}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
@@ -25,7 +25,7 @@ function dueTotalFor(exp){return (exp.installments||[]).reduce((s,i)=>s+Math.max
 function dateAddMonths(date,months){const d=parseDate(date);const day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+months);const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last));return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
 function openDialog(id){$(id).showModal();document.body.classList.add("modal-open")}
 function closeDialog(id){$(id).close();document.body.classList.remove("modal-open")}
-function goPage(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.page===page));const titles={dashboard:"Visão geral",freights:"Fretes",expenses:"Despesas e manutenção",payments:"Contas a pagar",reports:"Relatórios",receivables:"Contas a receber"};$("pageTitle").textContent=titles[page]||"Visão geral";$("sidebar").classList.remove("open");if(page==="reports")renderReport();if(page==="payments")renderPayments()}
+function goPage(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.page===page));const titles={dashboard:"Visão geral",freights:"Fretes",expenses:"Despesas e manutenção",payments:"Contas a pagar",reports:"Relatórios",registers:"Cadastros",receivables:"Contas a receber"};$("pageTitle").textContent=titles[page]||"Visão geral";$("sidebar").classList.remove("open");if(page==="reports")renderReport();if(page==="payments")renderPayments()}
 document.querySelectorAll(".nav-item").forEach(b=>b.addEventListener("click",()=>goPage(b.dataset.page)));
 document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>goPage(b.dataset.goto)));
 $("menuToggle").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
@@ -37,12 +37,12 @@ function openFreight(f=null){$("freightForm").reset();$("freightId").value=f?.id
 ["fValue","fToll","fCommission","fDeductToll"].forEach(id=>$(id).addEventListener("input",updateFreightCalc));
 function updateFreightCalc(){const v=num("fValue"),t=num("fToll"),c=num("fCommission");const commission=v*c/100,net=v-commission-($("fDeductToll").checked?t:0);$("freightCalc").innerHTML=`Comissão estimada: <strong>${money(commission)}</strong><br>Pedágio descontado do motorista: <strong>${money($("fDeductToll").checked?t:0)}</strong><br>Líquido estimado do motorista: <strong>${money(net)}</strong>`}
 $("freightForm").addEventListener("submit",e=>{e.preventDefault();const id=$("freightId").value;const f={id:id||uid(),date:$("fDate").value,driver:$("fDriver").value.trim(),client:$("fClient").value.trim(),due:$("fDue").value,origin:$("fOrigin").value.trim(),destination:$("fDestination").value.trim(),value:num("fValue"),toll:num("fToll"),commission:num("fCommission"),received:$("fStatus").value==="Pago"?num("fValue"):Math.min(num("fReceived"),num("fValue")),deductToll:$("fDeductToll").checked,notes:$("fNotes").value.trim()};if(f.value<=0){toast("Informe um valor de frete válido.",true);return}if(id)db.freights=db.freights.map(x=>x.id===id?f:x);else db.freights.unshift(f);saveDB();closeDialog("freightDialog");toast(id?"Frete atualizado.":"Frete cadastrado.")});
-function openExpense(exp=null){$("expenseForm").reset();$("expenseId").value=exp?.id||"";$("expenseModalTitle").textContent=exp?"Editar despesa":"Nova despesa";$("eDescription").value=exp?.description||"";$("eCategory").value=exp?.category||"Manutenção";$("eTruck").value=exp?.truck||"Caminhão 01";$("eSupplier").value=exp?.supplier||"";$("eValue").value=exp?.value??"";$("eType").value=exp?.type||"avista";$("eInstallments").value=exp?.installments?.length||1;$("eFirstDue").value=exp?.installments?.[0]?.due||todayISO();$("ePaidInitial").value=exp?paidAmount(exp):0;$("eNotes").value=exp?.notes||"";$("eInstallments").disabled=!!exp;$("eType").disabled=!!exp;$("ePaidInitial").disabled=!!exp;openDialog("expenseDialog")}
+function openExpense(exp=null){$("expenseForm").reset();$("expenseId").value=exp?.id||"";$("expenseModalTitle").textContent=exp?"Editar despesa":"Nova despesa";$("eDescription").value=exp?.description||"";$("eCategory").value=exp?.category||"Manutenção";fillTruckOptions(exp?.truck);$("eSupplier").value=exp?.supplier||"";$("eValue").value=exp?.value??"";$("eType").value=exp?.type||"avista";$("eInstallments").value=exp?.installments?.length||1;$("eFirstDue").value=exp?.installments?.[0]?.due||todayISO();$("ePaidInitial").value=exp?paidAmount(exp):0;$("eNotes").value=exp?.notes||"";$("eInstallments").disabled=!!exp;$("eType").disabled=!!exp;$("ePaidInitial").disabled=!!exp;openDialog("expenseDialog")}
 $("eType").addEventListener("change",()=>{$("eInstallments").disabled=$("eType").value==="avista";if($("eType").value==="avista")$("eInstallments").value="1"});
 $("expenseForm").addEventListener("submit",e=>{e.preventDefault();const id=$("expenseId").value,v=num("eValue"),n=$("eType").value==="avista"?1:Number($("eInstallments").value);if(v<=0){toast("Informe um valor válido.",true);return}if(id){const old=db.expenses.find(x=>x.id===id);if(old){old.description=$("eDescription").value.trim();old.category=$("eCategory").value;old.truck=$("eTruck").value;old.supplier=$("eSupplier").value.trim();old.notes=$("eNotes").value.trim();} }else{const base=Math.floor(v/n*100)/100;let remaining=Math.round(v*100);const installments=[];for(let i=0;i<n;i++){const val=i===n-1?remaining/100:base;remaining-=Math.round(val*100);installments.push({value:val,paid:0,due:dateAddMonths($("eFirstDue").value,i),payments:[]})}let initial=Math.min(num("ePaidInitial"),v);for(let i=0;i<n&&initial>0;i++){const pay=Math.min(installments[i].value,initial);installments[i].paid=pay;installments[i].payments.push({amount:pay,date:todayISO(),method:"Pagamento inicial"});initial-=pay}db.expenses.unshift({id:uid(),description:$("eDescription").value.trim(),category:$("eCategory").value,truck:$("eTruck").value,supplier:$("eSupplier").value.trim(),value:v,type:n===1?"avista":"parcelado",installments,notes:$("eNotes").value.trim(),created:todayISO()})}saveDB();closeDialog("expenseDialog");toast(id?"Despesa atualizada.":"Despesa cadastrada.")});
 function openPay(expId,index){const exp=db.expenses.find(x=>x.id===expId),i=exp?.installments[index];if(!exp||!i)return;const remaining=Math.max(0,i.value-i.paid);$("payExpenseId").value=expId;$("payInstallmentIndex").value=index;$("paySubtitle").textContent=`${exp.description} · parcela ${Number(index)+1}/${exp.installments.length} · falta ${money(remaining)}`;$("payAmount").value=remaining.toFixed(2);$("payAmount").max=remaining;$("payDate").value=todayISO();$("payMethod").value="Pix";openDialog("payDialog")}
 $("payForm").addEventListener("submit",e=>{e.preventDefault();const exp=db.expenses.find(x=>x.id===$("payExpenseId").value),i=exp?.installments[Number($("payInstallmentIndex").value)],amount=num("payAmount");if(!i||amount<=0||amount>i.value-i.paid+0.001){toast("Confira o valor restante da parcela.",true);return}i.paid=Math.round((i.paid+amount)*100)/100;i.payments=i.payments||[];i.payments.push({amount,date:$("payDate").value,method:$("payMethod").value});saveDB();closeDialog("payDialog");toast("Pagamento registrado.")});
-function renderAll(){renderDashboard();renderReceivables();renderFreights();renderExpenses();renderPayments();renderReport();refreshDriverFilters()}
+function renderAll(){renderDashboard();renderRegisters();renderReceivables();renderFreights();renderExpenses();renderPayments();renderReport();refreshDriverFilters()}
 function refreshDriverFilters(){const drivers=[...new Set(db.freights.map(f=>f.driver).filter(Boolean))].sort();const fill=(id,allLabel)=>{const el=$(id),old=el.value;el.innerHTML=`<option value="">${allLabel}</option>`+drivers.map(d=>`<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join("");if(drivers.includes(old))el.value=old};fill("freightDriverFilter","Todos os motoristas");fill("reportDriver","Todos")}
 function selectedMonth(id){return $(id).value||monthISO()}
 function inMonth(date,month){return String(date||"").startsWith(month)}
@@ -100,5 +100,63 @@ $("addReceivable").addEventListener("click",()=>{$("recForm").reset();$("rDue").
 $("recForm").addEventListener("submit",e=>{e.preventDefault();db.receivables.unshift({id:uid(),type:$("rType").value,party:$("rParty").value.trim(),description:$("rDesc").value.trim(),value:num("rValue"),due:$("rDue").value,received:0,created:todayISO()});saveDB();closeDialog("recDialog");toast("Conta a receber cadastrada.")});
 ["recSearch","recStatusFilter"].forEach(id=>$(id).addEventListener("input",renderReceivables));
 document.querySelectorAll("dialog").forEach(d=>d.addEventListener("close",()=>document.body.classList.remove("modal-open")));
+
+
+const activeEmployees=()=>db.employees.filter(x=>x.active!==false);
+const activeTrucks=()=>db.trucks.filter(x=>x.active!==false);
+const optionList=names=>names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join("");
+function fillTruckOptions(current){
+  const names=activeTrucks().map(t=>t.name);
+  if(current&&current!=="Não definido"&&!names.includes(current))names.push(current);
+  const opts=[...names,"Não definido"];
+  $("eTruck").innerHTML=optionList(opts);
+  $("eTruck").value=current||opts[0];
+}
+function refreshRegisterOptions(){
+  $("driverOptions").innerHTML=activeEmployees().filter(x=>x.role==="Motorista").map(x=>`<option value="${escapeHtml(x.name)}">`).join("");
+  const f=$("expenseTruckFilter"),old=f.value;
+  f.innerHTML='<option value="">Todos os caminhões</option>'+optionList([...new Set([...db.trucks.map(t=>t.name),...db.expenses.map(e=>e.truck).filter(Boolean),"Não definido"])]);
+  if([...f.options].some(o=>o.value===old))f.value=old;
+}
+function findRegister(key){const [kind,id]=key.split(":");return {kind,item:(kind==="employee"?db.employees:db.trucks).find(x=>String(x.id)===id)}}
+function renderRegisters(){
+  const showInactive=$("regShowInactive").checked;
+  const visible=list=>list.filter(x=>showInactive||x.active!==false);
+  const row=(kind,x,a,b)=>{const off=x.active===false;return `<tr class="${off?"is-inactive":""}"><td><strong>${escapeHtml(x.name)}</strong></td><td>${escapeHtml(a||"—")}</td><td>${escapeHtml(b||"—")}</td><td>${escapeHtml(x.notes||"")}</td><td><span class="pill ${off?"":"paid"}">${off?"Inativo":"Ativo"}</span></td><td><div class="row-actions"><button class="icon-btn" title="Editar" data-reg-edit="${kind}:${x.id}">✎</button><button class="btn btn-secondary" data-reg-toggle="${kind}:${x.id}">${off?"Reativar":"Inativar"}</button></div></td></tr>`};
+  const emps=visible(db.employees),trks=visible(db.trucks);
+  $("employeeRows").innerHTML=emps.map(x=>row("employee",x,x.role,x.phone)).join("");
+  $("truckRows").innerHTML=trks.map(x=>row("truck",x,x.plate,x.model)).join("");
+  $("employeeEmpty").hidden=emps.length>0;$("truckEmpty").hidden=trks.length>0;
+  document.querySelectorAll("[data-reg-edit]").forEach(b=>b.onclick=()=>{const {kind,item}=findRegister(b.dataset.regEdit);if(item)openRegister(kind,item)});
+  document.querySelectorAll("[data-reg-toggle]").forEach(b=>b.onclick=()=>{
+    const {item}=findRegister(b.dataset.regToggle);if(!item)return;
+    if(item.active!==false&&!confirm(`Inativar "${item.name}"? Deixa de aparecer nas listas de lançamento, mas o histórico continua.`))return;
+    item.active=item.active===false;saveDB();toast(item.active?"Cadastro reativado.":"Cadastro inativado.");
+  });
+  refreshRegisterOptions();
+}
+function openRegister(kind,item=null){
+  const emp=kind==="employee";
+  $("regForm").reset();$("regKind").value=kind;$("regId").value=item?.id||"";
+  $("regTitle").textContent=(item?"Editar ":"Novo ")+(emp?"funcionário":"caminhão");
+  $("regNameLabel").textContent=emp?"Nome *":"Identificação *";
+  $("rName").placeholder=emp?"Nome completo":"Ex.: Caminhão 01";
+  $("regRoleWrap").hidden=!emp;$("regPhoneWrap").hidden=!emp;$("regPlateWrap").hidden=emp;$("regModelWrap").hidden=emp;
+  $("rName").value=item?.name||"";$("rRole").value=item?.role||"Motorista";$("rPhone").value=item?.phone||"";
+  $("rPlate").value=item?.plate||"";$("rModel").value=item?.model||"";$("rNotes").value=item?.notes||"";
+  openDialog("regDialog");
+}
+$("addEmployee").addEventListener("click",()=>openRegister("employee"));
+$("addTruck").addEventListener("click",()=>openRegister("truck"));
+$("regShowInactive").addEventListener("change",renderRegisters);
+$("regForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const kind=$("regKind").value,id=$("regId").value,emp=kind==="employee",list=emp?db.employees:db.trucks,name=$("rName").value.trim();
+  if(list.some(x=>x.name.toLowerCase()===name.toLowerCase()&&String(x.id)!==id)){toast("Já existe um cadastro com esse nome.",true);return}
+  const notes=$("rNotes").value.trim();
+  const data=emp?{name,role:$("rRole").value,phone:$("rPhone").value.trim(),notes}:{name,plate:$("rPlate").value.trim().toUpperCase(),model:$("rModel").value.trim(),notes};
+  if(id)Object.assign(list.find(x=>String(x.id)===id),data);else list.unshift({id:uid(),active:true,...data});
+  saveDB();closeDialog("regDialog");toast(id?"Cadastro atualizado.":"Cadastro adicionado.");
+});
 
 renderAll();
