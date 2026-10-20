@@ -8,7 +8,7 @@ const escapeHtml = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&
 const parseDate = s => s ? new Date(s+"T12:00:00") : null;
 const dateBR = s => {const d=parseDate(s);return d?d.toLocaleDateString("pt-BR"):"—";};
 const monthName = s => {const d=parseDate((s||todayISO()).slice(0,7)+"-01");return d.toLocaleDateString("pt-BR",{month:"short"}).replace(".","").toUpperCase();};
-let db = loadDB();db.receivables=db.receivables||[];ensureDefaults();
+let db = {freights:[],expenses:[],receivables:[],employees:[],trucks:[]};
 function ensureDefaults(){
   if(db.defaultsV===2)return;
   db.employees=db.employees||[];db.trucks=db.trucks||[];
@@ -19,10 +19,8 @@ function ensureDefaults(){
   [["Rafael","Diretor"],["Rosilaine","Diretora"],["Pedro","Gerente"]].forEach(([n,r])=>{if(!has(db.employees,n))db.employees.push(person(n,r))});
   for(let n=db.trucks.length+1;n<=5;n++){const name="Caminhão 0"+n;if(!has(db.trucks,name))db.trucks.push({id:uid(),name,plate:"",model:"",notes:"",active:true})}
   db.defaultsV=2;
-  try{localStorage.setItem(DB_KEY,JSON.stringify(db))}catch{}
 }
-function loadDB(){try{return JSON.parse(localStorage.getItem(DB_KEY))||{freights:[],expenses:[]}}catch{return{freights:[],expenses:[]}}}
-function saveDB(){localStorage.setItem(DB_KEY,JSON.stringify(db));renderAll();}
+function saveDB(){renderAll();cloud.save();}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function toast(msg,error=false){const el=$("toast");el.textContent=msg;el.className="toast show"+(error?" error":"");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.className="toast",2800)}
 function statusPill(status){const cls=status==="Pago"||status==="Paga"||status==="Recebida"?"paid":status==="Atrasada"?"overdue":status==="Parcial"?"partial":"pending";return `<span class="pill ${cls}">${escapeHtml(status)}</span>`}
@@ -74,7 +72,7 @@ $("exportFreights").addEventListener("click",()=>csvDownload(`fretes-${$("report
 ["freightSearch","freightDriverFilter","freightMonth","freightStatusFilter"].forEach(id=>$(id).addEventListener("input",renderFreights));
 ["expenseSearch","expenseCategoryFilter","expenseTruckFilter","expenseMonth"].forEach(id=>$(id).addEventListener("input",renderExpenses));
 ["paymentSearch","paymentStatusFilter","paymentMonth"].forEach(id=>$(id).addEventListener("input",renderPayments));
-$("seedDemo").addEventListener("click",()=>{if(db.freights.length||db.expenses.length){if(!confirm("Já existem dados neste navegador. Adicionar exemplos junto com eles?"))return}const m=monthISO();db.freights.unshift({id:uid(),date:todayISO(),driver:"Motorista 1",origin:"Campinas",destination:"São Paulo",value:2200,toll:145,commission:10,received:2200,deductToll:true,notes:"Exemplo demonstrativo"},{id:uid(),date:todayISO(),driver:"Motorista 2",origin:"Capivari",destination:"Santos",value:1850,toll:110,commission:12,received:800,deductToll:false,notes:"Pagamento parcial"});const due=dateAddMonths(todayISO(),0);db.expenses.unshift({id:uid(),description:"Troca de óleo e filtros",category:"Manutenção",truck:"Caminhão 01",supplier:"Oficina Exemplo",value:850,type:"avista",installments:[{value:850,paid:850,due,payments:[{amount:850,date:todayISO(),method:"Pix"}]}],notes:"Exemplo demonstrativo",created:todayISO()},{id:uid(),description:"Reparo mecânico",category:"Manutenção",truck:"Caminhão 03",supplier:"Mecânica Exemplo",value:1800,type:"parcelado",installments:[{value:600,paid:0,due:dateAddMonths(due,0),payments:[]},{value:600,paid:0,due:dateAddMonths(due,1),payments:[]},{value:600,paid:0,due:dateAddMonths(due,2),payments:[]}],notes:"Exemplo demonstrativo",created:todayISO()});saveDB();toast("Exemplos adicionados. Você pode editar ou excluir depois.")});
+$("seedDemo").addEventListener("click",()=>{if(db.freights.length||db.expenses.length){if(!confirm("Já existem dados cadastrados. Adicionar exemplos junto com eles?"))return}const m=monthISO();db.freights.unshift({id:uid(),date:todayISO(),driver:"Motorista 1",origin:"Campinas",destination:"São Paulo",value:2200,toll:145,commission:10,received:2200,deductToll:true,notes:"Exemplo demonstrativo"},{id:uid(),date:todayISO(),driver:"Motorista 2",origin:"Capivari",destination:"Santos",value:1850,toll:110,commission:12,received:800,deductToll:false,notes:"Pagamento parcial"});const due=dateAddMonths(todayISO(),0);db.expenses.unshift({id:uid(),description:"Troca de óleo e filtros",category:"Manutenção",truck:"Caminhão 01",supplier:"Oficina Exemplo",value:850,type:"avista",installments:[{value:850,paid:850,due,payments:[{amount:850,date:todayISO(),method:"Pix"}]}],notes:"Exemplo demonstrativo",created:todayISO()},{id:uid(),description:"Reparo mecânico",category:"Manutenção",truck:"Caminhão 03",supplier:"Mecânica Exemplo",value:1800,type:"parcelado",installments:[{value:600,paid:0,due:dateAddMonths(due,0),payments:[]},{value:600,paid:0,due:dateAddMonths(due,1),payments:[]},{value:600,paid:0,due:dateAddMonths(due,2),payments:[]}],notes:"Exemplo demonstrativo",created:todayISO()});saveDB();toast("Exemplos adicionados. Você pode editar ou excluir depois.")});
 
 function receivableItems(){
   const fromFreights=db.freights.filter(f=>f.value>f.received).map(f=>({kind:"frete",id:f.id,party:f.client||"Cliente não informado",desc:`Frete ${f.origin} → ${f.destination} · ${f.driver}`,origin:"Frete automático",due:f.due||"",value:f.value,received:f.received}));
@@ -205,4 +203,4 @@ $("ruleRemove").addEventListener("click",()=>{
   delete e.commission;delete e.deductToll;saveDB();closeDialog("ruleDialog");toast("Regra removida.");
 });
 
-renderAll();
+cloud.start();

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
   <aside class="sidebar" id="sidebar">
@@ -19,7 +19,7 @@
     <button class="nav-item" data-page="receivables"><span>◶</span> Contas a receber</button>
     <button class="nav-item" data-page="registers"><span>☷</span> Cadastros</button>
     <button class="nav-item" data-page="reports"><span>▥</span> Relatórios</button>
-    <div class="sidebar-bottom"><div class="avatar">GF</div><div><strong>Gestão familiar</strong><small>Controle da transportadora</small></div></div>
+    <div class="sidebar-bottom"><div class="avatar">GF</div><div><strong>Gestão familiar</strong><small>Controle da transportadora</small></div><button class="icon-btn" id="logoutBtn" title="Sair" style="margin-left:auto;background:transparent;border-color:#31584b;color:#bcd0c5">⎋</button></div>
   </aside>
   <main class="main">
     <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div><div class="eyebrow">CONTROLE DA TRANSPORTADORA</div><h1 id="pageTitle">Visão geral</h1></div><div class="top-actions"><span class="today" id="today"></span><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
@@ -143,6 +143,9 @@
     <form id="payForm" method="dialog"><div class="modal-header"><div><h2>Registrar pagamento</h2><p id="paySubtitle">Confirme os dados do pagamento.</p></div><button type="button" class="icon-btn" data-close="payDialog">✕</button></div><input type="hidden" id="payExpenseId"><input type="hidden" id="payInstallmentIndex"><div class="form-grid"><div><label for="payAmount">Valor pago (R$)</label><input type="number" min="0.01" step="0.01" id="payAmount" required></div><div><label for="payDate">Data do pagamento</label><input type="date" id="payDate" required></div><div><label for="payMethod">Meio de pagamento</label><select id="payMethod"><option>Pix</option><option>Dinheiro</option><option>Transferência</option><option>Boleto</option><option>Cartão</option><option>Outro</option></select></div></div><div class="modal-actions"><button type="button" class="btn btn-secondary" data-close="payDialog">Cancelar</button><button class="btn btn-primary" type="submit">Confirmar pagamento</button></div></form>
   </dialog>
   <div id="toast" class="toast" role="status"></div>
-  <script src="app.js?v=4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="config.js?v=5"></script>
+  <script src="sync.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
