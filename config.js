@@ -1,7 +1,9 @@
-// Preencha com os dados do seu projeto Supabase (Project Settings → API).
-// A chave "anon/public" pode ficar no repositório: quem protege os dados é o login + RLS.
-// NUNCA coloque aqui a chave "service_role".
-window.APP_CONFIG = {
-  SUPABASE_URL: "COLE_AQUI_A_PROJECT_URL",
-  SUPABASE_ANON_KEY: "COLE_AQUI_A_ANON_PUBLIC_KEY"
-};
+
+const SUPABASE_URL = "https://feevzqkqruyzoskowxrw.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_jXoGdEwcHd2VYaca2nPKKg_4_OUztoN";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
