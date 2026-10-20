@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Transportes</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            navy: '#1e3a8a',
+                            blue: '#2563eb',
+                            light: '#f8fafc',
+                            card: '#ffffff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-brand-dark text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">Transportes | Gestão de Frota</h1>
+                    <p class="text-xs text-slate-400">Controle Automático de Fretes e Viagens</p>
+                </div>
+            </div>
+            <div class="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-slate-300 border border-slate-700 mt-2 sm:mt-0">
+                Data: <span id="dataAtual" class="font-semibold text-blue-400">20/10/2026</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- Métricas / Dashboard Resumo -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-blue-600 transition hover:shadow-md">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Bruto dos Fretes</p>
+                <p class="text-2xl font-extrabold text-slate-800 mt-1" id="cardTotalFrete">R$ 0,00</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-emerald-500 transition hover:shadow-md">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Recebido (Pago)</p>
+                <p class="text-2xl font-extrabold text-emerald-600 mt-1" id="cardTotalPago">R$ 0,00</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-amber-500 transition hover:shadow-md">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pendente de Recebimento</p>
+                <p class="text-2xl font-extrabold text-amber-600 mt-1" id="cardTotalPendente">R$ 0,00</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-purple-600 transition hover:shadow-md">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Comissões de Motoristas</p>
+                <p class="text-2xl font-extrabold text-purple-700 mt-1" id="cardTotalComissao">R$ 0,00</p>
+            </div>
+        </div>
+
+        <!-- Formulário de Cadastro de Frete -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h2 class="text-base font-bold text-slate-800 flex items-center space-x-2">
+                    <span class="bg-blue-100 text-blue-700 p-1 rounded">✍️</span>
+                    <span>Novo Lançamento de Frete</span>
+                </h2>
+                <span class="text-xs text-slate-500">Preencha os campos para calcular comissão e registrar</span>
+            </div>
+            
+            <form id="formFrete" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Data da Viagem</label>
+                    <input type="date" id="dataFrete" required class="w-full p-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Motorista / Caminhão</label>
+                    <select id="motorista" required class="w-full p-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                        <option value="">Selecione o motorista...</option>
+                        <option value="Motorista 1 (TEGMA - Carreta 1)">Motorista 1 (TEGMA - Carreta 1)</option>
+                        <option value="Motorista 2 (TEGMA - Carreta 2)">Motorista 2 (TEGMA - Carreta 2)</option>
+                        <option value="Motorista 3 (Sider 7 Eixos)">Motorista 3 (Sider 7 Eixos)</option>
+                        <option value="Motorista 4 (Sider 7 Eixos)">Motorista 4 (Sider 7 Eixos)</option>
+                        <option value="Motorista 5 (Sider 7 Eixos)">Motorista 5 (Sider 7 Eixos)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Cidade de Origem</label>
+                    <input type="text" id="origem" placeholder="Ex: Capivari - SP" required class="w-full p-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Cidade de Destino</label>
+                    <input type="text" id="destino" placeholder="Ex: Curitiba - PR" required class="w-full p-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Valor do Frete (R$)</label>
+                    <input type="number" step="0.01" id="valorFrete" placeholder="0.00" required class="w-full p-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Valor do Pedágio (R$)</label>
+                    <input type="number" step="0.01" id="valorPedagio" placeholder="0.00" class="w-full p-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">% Comissão do Motorista</label>
+                    <input type="number" step="0.1" id="percComissao" value="10" required class="w-full p-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Status do Pagamento</label>
+                    <select id="statusPagamento" required class="w-full p-2.5 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none">
+                        <option value="Pendente">⏳ Pendente</option>
+                        <option value="Pago">✅ Pago</option>
+                    </select>
+                </div>
+
+                <!-- Regra de Pedágio -->
+                <div class="lg:col-span-3 flex items-center space-x-2 pt-2">
+                    <input type="checkbox" id="descontarPedagio" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer">
+                    <label for="descontarPedagio" class="text-xs font-medium text-slate-700 cursor-pointer">
+                        Descontar o pedágio do valor total antes de calcular a comissão do motorista?
+                    </label>
+                </div>
+
+                <div class="lg:col-span-1 flex justify-end items-end">
+                    <button type="submit" class="w-full bg-brand-navy hover:bg-blue-900 text-white font-bold py-2.5 px-4 rounded-lg text-xs shadow-sm transition flex items-center justify-center space-x-1">
+                        <span>+ Registrar Frete</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Filtros e Relatórios -->
+        <section class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <div class="flex flex-wrap gap-3 items-center">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Filtrar:</span>
+                    
+                    <select id="filtroMotorista" onchange="renderizarTabela()" class="p-2 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none">
+                        <option value="">Todos os Motoristas</option>
+                        <option value="Motorista 1 (TEGMA - Carreta 1)">Motorista 1 (TEGMA - Carreta 1)</option>
+                        <option value="Motorista 2 (TEGMA - Carreta 2)">Motorista 2 (TEGMA - Carreta 2)</option>
+                        <option value="Motorista 3 (Sider 7 Eixos)">Motorista 3 (Sider 7 Eixos)</option>
+                        <option value="Motorista 4 (Sider 7 Eixos)">Motorista 4 (Sider 7 Eixos)</option>
+                        <option value="Motorista 5 (Sider 7 Eixos)">Motorista 5 (Sider 7 Eixos)</option>
+                    </select>
+
+                    <input type="month" id="filtroMes" onchange="renderizarTabela()" class="p-2 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none">
+
+                    <select id="filtroStatus" onchange="renderizarTabela()" class="p-2 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none">
+                        <option value="">Todos os Status</option>
+                        <option value="Pago">Apenas Pagos</option>
+                        <option value="Pendente">Apenas Pendentes</option>
+                    </select>
+                </div>
+
+                <div class="flex space-x-2">
+                    <button onclick="exportarCSV()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs px-3.5 py-2 rounded-lg font-medium transition flex items-center space-x-1">
+                        <span>📊 Exportar Excel</span>
+                    </button>
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3.5 py-2 rounded-lg font-medium transition flex items-center space-x-1">
+                        <span>🖨️ Imprimir PDF</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabela de Fretes -->
+        <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Histórico de Fretes Cadastrados</h3>
+                <span class="text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full font-semibold" id="contadorFretes">0 registros</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-600">
+                    <thead class="bg-slate-100 text-slate-700 uppercase font-bold border-b">
+                        <tr>
+                            <th class="p-3">Data</th>
+                            <th class="p-3">Motorista</th>
+                            <th class="p-3">Rota</th>
+                            <th class="p-3">Valor Frete</th>
+                            <th class="p-3">Pedágio</th>
+                            <th class="p-3">Comissão</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3 text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaFretes" class="divide-y divide-slate-200">
+                        <!-- Conteúdo carregado via script.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-200 text-center text-xs text-slate-500 py-4 border-t">
+        Sistema de Gestão de Transportes &copy; 2026 - Uso Exclusivo da Frota
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
