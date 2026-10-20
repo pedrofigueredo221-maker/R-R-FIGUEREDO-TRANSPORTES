@@ -1,9 +1,21 @@
 
-const SUPABASE_URL = "https://feevzqkqruyzoskowxrw.supabase.co";
+/* Supabase - R&R Figueredo Transportes */
 
-const SUPABASE_ANON_KEY = "sb_publishable_jXoGdEwcHd2VYaca2nPKKg_4_OUztoN";
+window.SUPABASE_URL =
+  "https://feevzqkqruyzoskowxrw.supabase.co";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
+window.SUPABASE_ANON_KEY =
+  "sb_publishable_jXoGdEwcHd2VYaca2nPKKg_4_OUztoN";
+
+if (!window.supabase) {
+  throw new Error(
+    "A biblioteca JavaScript do Supabase não foi carregada."
+  );
+}
+
+window.supabaseClient = window.supabase.createClient(
+  window.SUPABASE_URL,
+  window.SUPABASE_ANON_KEY
 );
+
+console.info("Configuração do Supabase carregada.");
