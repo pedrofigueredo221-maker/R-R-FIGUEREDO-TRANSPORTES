@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,6 +16,7 @@
     <button class="nav-item" data-page="freights"><span>⇄</span> Fretes</button>
     <button class="nav-item" data-page="expenses"><span>▤</span> Despesas e manutenção</button>
     <button class="nav-item" data-page="payments"><span>◷</span> Contas a pagar</button>
+    <button class="nav-item" data-page="receivables"><span>◶</span> Contas a receber</button>
     <button class="nav-item" data-page="reports"><span>▥</span> Relatórios</button>
     <div class="sidebar-bottom"><div class="avatar">GF</div><div><strong>Gestão familiar</strong><small>Controle da transportadora</small></div></div>
   </aside>
@@ -60,6 +62,13 @@
         <article class="panel"><div class="table-wrap"><table><thead><tr><th>Vencimento</th><th>Conta</th><th>Parcela</th><th>Valor</th><th>Situação</th><th>Pagamento</th><th></th></tr></thead><tbody id="paymentRows"></tbody></table></div><div class="empty-state" id="paymentEmpty" hidden>Nenhuma conta encontrada.</div></article>
       </section>
 
+      <section class="page" id="page-receivables">
+        <div class="section-top"><div><h2>Contas a receber</h2><p>Fretes não pagos por completo entram aqui sozinhos. Você também pode lançar contas avulsas.</p></div><button class="btn btn-primary" id="addReceivable">＋ Nova conta a receber</button></div>
+        <div class="filters"><input id="recSearch" placeholder="Buscar cliente, fornecedor ou descrição..."><select id="recStatusFilter"><option value="">Todas as situações</option><option value="atrasada">Atrasadas</option><option value="aberta">Em aberto</option><option value="recebida">Recebidas</option></select></div>
+        <div class="summary-strip"><div><span>Total a receber</span><strong id="recOpenTotal">R$ 0,00</strong></div><div><span>Atrasado</span><strong id="recOverdueTotal">R$ 0,00</strong></div><div><span>Contas em aberto</span><strong id="recOpenCount">0</strong></div></div>
+        <article class="panel"><div class="table-wrap"><table><thead><tr><th>Vencimento</th><th>Cliente / Fornecedor</th><th>Origem</th><th>Valor</th><th>Recebido</th><th>Saldo</th><th>Situação</th><th></th></tr></thead><tbody id="recRows"></tbody></table></div><div class="empty-state" id="recEmpty" hidden>Nenhuma conta a receber. Fretes com saldo pendente aparecem aqui automaticamente.</div></article>
+      </section>
+
       <section class="page" id="page-reports">
         <div class="section-top"><div><h2>Relatórios</h2><p>Consulte os dados cadastrados e exporte para planilhas.</p></div></div>
         <div class="report-controls panel"><div><label for="reportMonth">Mês de referência</label><input type="month" id="reportMonth"></div><div><label for="reportDriver">Motorista</label><select id="reportDriver"><option value="">Todos</option></select></div><button class="btn btn-primary" id="refreshReport">Gerar relatório</button><button class="btn btn-secondary" id="exportFreights">Exportar fretes CSV</button><button class="btn btn-secondary" id="exportExpenses">Exportar despesas CSV</button></div>
@@ -78,6 +87,8 @@
         <div><label for="fDriver">Motorista *</label><input id="fDriver" list="driverOptions" placeholder="Nome do motorista" required><datalist id="driverOptions"><option value="Motorista 1"><option value="Motorista 2"><option value="Motorista 3"><option value="Motorista 4"><option value="Motorista 5"></datalist></div>
         <div><label for="fOrigin">Cidade de origem *</label><input id="fOrigin" required placeholder="Ex.: Campinas"></div>
         <div><label for="fDestination">Cidade de destino *</label><input id="fDestination" required placeholder="Ex.: São Paulo"></div>
+        <div><label for="fClient">Cliente (opcional)</label><input id="fClient" placeholder="Quem vai pagar o frete"></div>
+        <div><label for="fDue">Vencimento do recebimento</label><input type="date" id="fDue"></div>
         <div><label for="fValue">Valor do frete (R$) *</label><input type="number" id="fValue" min="0.01" step="0.01" required placeholder="0,00"></div>
         <div><label for="fToll">Pedágio (R$)</label><input type="number" id="fToll" min="0" step="0.01" value="0"></div>
         <div><label for="fCommission">Comissão (%)</label><input type="number" id="fCommission" min="0" max="100" step="0.1" value="10"></div>
@@ -110,6 +121,9 @@
       <p class="form-hint">As parcelas serão geradas automaticamente com vencimento mensal. Você poderá registrar pagamentos individualmente.</p>
       <div class="modal-actions"><button type="button" class="btn btn-secondary" data-close="expenseDialog">Cancelar</button><button class="btn btn-primary" type="submit">Salvar despesa</button></div>
     </form>
+  </dialog>
+  <dialog id="recDialog" class="modal small-modal">
+    <form id="recForm" method="dialog"><div class="modal-header"><div><h2>Nova conta a receber</h2><p>Lançamento manual de cliente ou fornecedor.</p></div><button type="button" class="icon-btn" data-close="recDialog">✕</button></div><div class="form-grid"><div><label for="rType">Tipo</label><select id="rType"><option>Cliente</option><option>Fornecedor</option></select></div><div><label for="rParty">Nome *</label><input id="rParty" required placeholder="Cliente ou fornecedor"></div><div class="full-width"><label for="rDesc">Descrição *</label><input id="rDesc" required placeholder="Ex.: reembolso, frete avulso, venda de peça"></div><div><label for="rValue">Valor (R$) *</label><input type="number" id="rValue" min="0.01" step="0.01" required></div><div><label for="rDue">Vencimento *</label><input type="date" id="rDue" required></div></div><div class="modal-actions"><button type="button" class="btn btn-secondary" data-close="recDialog">Cancelar</button><button class="btn btn-primary" type="submit">Salvar conta</button></div></form>
   </dialog>
   <dialog id="payDialog" class="modal small-modal">
     <form id="payForm" method="dialog"><div class="modal-header"><div><h2>Registrar pagamento</h2><p id="paySubtitle">Confirme os dados do pagamento.</p></div><button type="button" class="icon-btn" data-close="payDialog">✕</button></div><input type="hidden" id="payExpenseId"><input type="hidden" id="payInstallmentIndex"><div class="form-grid"><div><label for="payAmount">Valor pago (R$)</label><input type="number" min="0.01" step="0.01" id="payAmount" required></div><div><label for="payDate">Data do pagamento</label><input type="date" id="payDate" required></div><div><label for="payMethod">Meio de pagamento</label><select id="payMethod"><option>Pix</option><option>Dinheiro</option><option>Transferência</option><option>Boleto</option><option>Cartão</option><option>Outro</option></select></div></div><div class="modal-actions"><button type="button" class="btn btn-secondary" data-close="payDialog">Cancelar</button><button class="btn btn-primary" type="submit">Confirmar pagamento</button></div></form>
