@@ -766,3 +766,42 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
  #freightDialog .freight-check-field,#freightDialog .freight-notes-field,#freightDialog .freight-section-fields .balance-validation{grid-column:1}
  #freightDialog .form-section-heading{align-items:flex-start}
 }
+
+
+/* Resumo financeiro do frete: três colunas, texto maior e branco em negrito */
+#freightDialog .freight-calculations-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+#freightDialog #freightCalc .freight-calculation-item span{
+  font-size:17px!important; /* 13 px + 4 px */
+  font-weight:800!important;
+  line-height:1.4;
+  color:#fff!important;
+}
+#freightDialog #freightCalc .freight-calculation-item strong{
+  font-size:18px!important; /* 14 px + 4 px */
+  font-weight:800!important;
+  line-height:1.4;
+  color:#fff!important;
+}
+#freightDialog #freightCalc .freight-calculation-item{
+  gap:10px;
+  padding:12px;
+  align-items:flex-start;
+}
+#freightDialog #freightCalc .freight-calculation-item strong{
+  text-align:right;
+  overflow-wrap:anywhere;
+}
+@media(max-width:980px){
+  #freightDialog .freight-calculations-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:600px){
+  #freightDialog .freight-calculations-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  #freightDialog #freightCalc .freight-calculation-item span{font-size:17px!important;}
+  #freightDialog #freightCalc .freight-calculation-item strong{font-size:18px!important;}
+}
