@@ -693,3 +693,8 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
 #freightDialog input[type=number]{appearance:textfield;-moz-appearance:textfield;}
 #freightDialog input[type=number]::-webkit-inner-spin-button,#freightDialog input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
 @media(max-width:760px){#freightDialog .freight-calculations-grid{grid-template-columns:minmax(0,1fr)!important;}}
+
+/* Revisão geral: foco visível, movimento reduzido e controles mais acessíveis */
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #2563a6;outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}}
+@media(max-width:760px){.content{min-width:0}.filters>*{max-width:100%;min-width:0}.summary-strip{grid-template-columns:1fr}.modal form{padding:18px}.form-grid{grid-template-columns:minmax(0,1fr)}.full-width{grid-column:auto}}
