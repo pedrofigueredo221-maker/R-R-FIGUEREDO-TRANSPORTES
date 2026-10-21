@@ -56,11 +56,11 @@
     <form id="resetForm">
       <label for="newPassword">Nova senha</label>
       <input id="newPassword" type="password"
-        minlength="8" autocomplete="new-password" required>
+        minlength="6" autocomplete="new-password" required>
 
       <label for="confirmPassword">Confirme a nova senha</label>
       <input id="confirmPassword" type="password"
-        minlength="8" autocomplete="new-password" required>
+        minlength="6" autocomplete="new-password" required>
 
       <button id="saveButton" type="submit">Salvar nova senha</button>
     </form>
@@ -151,9 +151,9 @@
       const confirmation =
         document.getElementById("confirmPassword").value;
 
-      if (password.length < 8) {
+      if (password.length < 6) {
         message.textContent =
-          "A senha deve ter pelo menos 8 caracteres.";
+          "A senha deve ter pelo menos 6 caracteres.";
         return;
       }
 
