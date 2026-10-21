@@ -66,3 +66,12 @@ Permitir que o e-mail `pedrofogofogop@gmail.com` consulte os dados sem poder cri
 
 ### Validação
 Revisão estática das alterações. Não foi possível testar autenticação real, RLS no projeto Supabase ou o fluxo visual no navegador nesta etapa. Testar leitura com visitante e confirmar que UPDATE/INSERT falham para ele e funcionam para a conta administrativa antes de uso real.
+
+
+## 2026-10-21 — Ajuste do layout do frete e nome de acesso visitante
+
+- O usuário de acesso somente leitura passa a se chamar `VISITANTES`, mantendo o e-mail alternativo configurado e a conta administrativa original.
+- O resumo financeiro do cadastro de frete voltou para duas colunas em telas maiores e uma coluna em telas estreitas.
+- O formulário de frete foi ampliado lateralmente e as quatro seções foram dispostas em duas colunas em telas largas; os campos editáveis usam três colunas por seção, com adaptação para tablets e celulares.
+- Ajustados espaçamentos e tamanho dos rótulos para manter leitura e evitar excesso visual sem remover campos ou alterar fórmulas.
+- A senha não é armazenada no código/repositório; deve ser definida na conta Supabase. Recomenda-se não usar senhas fracas.
