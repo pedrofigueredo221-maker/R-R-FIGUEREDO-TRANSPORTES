@@ -919,6 +919,6 @@ textarea:required:focus {
 .login-card{align-items:stretch;text-align:center}
 .login-logo{align-self:center!important;margin:0 auto 12px!important}
 .login-eyebrow{width:100%;text-align:center}
-.login-screen-label{margin:2px 0 0;color:#244b72;font-size:12px;font-weight:800;letter-spacing:2px;text-align:center}
+.login-screen-label{margin:18px 0 0;color:#000;font-size:20px;font-weight:800;letter-spacing:2px;text-align:center}
 .login-card h1,.login-description{text-align:center}
 .login-card label{text-align:left}
