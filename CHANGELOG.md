@@ -75,3 +75,17 @@ Revisão estática das alterações. Não foi possível testar autenticação re
 - O formulário de frete foi ampliado lateralmente e as quatro seções foram dispostas em duas colunas em telas largas; os campos editáveis usam três colunas por seção, com adaptação para tablets e celulares.
 - Ajustados espaçamentos e tamanho dos rótulos para manter leitura e evitar excesso visual sem remover campos ou alterar fórmulas.
 - A senha não é armazenada no código/repositório; deve ser definida na conta Supabase. Recomenda-se não usar senhas fracas.
+
+
+## 2026-10-21 — Cadastro de frete em duas colunas por seção
+
+- Reduzida a largura máxima do modal de frete de 1580 px para 1380 px, mantendo o formulário confortável e menos exagerado.
+- Mantidas as quatro seções em duas colunas em telas largas.
+- Cada seção passa a exibir dois campos por linha; nas duas seções lado a lado, ficam até quatro campos distribuídos na largura total.
+- Ajustados espaçamentos, altura dos campos e preenchimentos internos para compactar o formulário sem remover informações.
+- Em telas menores, as seções se empilham e os campos se adaptam; em celulares estreitos, o formulário usa uma coluna.
+- Mantido o resumo financeiro em duas colunas, com textos brancos maiores e em negrito.
+- Nenhuma fórmula ou regra de negócio foi alterada.
+
+### Validação
+Revisão estática dos arquivos. O perfil `VISITANTES` já foi confirmado pelo usuário como funcionando. O layout precisa ser conferido visualmente no navegador após a publicação; nenhuma validação visual automatizada foi realizada nesta alteração.
