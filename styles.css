@@ -665,3 +665,19 @@ table thead th.grid-sortable:hover{
 #freightDialog .balance-validation{padding:10px 12px;border:1px solid #c62828;border-radius:7px;background:#fff0f0;color:#a61b1b;font-size:13px;font-weight:700}
 #freightDialog .balance-validation[hidden]{display:none}
 @media(max-width:760px){#freightDialog .freight-calculations-grid{grid-template-columns:minmax(0,1fr)}#freightDialog .toll-deduct-field{min-height:42px}}
+
+
+/* Cabeçalhos de filtros/colunas em todas as telas: cinza claro e texto preto em negrito */
+table thead th{
+  background:#d6d8db !important;
+  color:#111111 !important;
+  font-weight:800 !important;
+  text-align:center !important;
+  border-top:1px solid #c0c3c7 !important;
+  border-bottom:2px solid #aeb2b7 !important;
+  border-right:1px solid #b7bbc0 !important;
+  box-shadow:none !important;
+}
+table thead th:first-child{border-left:1px solid #b7bbc0 !important;}
+table thead th[aria-sort]{background:#c8cbd0 !important;color:#111111 !important;border-right-color:#aeb2b7 !important;}
+table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !important;}
