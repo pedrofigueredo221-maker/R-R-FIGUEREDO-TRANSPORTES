@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -598,7 +598,7 @@
   <dialog id="freightDialog" class="modal">
     <form id="freightForm" method="dialog">
       <div class="modal-header">
-        <div><h2 id="freightModalTitle">Cadastrar frete</h2><p>Campos com * são obrigatórios.</p></div>
+        <div><h2 id="freightModalTitle">Cadastrar frete</h2><p><strong>* Obrigatório</strong> · <span class="optional-hint">Opcional</span> — campos opcionais podem ficar em branco.</p></div>
         <button type="button" class="icon-btn" data-close="freightDialog">✕</button>
       </div>
 
@@ -607,26 +607,26 @@
       <div class="form-grid">
         <div><label for="fDate">Data do frete *</label><input type="date" id="fDate" required></div>
         <div><label for="fDriver">Motorista *</label><select id="fDriver" required><option value="">Selecione um motorista</option></select></div>
-        <div><label for="fCustomer">Cliente (opcional)</label><input id="fCustomer" placeholder="Empresa / cliente"></div>
+        <div><label for="fCustomer">Cliente *</label><input id="fCustomer" required placeholder="Empresa / cliente"></div>
         <div><label for="fOrigin">Cidade de origem *</label><input id="fOrigin" required placeholder="Ex.: Campinas"></div>
         <div><label for="fDestination">Cidade de destino *</label><input id="fDestination" required placeholder="Ex.: São Paulo"></div>
         <div><label for="fValue">Valor do frete (R$) *</label><input type="number" id="fValue" min="0.01" step="0.01" required placeholder="0,00"></div>
-        <div><label for="fToll">Pedágio (R$)</label><input type="number" id="fToll" min="0" step="0.01" value="0"></div>
-        <div><label for="fDiscount">Descontos gerais (R$)</label><input type="number" id="fDiscount" min="0" step="0.01" value="0"></div>
-        <div><label for="fCommissionType">Tipo de comissão</label><select id="fCommissionType"><option value="percent">Porcentagem</option><option value="fixed">Valor fixo por viagem</option></select></div>
-        <div><label for="fCommission">Comissão (%) ou valor (R$)</label><input type="number" id="fCommission" min="0" step="0.01" value="10"></div>
-        <div><label for="fBonus">Bônus ao motorista (R$)</label><input type="number" id="fBonus" min="0" step="0.01" value="0"></div>
-        <div><label for="fKm">KM rodados</label><input type="number" id="fKm" min="0" step="0.1" placeholder="Ex.: 350"></div>
-        <div><label for="fDieselPrice">Preço do diesel (R$/L)</label><input type="number" id="fDieselPrice" min="0" step="0.001" placeholder="Ex.: 6,20"></div>
-        <div><label for="fLiters">Litros abastecidos</label><input type="number" id="fLiters" min="0" step="0.01" placeholder="Ex.: 100"></div>
-        <div><label for="fFuelActual">Gasto real com combustível (R$)</label><input type="number" id="fFuelActual" min="0" step="0.01" value="0"></div>
+        <div><label for="fToll">Pedágio (R$) *</label><input type="number" id="fToll" min="0" step="any" value="0" required></div>
+        <div><label class="optional-label" for="fDiscount">Descontos gerais (R$) <span>(opcional)</span></label><input type="number" id="fDiscount" min="0" step="any" value="0"></div>
+        <div><label for="fCommissionType">Tipo de comissão *</label><select id="fCommissionType" required><option value="percent">Porcentagem</option><option value="fixed">Valor fixo por viagem</option></select></div>
+        <div><label for="fCommission">Comissão (%) ou valor (R$) *</label><input type="number" id="fCommission" min="0" step="any" value="10" required></div>
+        <div><label class="optional-label" for="fBonus">Bônus ao motorista (R$) <span>(opcional)</span></label><input type="number" id="fBonus" min="0" step="any" value="0"></div>
+        <div><label for="fKm">KM rodados *</label><input type="number" id="fKm" min="0" step="any" required placeholder="Ex.: 350"></div>
+        <div><label for="fDieselPrice">Preço do diesel (R$/L) *</label><input type="number" id="fDieselPrice" min="0" step="any" required placeholder="Ex.: 6,20"></div>
+        <div><label for="fLiters">Litros abastecidos *</label><input type="number" id="fLiters" min="0" step="any" required placeholder="Ex.: 100"></div>
+        <div><label for="fFuelActual">Gasto real com combustível (R$) *</label><input type="number" id="fFuelActual" min="0" step="any" value="0" required></div>
         <div id="fuelEstimateBox"><label>Gasto estimado de combustível (R$)</label><div class="calc-preview fuel-estimate-value" id="fuelEstimate">R$ 0,00</div></div>
-        <div><label for="fStatus">Recebimento do cliente</label><select id="fStatus"><option>Pendente</option><option>Parcial</option><option>Pago</option></select></div>
-        <div><label for="fReceived">Adiantamento / valor já recebido (R$)</label><input type="number" id="fReceived" min="0" step="0.01" value="0"></div>
-        <div><label for="fBalanceCurrent">Saldo atual a receber (R$)</label><input type="number" id="fBalanceCurrent" min="0" step="0.01" placeholder="Informe o saldo atual"></div>
+        <div><label for="fStatus">Recebimento do cliente *</label><select id="fStatus" required><option>Pendente</option><option>Parcial</option><option>Pago</option></select></div>
+        <div><label for="fReceived">Adiantamento / valor já recebido (R$) *</label><input type="number" id="fReceived" min="0" step="any" value="0" required></div>
+        <div><label class="optional-label" for="fBalanceCurrent">Saldo atual a receber (R$) <span>(opcional — calculado automaticamente se vazio)</span></label><input type="number" id="fBalanceCurrent" min="0" step="any" placeholder="Calculado automaticamente se vazio"></div>
         <div class="check-field toll-deduct-field"><input type="checkbox" id="fDeductToll"><label for="fDeductToll">Descontar pedágio do motorista</label></div>
         <div class="full-width balance-validation" id="balanceValidation" role="alert" hidden></div>
-        <div class="full-width"><label for="fNotes">Observações (opcional)</label><textarea id="fNotes" rows="2" placeholder="Número do conhecimento, cliente ou observações"></textarea></div>
+        <div class="full-width"><label class="optional-label" for="fNotes">Observações <span>(opcional)</span></label><textarea id="fNotes" rows="2" placeholder="Número do conhecimento, cliente ou observações"></textarea></div>
       </div>
 
       <div class="calc-preview" id="freightCalc">Preencha o valor para ver a prévia dos cálculos.</div>
@@ -703,7 +703,7 @@
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="config.js?v=11"></script>
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=16"></script>
   <script src="sync.js?v=15"></script>
   <script>
     cloud.start();
