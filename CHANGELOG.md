@@ -89,3 +89,8 @@ Revisão estática das alterações. Não foi possível testar autenticação re
 
 ### Validação
 Revisão estática dos arquivos. O perfil `VISITANTES` já foi confirmado pelo usuário como funcionando. O layout precisa ser conferido visualmente no navegador após a publicação; nenhuma validação visual automatizada foi realizada nesta alteração.
+
+
+### Complemento da revisão — organização dos campos de combustível
+- Ajustada a ordem visual dos campos na seção de combustível para exibir o gasto real e a estimativa lado a lado, sem alterar a ordem dos dados armazenados nem os cálculos.
+- Atualizada a versão de cache do CSS para `v=35`.
