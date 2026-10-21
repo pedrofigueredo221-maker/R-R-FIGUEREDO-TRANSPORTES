@@ -10,7 +10,7 @@
   <link rel="shortcut icon" href="favicon.svg?v=1">
   <link rel="apple-touch-icon" href="favicon.svg?v=1">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=38">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -619,7 +619,7 @@
             <div><label for="fOrigin">Cidade de origem *</label><input id="fOrigin" required placeholder="Ex.: Campinas"></div>
             <div><label for="fDestination">Cidade de destino *</label><input id="fDestination" required placeholder="Ex.: São Paulo"></div>
             <div><label for="fValue">Valor do frete (R$) *</label><input type="number" id="fValue" min="0.01" step="0.01" required placeholder="0,00"></div>
-            <div><label for="fToll">Pedágio (R$) *</label><input type="number" id="fToll" min="0" step="any" value="0" required></div>
+            <div><label for="fToll">Pedágio (R$) *</label><input type="number" id="fToll" min="0" step="any" required placeholder="0,00"></div>
           </div>
         </section>
 
@@ -627,8 +627,9 @@
           <div class="form-section-heading"><span class="section-step">02</span><div><strong>Motorista e comissão</strong><small>Defina quem realizou o frete e como calcular a comissão</small></div></div>
           <div class="freight-section-fields">
             <div><label for="fDriver">Motorista *</label><select id="fDriver" required><option value="">Selecione um motorista</option></select></div>
-            <div><label for="fCommissionType">Tipo de comissão *</label><select id="fCommissionType" required><option value="percent">Porcentagem</option><option value="fixed">Valor fixo por viagem</option></select></div>
-            <div><label for="fCommission">Comissão (%) ou valor (R$) *</label><input type="number" id="fCommission" min="0" step="any" value="10" required></div>
+            <div><label for="fTruck">Caminhão *</label><select id="fTruck" required><option value="">Selecione um caminhão</option></select></div>
+            <div><label for="fCommissionType">Tipo de comissão *</label><select id="fCommissionType" required><option value="">Selecione o tipo de comissão</option><option value="percent">Porcentagem</option><option value="fixed">Valor fixo por viagem</option></select></div>
+            <div><label for="fCommission">Comissão (%) ou valor (R$) *</label><input type="number" id="fCommission" min="0" step="any" required placeholder="Informe a comissão"></div>
             <div><label for="fBonus">Bônus ao motorista (R$)</label><input type="number" id="fBonus" min="0" step="any" value="0"></div>
             <div class="freight-check-field"><input type="checkbox" id="fDeductToll"><div><label for="fDeductToll">Descontar pedágio da base da comissão</label><small>Usa o padrão do motorista; pode ser alterado neste frete.</small></div></div>
           </div>
@@ -640,7 +641,7 @@
             <div><label for="fKm">KM rodados *</label><input type="number" id="fKm" min="0" step="any" required placeholder="Ex.: 350"></div>
             <div><label for="fDieselPrice">Preço do diesel (R$/L) *</label><input type="number" id="fDieselPrice" min="0" step="any" required placeholder="Ex.: 6,20"></div>
             <div><label for="fLiters">Litros abastecidos *</label><input type="number" id="fLiters" min="0" step="any" required placeholder="Ex.: 100"></div>
-            <div><label for="fFuelActual">Gasto real com combustível (R$) *</label><input type="number" id="fFuelActual" min="0" step="any" value="0" required></div>
+            <div><label for="fFuelActual">Gasto real com combustível (R$) *</label><input type="number" id="fFuelActual" min="0" step="any" required placeholder="0,00"></div>
             <div id="fuelEstimateBox"><label>Gasto estimado de combustível</label><div class="fuel-estimate-value" id="fuelEstimate">R$ 0,00</div></div>
             <div><label for="fDiscount">Descontos gerais (R$)</label><input type="number" id="fDiscount" min="0" step="any" value="0"></div>
           </div>
@@ -649,8 +650,8 @@
         <section class="freight-form-section">
           <div class="form-section-heading"><span class="section-step">04</span><div><strong>Recebimento e observações</strong><small>Informe o que já foi recebido e confira os valores em aberto</small></div></div>
           <div class="freight-section-fields">
-            <div><label for="fStatus">Recebimento do cliente *</label><select id="fStatus" required><option>Pendente</option><option>Parcial</option><option>Pago</option></select></div>
-            <div><label for="fReceived">Adiantamento / valor já recebido (R$) *</label><input type="number" id="fReceived" min="0" step="any" value="0" required></div>
+            <div><label for="fStatus">Recebimento do cliente *</label><select id="fStatus" required><option value="">Selecione a situação</option><option>Pendente</option><option>Parcial</option><option>Pago</option></select></div>
+            <div><label for="fReceived">Adiantamento / valor já recebido (R$) *</label><input type="number" id="fReceived" min="0" step="any" required placeholder="0,00"></div>
             <div><label for="fBalanceCurrent">Saldo atual a receber (R$)</label><input type="number" id="fBalanceCurrent" min="0" step="any" placeholder="Calculado automaticamente se vazio"></div>
             <div class="freight-notes-field"><label for="fNotes">Observações</label><textarea id="fNotes" rows="2" placeholder="Número do conhecimento, cliente ou outras informações"></textarea></div>
             <div class="full-width balance-validation" id="balanceValidation" role="alert" hidden></div>
@@ -730,7 +731,7 @@
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="config.js?v=13"></script>
-  <script src="app.js?v=17"></script>
+  <script src="app.js?v=18"></script>
   <script src="sync.js?v=18"></script>
   <script>
     cloud.start();
