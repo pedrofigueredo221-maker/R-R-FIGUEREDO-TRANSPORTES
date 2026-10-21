@@ -5,21 +5,17 @@
 -- Visitante: pedrofogofogop@gmail.com
 
 begin;
-
 alter table public.app_state enable row level security;
-
 revoke all on table public.app_state from anon;
 revoke all on table public.app_state from public;
 grant select, insert, update on table public.app_state to authenticated;
 
--- Remove TODAS as políticas existentes desta tabela, inclusive políticas antigas
--- com nomes inesperados que poderiam conceder escrita ao visitante.
+-- Remove todas as políticas anteriores para não deixar uma política permissiva antiga ativa.
 do $$
 declare p record;
 begin
   for p in
-    select policyname
-    from pg_policies
+    select policyname from pg_policies
     where schemaname = 'public' and tablename = 'app_state'
   loop
     execute format('drop policy if exists %I on public.app_state', p.policyname);
@@ -27,35 +23,27 @@ begin
 end
 $$;
 
--- Administrador e visitante podem consultar o registro compartilhado.
 create policy "authenticated_read_app_state"
 on public.app_state for select to authenticated
 using (
-  id = 1
-  and lower(coalesce(auth.jwt() ->> 'email', '')) in (
+  id = 1 and lower(coalesce(auth.jwt() ->> 'email', '')) in (
     'pedrofigueredo221@gmail.com',
     'pedrofogofogop@gmail.com'
   )
 );
 
--- Somente o administrador pode criar o registro (se necessário).
 create policy "authenticated_insert_app_state"
 on public.app_state for insert to authenticated
 with check (
-  id = 1
-  and lower(coalesce(auth.jwt() ->> 'email', '')) = 'pedrofigueredo221@gmail.com'
+  id = 1 and lower(coalesce(auth.jwt() ->> 'email', '')) = 'pedrofigueredo221@gmail.com'
 );
 
--- Somente o administrador pode modificar os dados financeiros.
 create policy "authenticated_update_app_state"
 on public.app_state for update to authenticated
 using (
-  id = 1
-  and lower(coalesce(auth.jwt() ->> 'email', '')) = 'pedrofigueredo221@gmail.com'
+  id = 1 and lower(coalesce(auth.jwt() ->> 'email', '')) = 'pedrofigueredo221@gmail.com'
 )
 with check (
-  id = 1
-  and lower(coalesce(auth.jwt() ->> 'email', '')) = 'pedrofigueredo221@gmail.com'
+  id = 1 and lower(coalesce(auth.jwt() ->> 'email', '')) = 'pedrofigueredo221@gmail.com'
 );
-
 commit;
