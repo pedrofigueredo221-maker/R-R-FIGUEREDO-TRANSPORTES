@@ -388,3 +388,93 @@ td{font-size:14px}
   .sidebar .nav-label{font-size:15px;padding-bottom:13px}
   .sidebar .nav-item{min-height:47px;font-size:15px;padding:11px 12px}
 }
+
+
+/* Logo da empresa no topo do menu lateral */
+.sidebar .brand{
+  gap:13px;
+  padding:2px 8px 32px;
+  align-items:center;
+}
+.sidebar .brand-mark{
+  flex:0 0 48px;
+  width:48px;
+  height:48px;
+  border:1px solid #fff;
+  border-radius:12px;
+  background:linear-gradient(145deg,#fff 0%,#dedede 100%);
+  color:#171717;
+  box-shadow:inset 0 1px 0 #fff,0 4px 12px #0004;
+  font-size:17px;
+  font-weight:900;
+  letter-spacing:-1px;
+}
+.sidebar .brand strong{
+  font-size:18px;
+  line-height:1.15;
+  letter-spacing:.15px;
+  white-space:nowrap;
+}
+.sidebar .brand small{
+  display:block;
+  margin-top:5px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2.2px;
+  color:#c8c8c8;
+}
+
+/* Espaçamento consistente entre rótulos e campos em todo o sistema */
+.form-grid label{
+  display:block;
+  line-height:1.45;
+  margin:0 0 9px;
+  overflow-wrap:anywhere;
+}
+.form-grid input:not([type=checkbox]),
+.form-grid select,
+.form-grid textarea{
+  display:block;
+  margin-top:0;
+  line-height:1.4;
+}
+.inline-register>label{
+  display:block;
+  line-height:1.45;
+  margin:15px 0 9px;
+}
+.inline-register>input,
+.inline-register>select,
+.inline-register>textarea{
+  display:block;
+  margin-top:0;
+  line-height:1.4;
+}
+.inline-register .form-grid{row-gap:18px}
+.login-card label{
+  display:block;
+  line-height:1.45;
+  margin:8px 0 0;
+}
+.login-card input{line-height:1.4}
+.toolbar label,.report-controls label{
+  line-height:1.45;
+  margin-bottom:9px;
+}
+.filters input,.filters select,
+.toolbar input,.report-controls input,.report-controls select{
+  line-height:1.4;
+}
+.import-review>label{
+  display:block;
+  line-height:1.45;
+  margin:14px 0 9px;
+}
+.check-field label{line-height:1.45}
+@media(max-width:760px){
+  .sidebar .brand{padding-bottom:27px}
+  .sidebar .brand-mark{flex-basis:46px;width:46px;height:46px}
+  .sidebar .brand strong{font-size:17px}
+  .inline-register>label{margin-top:13px}
+  .form-grid label{margin-bottom:8px}
+}
