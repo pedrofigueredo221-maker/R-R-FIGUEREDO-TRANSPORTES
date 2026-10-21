@@ -8,6 +8,7 @@ begin;
 alter table public.app_state enable row level security;
 revoke all on table public.app_state from anon;
 revoke all on table public.app_state from public;
+revoke all on table public.app_state from authenticated;
 grant select, insert, update on table public.app_state to authenticated;
 
 -- Remove todas as políticas anteriores para não deixar uma política permissiva antiga ativa.
