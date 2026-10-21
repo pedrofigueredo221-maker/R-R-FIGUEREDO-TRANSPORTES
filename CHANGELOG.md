@@ -30,7 +30,7 @@ Facilitar a leitura da prévia financeira ao cadastrar ou editar um frete, mante
 
 ### Alterações
 - `styles.css`: resumo financeiro passa de duas para três colunas em telas maiores.
-- `styles.css`: textos brancos do resumo aumentados em 4 px (de 13/14 px para 17 px) e colocados em negrito.
+- `styles.css`: textos brancos do resumo aumentados em 4 px e colocados em negrito: rótulos de 13 para 17 px e valores de 14 para 18 px.
 - `styles.css`: pequenos ajustes de espaçamento e alinhamento para melhorar a leitura dos rótulos e valores.
 - `styles.css`: layout responsivo mantém duas colunas em telas médias e uma coluna em telas estreitas.
 - `index.html`: versão do CSS atualizada para `v=31`, evitando cache antigo.
