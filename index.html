@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -443,9 +443,14 @@
               <label class="inactive-filter"><input type="checkbox" id="showInactiveEmployees"> INATIVOS</label>
               <span>Por padrão, são exibidos somente funcionários ativos.</span>
             </div>
+            <div class="bulk-registration-tools">
+              <label class="inactive-filter"><input type="checkbox" id="selectAllEmployees"> Selecionar todos visíveis</label>
+              <button class="btn btn-danger" type="button" id="deleteSelectedEmployees">Excluir selecionados</button>
+              <span id="selectedEmployeesCount">0 selecionados</span>
+            </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Nome</th><th>Função</th><th>Caminhão vinculado</th><th>Situação</th><th></th></tr></thead>
+                <thead><tr><th class="select-column"><span class="sr-only">Selecionar</span></th><th>Nome</th><th>Função</th><th>Caminhão vinculado</th><th>Situação</th><th>Ações</th></tr></thead>
                 <tbody id="employeeRows"></tbody>
               </table>
             </div>
@@ -485,9 +490,14 @@
               <label class="inactive-filter"><input type="checkbox" id="showInactiveTrucks"> INATIVOS</label>
               <span>Por padrão, são exibidos somente caminhões ativos.</span>
             </div>
+            <div class="bulk-registration-tools">
+              <label class="inactive-filter"><input type="checkbox" id="selectAllTrucks"> Selecionar todos visíveis</label>
+              <button class="btn btn-danger" type="button" id="deleteSelectedTrucks">Excluir selecionados</button>
+              <span id="selectedTrucksCount">0 selecionados</span>
+            </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Caminhão</th><th>Placa</th><th>Motorista vinculado</th><th>Situação</th><th></th></tr></thead>
+                <thead><tr><th class="select-column"><span class="sr-only">Selecionar</span></th><th>Caminhão</th><th>Placa</th><th>Motorista vinculado</th><th>Situação</th><th>Ações</th></tr></thead>
                 <tbody id="truckRows"></tbody>
               </table>
             </div>
