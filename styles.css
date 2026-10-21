@@ -698,3 +698,13 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
 :where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #2563a6;outline-offset:2px;}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}}
 @media(max-width:760px){.content{min-width:0}.filters>*{max-width:100%;min-width:0}.summary-strip{grid-template-columns:1fr}.modal form{padding:18px}.form-grid{grid-template-columns:minmax(0,1fr)}.full-width{grid-column:auto}}
+
+
+/* Preferência padrão de pedágio no cadastro do motorista */
+#page-cadastros .driver-toll-default-field{grid-column:1/-1;display:grid;grid-template-columns:18px minmax(0,1fr);align-items:start;column-gap:10px;row-gap:5px;padding:12px 14px;margin:2px 0 14px;background:#f5f8fb;border:1px solid #d7e0e9;border-radius:8px;min-width:0}
+#page-cadastros .driver-toll-default-field input[type=checkbox]{width:17px;height:17px;min-width:17px;min-height:17px;margin:2px 0 0;accent-color:#1769b2}
+#page-cadastros .driver-toll-default-field label{margin:0;font-weight:700;line-height:1.4;cursor:pointer}
+#page-cadastros .driver-toll-default-field small{grid-column:2;color:#657181;font-size:12px;line-height:1.45}
+#freightDialog .toll-deduct-field{display:grid;grid-template-columns:16px minmax(0,1fr);align-content:center;justify-content:stretch;column-gap:9px;row-gap:4px}
+#freightDialog .toll-deduct-field small{grid-column:2;color:#657181;font-size:11px;line-height:1.4}
+@media(max-width:760px){#page-cadastros .driver-toll-default-field{padding:11px}#freightDialog .toll-deduct-field{align-self:stretch}}
