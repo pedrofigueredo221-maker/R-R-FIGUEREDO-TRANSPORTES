@@ -137,12 +137,19 @@ const cloud = (() => {
     return email.trim();
   }
 
-  function showLogin(show) {
+  function showLogin(show, remember = true) {
     const screen = el("loginScreen");
 
     if (screen) screen.hidden = !show;
 
     document.body.classList.toggle("authenticated", !show);
+
+    // Guarda a tela apresentada nesta aba para restaurá-la após atualizar.
+    if (remember) {
+      try {
+        sessionStorage.setItem("rr_screen_state", show ? "login" : "authenticated");
+      } catch (_) {}
+    }
 
     const logout = el("logoutButton");
     if (logout) logout.hidden = show;
@@ -757,7 +764,14 @@ const cloud = (() => {
       console.error("Erro ao encerrar sessão:", error);
     }
 
-    showLogin(true);
+    // Lê o estado anterior antes de exibir qualquer tela temporária.
+    // sessionStorage persiste ao atualizar, mas é isolado por aba.
+    let lastScreen = null;
+    try {
+      lastScreen = sessionStorage.getItem("rr_screen_state");
+    } catch (_) {}
+
+    showLogin(true, false);
 
     const form = el("loginForm");
     if (form) form.reset();
@@ -893,10 +907,13 @@ const cloud = (() => {
 
       if (error) throw error;
 
-      if (session) {
+      if (session && lastScreen === "authenticated") {
+        // Só restaura o painel se ele já estava aberto antes da atualização.
         await boot();
         showLogin(false);
       } else {
+        // Se a última tela era o login (ou ainda não existe estado salvo),
+        // não abre o painel automaticamente só porque há uma sessão salva.
         showLogin(true);
         status("Faça login para continuar", "");
       }
