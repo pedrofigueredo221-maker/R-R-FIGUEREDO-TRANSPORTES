@@ -635,6 +635,40 @@ const cloud = (() => {
         localStorage.setItem(MIG_KEY, "1");
       }
 
+      // Cadastros iniciais: só cria exemplos se as listas estiverem vazias.
+      // Não substitui nem modifica cadastros reais já existentes na nuvem.
+      let addedStarterRecords = false;
+
+      if (Array.isArray(db.employees) && db.employees.length === 0) {
+        db.employees = Array.from({ length: 5 }, (_, index) => ({
+          id: "starter-driver-" + (index + 1),
+          name: "Motorista " + String(index + 1).padStart(2, "0"),
+          role: "Motorista",
+          phone: "",
+          commissionType: "percent",
+          commissionValue: 10,
+          active: true
+        }));
+        addedStarterRecords = true;
+      }
+
+      if (Array.isArray(db.trucks) && db.trucks.length === 0) {
+        db.trucks = Array.from({ length: 5 }, (_, index) => ({
+          id: "starter-truck-" + (index + 1),
+          name: "Caminhão " + String(index + 1).padStart(2, "0"),
+          plate: "",
+          active: true
+        }));
+        addedStarterRecords = true;
+      }
+
+      // Persiste os cadastros iniciais na nuvem quando foram criados.
+      if (addedStarterRecords) {
+        pending = !same(db, remote.data);
+        writeCache();
+        if (pending) await push();
+      }
+
       if (typeof ensureDefaults === "function") {
         ensureDefaults();
       }
