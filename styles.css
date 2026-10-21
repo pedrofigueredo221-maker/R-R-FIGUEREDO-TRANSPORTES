@@ -728,3 +728,41 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
 @media(max-width:760px){
   #freightDialog .form-section-title{grid-column:1/-1}
 }
+
+
+/* Cadastro de frete: agrupamento visual para reduzir poluição sem ocultar campos */
+#freightDialog .freight-form-sections{display:flex!important;flex-direction:column;gap:13px}
+#freightDialog .freight-form-section{min-width:0;border:1px solid #e0e5eb;border-radius:11px;padding:15px 16px 16px;background:#fff}
+#freightDialog .form-section-heading{display:flex;align-items:center;gap:11px;padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid #edf0f3}
+#freightDialog .section-step{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:9px;background:#e8eef5;color:#315578;font-size:12px;font-weight:800}
+#freightDialog .form-section-heading strong{display:block;color:#243247;font-size:15px;line-height:1.3}
+#freightDialog .form-section-heading small{display:block;color:#6d7786;font-size:12px;line-height:1.4;margin-top:3px}
+#freightDialog .freight-section-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;align-items:start}
+#freightDialog .freight-section-fields>div{min-width:0}
+#freightDialog .freight-section-fields label{display:block;margin-bottom:6px;color:#394456;font-size:13px;font-weight:600;line-height:1.35}
+#freightDialog .freight-section-fields input:not([type=checkbox]),
+#freightDialog .freight-section-fields select,
+#freightDialog .freight-section-fields textarea{width:100%;min-width:0;min-height:43px;padding:10px 11px;border:1px solid #d7dde5;border-radius:7px;background:#fff;color:#202938;font-size:14px}
+#freightDialog .freight-section-fields textarea{min-height:76px;resize:vertical}
+#freightDialog .freight-section-fields input:focus,
+#freightDialog .freight-section-fields select:focus,
+#freightDialog .freight-section-fields textarea:focus{border-color:#7396ba;box-shadow:0 0 0 3px rgba(49,85,120,.1);outline:none}
+#freightDialog .freight-check-field{grid-column:1/-1;display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #dfe5ec;border-radius:8px;background:#f7f9fb}
+#freightDialog .freight-check-field input[type=checkbox]{width:17px;height:17px;min-width:17px;margin:2px 0 0;accent-color:#315f8b}
+#freightDialog .freight-check-field label{margin:0;cursor:pointer}
+#freightDialog .freight-check-field small{display:block;margin-top:4px;color:#687386;font-size:11px;line-height:1.45}
+#freightDialog #fuelEstimateBox .fuel-estimate-value{display:flex;align-items:center;min-height:43px;padding:10px 11px;border:1px solid #d7dde5;border-radius:7px;background:#eef2f6;color:#26374a;font-size:14px;font-weight:800}
+#freightDialog .freight-notes-field{grid-column:1/-1}
+#freightDialog .freight-section-fields .balance-validation{grid-column:1/-1}
+#freightDialog #freightCalc{background:#454c53!important;border:1px solid #353b41!important;color:#fff!important;border-radius:10px;padding:16px}
+#freightDialog #freightCalc,
+#freightDialog #freightCalc *{color:#fff!important}
+#freightDialog #freightCalc .freight-calculation-item{background:#59616a;border-color:#69727b}
+#freightDialog #freightCalc .freight-calculation-item.cost-total{background:#b94b52;border-color:#a93c44}
+#freightDialog #freightCalc .freight-calculation-item.profit-total{background:#275c40;border-color:#36734f}
+@media(max-width:760px){
+ #freightDialog .freight-form-section{padding:12px}
+ #freightDialog .freight-section-fields{grid-template-columns:minmax(0,1fr);gap:12px}
+ #freightDialog .freight-check-field,#freightDialog .freight-notes-field,#freightDialog .freight-section-fields .balance-validation{grid-column:1}
+ #freightDialog .form-section-heading{align-items:flex-start}
+}
