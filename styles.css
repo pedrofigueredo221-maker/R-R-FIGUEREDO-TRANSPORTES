@@ -913,3 +913,12 @@ textarea:required:focus {
 .login-logo{display:block;width:min(100%,270px);height:auto;object-fit:contain;align-self:flex-start;margin:0 0 12px}
 .welcome-logo{display:block;width:clamp(90px,15vw,150px);height:auto;object-fit:contain;flex:0 0 auto}
 @media(max-width:760px){.sidebar .brand{padding-bottom:27px}.sidebar .brand-logo{max-width:205px}.login-logo{width:min(100%,245px)}.welcome-logo{width:88px}}
+
+
+/* Identificação centralizada da tela de login */
+.login-card{align-items:stretch;text-align:center}
+.login-logo{align-self:center!important;margin:0 auto 12px!important}
+.login-eyebrow{width:100%;text-align:center}
+.login-screen-label{margin:2px 0 0;color:#244b72;font-size:12px;font-weight:800;letter-spacing:2px;text-align:center}
+.login-card h1,.login-description{text-align:center}
+.login-card label{text-align:left}
