@@ -88,3 +88,18 @@ Faça backup do banco Supabase e dos dados locais antes de substituir a versão 
 ### Busca de cidades brasileiras
 
 Os campos Cidade de origem e Cidade de destino possuem autocomplete com os municípios brasileiros consultados na API oficial de Localidades do IBGE. Ao digitar pelo menos dois caracteres, o sistema sugere o município e a UF; é possível navegar com as setas e selecionar com Enter. A lista é armazenada no navegador por até 30 dias para reduzir consultas repetidas. Na primeira utilização, é necessária conexão com a internet para carregar a lista. Fonte: https://servicodados.ibge.gov.br/api/docs/localidades.
+
+
+## Perfil Visitante (somente leitura)
+
+O usuário visitante usa o login **VISITANTE**, vinculado a `pedrofogofogop@gmail.com`. A conta administrativa permanece vinculada a `pedrofigueredo221@gmail.com`.
+
+### Ativação no Supabase existente
+
+1. Abra o projeto Supabase correto e entre em **SQL Editor**.
+2. Abra o arquivo `supabase-visitor-role.sql` deste repositório, copie todo o conteúdo e execute. A migração preserva os dados existentes e recria as políticas RLS de `app_state`: administrador e visitante podem ler; somente o administrador pode inserir/atualizar.
+3. Em **Authentication → Users**, crie o usuário `pedrofogofogop@gmail.com` e defina ou envie uma senha segura. Essa criação precisa ser feita no painel Supabase; o código do site não cria contas Auth.
+4. Depois que o PR for revisado e mesclado, abra o site e entre usando **VISITANTE** e a senha criada.
+5. Teste com o visitante: consultar páginas e relatórios deve funcionar; tentar alterar dados deve ser bloqueado pela interface e pelo Supabase RLS. Confirme também que a conta administrativa continua podendo salvar alterações.
+
+**Importante:** não use a conta visitante para cadastrar dados. O bloqueio real de escrita depende da migração SQL aplicada no projeto Supabase de produção, não apenas da atualização do site.
