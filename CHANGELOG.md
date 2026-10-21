@@ -42,3 +42,27 @@ Facilitar a leitura da prévia financeira ao cadastrar ou editar um frete, mante
 
 ### Validação
 Revisão das regras CSS e conferência dos arquivos. A aparência final ainda deve ser validada no navegador após mesclar o PR.
+
+
+
+## 2026-10-21 — Perfil Visitante somente leitura
+
+### Objetivo
+Permitir que o e-mail `pedrofogofogop@gmail.com` consulte os dados sem poder criar, editar ou excluir informações, preservando `pedrofigueredo221@gmail.com` como conta administrativa.
+
+### Alterações
+- `config.js`: adiciona o usuário de login `VISITANTE` vinculado ao e-mail visitante.
+- `sync.js`: identifica o perfil visitante pelo e-mail autenticado, evita migração/seed de dados locais para esse perfil e bloqueia qualquer tentativa de sincronização de escrita no cliente.
+- `app.js` e `styles.css`: ocultam ações de alteração, mostram aviso de somente leitura e interceptam envios/cliques de mutação no navegador.
+- `supabase-visitor-role.sql`: migração para permitir SELECT ao administrador e visitante, mas permitir INSERT/UPDATE somente ao administrador.
+- `supabase.sql` e `supabase-login.sql`: atualizam as políticas de leitura para incluir o visitante.
+- `index.html`: atualiza versões de cache dos arquivos alterados.
+
+### Segurança e ativação obrigatória
+- O bloqueio visual não é tratado como segurança: o banco precisa receber a migração `supabase-visitor-role.sql` para aplicar RLS no servidor.
+- Criar manualmente o usuário `pedrofogofogop@gmail.com` em Supabase → Authentication → Users e definir/enviar uma senha. A integração GitHub não cria usuários do Supabase Auth nem envia convites.
+- No login do site, informar `VISITANTE` como usuário e a senha criada para esse e-mail.
+- Aplicar a migração SQL antes de liberar o login visitante.
+
+### Validação
+Revisão estática das alterações. Não foi possível testar autenticação real, RLS no projeto Supabase ou o fluxo visual no navegador nesta etapa. Testar leitura com visitante e confirmar que UPDATE/INSERT falham para ele e funcionam para a conta administrativa antes de uso real.
