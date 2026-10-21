@@ -1,24 +1,26 @@
-R&R FIGUEREDO TRANSPORTES — versão com login e sincronização Supabase
+R&R FIGUEREDO TRANSPORTES — guia de login e sincronização
 
-Arquivos principais:
-- index.html: interface principal e formulário de login.
-- app.js: telas, lançamentos, relatórios e cálculos.
-- config.js: URL e chave publicável do Supabase e mapeamento do usuário RAFAEL para o e-mail da conta.
+ARQUIVOS
+- index.html: interface principal e login.
+- app.js: cadastros, telas, cálculos e relatórios.
+- styles.css: aparência e responsividade.
+- config.js: URL/chave publicável do Supabase e alias de usuário para e-mail.
 - sync.js: login, recuperação de senha e sincronização.
-- redefinir-senha.html: tela de redefinição de senha.
-- supabase.sql: cria a tabela e configura políticas RLS restritas ao usuário autenticado autorizado.
-- supabase-login.sql: script alternativo para configurar a tabela e o acesso autenticado.
+- redefinir-senha.html: formulário para cadastrar nova senha.
+- supabase.sql e supabase-login.sql: criação/configuração da tabela e políticas de acesso.
 
-Configuração:
-1. No Supabase, confirme que o usuário existe em Authentication > Users e que o e-mail corresponde a config.js.
-2. No SQL Editor, execute supabase.sql. O script não substitui os dados se a linha id=1 já existir.
-3. Em Authentication > URL Configuration, configure a URL do site e inclua o endereço publicado de redefinir-senha.html nas Redirect URLs.
-4. Publique todos os arquivos do repositório juntos no mesmo diretório.
-5. Teste o login, a recuperação de senha e a sincronização em dois dispositivos.
+CONFIGURAÇÃO
+1. Em Supabase > Authentication > Users, crie as contas das pessoas autorizadas.
+2. Desative o cadastro público de usuários. Crie as contas manualmente para evitar que desconhecidos acessem os dados compartilhados.
+3. Em Authentication > URL Configuration, configure a URL principal do site e permita:
+   https://pedrofigueredo221-maker.github.io/RR-FIGUEREDO-TRANSPORTES/redefinir-senha.html
+4. Faça backup do banco antes de mexer nas políticas.
+5. Leia o supabase.sql e execute no SQL Editor se estiver de acordo com a política. Ele não substitui dados existentes na linha id=1.
+6. Para cadastrar outro usuário, crie sua conta no Supabase e adicione um alias com o e-mail exato em USER_EMAILS no config.js.
+7. Publique todos os arquivos juntos e teste em dois navegadores.
 
-Segurança:
-- Não coloque service_role key nem senhas no repositório.
-- A chave publishable/anon é destinada ao cliente; a proteção dos dados depende das políticas RLS.
-- O SQL deste projeto restringe o estado compartilhado ao e-mail pedrofigueredo221@gmail.com. Se a conta autorizada usar outro e-mail, altere a política no SQL e confira USER_EMAILS em config.js.
-- Não execute o antigo SQL com políticas abertas para anon.
-- Faça backup do banco e teste com dados não críticos antes do uso real.
+SEGURANÇA
+As políticas SQL permitem que qualquer usuário autenticado leia e atualize o estado compartilhado. Portanto, é essencial desativar cadastros públicos e criar contas apenas para pessoas autorizadas. A chave publishable/anon pode estar no frontend; nunca publique a chave service_role nem senhas.
+
+DADOS ANTIGOS
+Não limpe o armazenamento local do computador de casa: pode haver registros ainda não enviados à nuvem. Confira e faça backup antes de importar registros antigos. Faça backup frequente do banco Supabase.
