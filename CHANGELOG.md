@@ -94,3 +94,24 @@ Revisão estática dos arquivos. O perfil `VISITANTES` já foi confirmado pelo u
 ### Complemento da revisão — organização dos campos de combustível
 - Ajustada a ordem visual dos campos na seção de combustível para exibir o gasto real e a estimativa lado a lado, sem alterar a ordem dos dados armazenados nem os cálculos.
 - Atualizada a versão de cache do CSS para `v=35`.
+
+
+## 2026-10-21 — Experiência mobile-first para acompanhamento financeiro
+
+### Objetivo
+Facilitar a consulta do sistema em celulares e smartphones, priorizando leitura rápida de faturamento, lucro estimado, recebimentos, despesas e fretes.
+
+### Alterações
+- `styles.css`: sidebar vira menu lateral deslizante em telas menores, liberando a largura para o conteúdo.
+- `styles.css`: painel financeiro passa a usar cartões em duas colunas no celular, com valores em destaque e quebra segura para números longos.
+- `styles.css`: cabeçalho, filtros, cartões e listas recebem espaçamentos e tamanhos adaptados para toque.
+- `styles.css`: tabelas mantêm leitura e rolagem horizontal controlada quando não couberem na largura disponível, sem comprimir os dados.
+- `index.html`: cache do CSS atualizado para `v=36`.
+
+### Preservado
+- Fórmulas de comissão, lucro e custos.
+- Estrutura e dados do Supabase.
+- Permissões dos perfis e fluxo de autenticação.
+
+### Validação
+Revisão estática das regras CSS e do cache. Ainda é necessário conferir visualmente em celular real ou emulador, incluindo o menu, os valores longos e o formulário de frete.
