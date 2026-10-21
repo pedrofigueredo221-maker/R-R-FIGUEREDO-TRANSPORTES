@@ -82,3 +82,8 @@ Antes de usar com dados reais, evoluir para Supabase/PostgreSQL com autenticaç�
 ### Atenção antes de usar em produção
 
 Faça backup do banco Supabase e dos dados locais antes de substituir a versão publicada. A configuração atual do projeto não tem login e o SQL de exemplo concede acesso anônimo ao registro financeiro compartilhado. Portanto, mesmo que o uso planejado seja só para diretores e gerência, **o sistema ainda não está tecnicamente restrito a essas pessoas**. Não use dados financeiros reais/publicação aberta até configurar autenticação e políticas de acesso adequadas no Supabase.
+
+
+### Busca de cidades brasileiras
+
+Os campos Cidade de origem e Cidade de destino possuem autocomplete com os municípios brasileiros consultados na API oficial de Localidades do IBGE. Ao digitar pelo menos dois caracteres, o sistema sugere o município e a UF; é possível navegar com as setas e selecionar com Enter. A lista é armazenada no navegador por até 30 dias para reduzir consultas repetidas. Na primeira utilização, é necessária conexão com a internet para carregar a lista. Fonte: https://servicodados.ibge.gov.br/api/docs/localidades.

@@ -157,3 +157,77 @@ function splitImport(line){let out=[],s="",q=false;for(let i=0;i<line.length;i++
 $("confirmFreightImport").addEventListener("click",()=>{const rows=$("importText").value.split(/\r?\n/).filter(s=>s.trim()).map(splitImport),hi=rows.findIndex(r=>r.some(v=>nh(v)==="data")&&r.some(v=>["motorista","condutor"].includes(nh(v))));if(hi<0){$("importValidation").innerHTML='<p class="error-line">O cabeçalho precisa conter Data e Motorista.</p>';return}const imported=[],errors=[];rows.slice(hi+1).forEach((r,i)=>{const line=hi+i+2;if(!r.some(x=>x.trim()))return;const date=impDate(r[0]),driver=(r[1]||"").trim(),value=impMoney(r[4]),toll=impMoney(r[5]),commission=r[6]===""||r[6]==null?10:impMoney(r[6]),received=impMoney(r[7]);if(!date||!driver||!Number.isFinite(value)||value<=0||!Number.isFinite(toll)||toll<0||!Number.isFinite(commission)||commission<0||!Number.isFinite(received)||received<0||received>value){errors.push(`Linha ${line}: confira data, motorista, valor, pedágio, comissão e recebido.`);return}imported.push({id:uid(),date,driver,origin:(r[2]||"").trim(),destination:(r[3]||"").trim(),value,toll,commission,received,deductToll:false,notes:(r[8]||"").trim()})});if(errors.length){$("importValidation").innerHTML='<p class="error-line"><strong>Corrija antes de importar:</strong></p><ul>'+errors.map(x=>`<li>${escapeHtml(x)}</li>`).join("")+'</ul>';return}if(!imported.length){$("importValidation").textContent="Nenhuma linha válida encontrada.";return}if(!confirm(`Adicionar ${imported.length} frete(s) ao sistema?`))return;db.freights=[...imported,...db.freights];saveDB();$("importReview").hidden=true;$("ocrStatus").hidden=true;toast(`${imported.length} frete(s) importado(s).`)});
 $("cancelFreightImport").addEventListener("click",()=>{$("importReview").hidden=true;$("importValidation").innerHTML=""});
 renderAll();
+
+
+// Busca de municípios brasileiros (IBGE) nos campos de origem e destino.
+// A lista é carregada uma vez e armazenada localmente para evitar consultar a API a cada tecla.
+(function initBrazilianCityAutocomplete(){
+  const API_URL = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome";
+  const CACHE_KEY = "rr_ibge_municipios_v1";
+  let cities = [];
+  let loadPromise = null;
+  const normalizeCity = value => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+  function loadCities(){
+    if(cities.length) return Promise.resolve(cities);
+    if(loadPromise) return loadPromise;
+    loadPromise = (async()=>{
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if(cached){
+          const parsed = JSON.parse(cached);
+          if(parsed.savedAt && Date.now()-parsed.savedAt < 30*24*60*60*1000 && Array.isArray(parsed.data) && parsed.data.length > 5000){
+            cities = parsed.data.map(item=>({...item,label:`${item.name} - ${item.uf}`,search:normalizeCity(`${item.name} ${item.uf}`)})); return cities;
+          }
+        }
+      } catch(_) {}
+      const response = await fetch(API_URL, {headers:{Accept:"application/json"}});
+      if(!response.ok) throw new Error("Não foi possível consultar a lista de municípios do IBGE.");
+      const data = await response.json();
+      cities = data.map(item=>({id:item.id, name:item.nome, uf:item.microrregiao?.mesorregiao?.UF?.sigla || item["regiao-imediata"]?.["regiao-intermediaria"]?.UF?.sigla || ""}))
+        .filter(item=>item.name && item.uf)
+        .map(item=>({...item, label:`${item.name} - ${item.uf}`, search:normalizeCity(`${item.name} ${item.uf}`)}))
+        .sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({savedAt:Date.now(),data:cities.map(({id,name,uf})=>({id,name,uf}))})); } catch(_) {}
+      return cities;
+    })().catch(error=>{loadPromise=null;throw error;});
+    return loadPromise;
+  }
+  function attach(input){
+    if(!input || input.dataset.cityAutocomplete === "1") return;
+    input.dataset.cityAutocomplete = "1";
+    const wrapper = document.createElement("div"); wrapper.className="city-autocomplete";
+    input.parentNode.insertBefore(wrapper,input); wrapper.appendChild(input);
+    const list=document.createElement("div"); list.className="city-suggestions"; list.hidden=true; list.setAttribute("role","listbox"); wrapper.appendChild(list);
+    let matches=[], active=-1, request=0;
+    function close(){list.hidden=true;active=-1;}
+    function choose(city){input.value=city.label;input.dataset.cityId=String(city.id);close();input.dispatchEvent(new Event("change",{bubbles:true}));}
+    function render(query){
+      const q=normalizeCity(query);
+      if(q.length<2){close();return;}
+      matches=cities.filter(city=>city.search.includes(q)).slice(0,10);
+      if(!matches.length){list.innerHTML='<div class="city-no-results">Nenhum município encontrado</div>';list.hidden=false;return;}
+      list.innerHTML=matches.map((city,index)=>`<button type="button" role="option" aria-selected="false" class="city-option" data-city-index="${index}"><span>${city.name}</span><small>${city.uf}</small></button>`).join("");
+      list.hidden=false;
+      list.querySelectorAll("[data-city-index]").forEach(button=>button.addEventListener("mousedown",event=>{event.preventDefault();choose(matches[Number(button.dataset.cityIndex)]);}));
+    }
+    input.addEventListener("input",async()=>{
+      delete input.dataset.cityId;
+      const current=++request, query=input.value;
+      if(normalizeCity(query).length<2){close();return;}
+      if(!cities.length){list.innerHTML='<div class="city-no-results">Buscando municípios do IBGE…</div>';list.hidden=false;try{await loadCities();}catch(_){list.innerHTML='<div class="city-no-results">Não foi possível carregar a lista. Verifique a conexão e tente novamente.</div>';return;}}
+      if(current===request) render(query);
+    });
+    input.addEventListener("keydown",event=>{
+      if(list.hidden || !matches.length) return;
+      if(event.key==="ArrowDown"){event.preventDefault();active=Math.min(active+1,matches.length-1);}
+      else if(event.key==="ArrowUp"){event.preventDefault();active=Math.max(active-1,0);}
+      else if(event.key==="Enter" && active>=0){event.preventDefault();choose(matches[active]);return;}
+      else if(event.key==="Escape"){close();return;} else return;
+      list.querySelectorAll(".city-option").forEach((button,index)=>{button.classList.toggle("active",index===active);button.setAttribute("aria-selected",String(index===active));});
+    });
+    input.addEventListener("blur",()=>setTimeout(close,150));
+    input.addEventListener("focus",()=>{if(input.value.trim().length>=2 && cities.length)render(input.value);});
+  }
+  attach(document.getElementById("fOrigin"));
+  attach(document.getElementById("fDestination"));
+})();

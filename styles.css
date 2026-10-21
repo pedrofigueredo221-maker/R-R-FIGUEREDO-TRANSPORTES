@@ -16,3 +16,7 @@
 .refresh-btn:hover{background:#eaf3ff;border-color:#a9c8e8}
 .section-top .import-actions{margin-left:auto}
 .calc-preview{background:#f3f7fc;border:1px solid #dbe6f2;border-radius:10px;padding:12px;line-height:1.8;color:#26384e}
+
+
+/* Autocomplete de cidades brasileiras */
+.city-autocomplete{position:relative;width:100%;min-width:0}.city-autocomplete>input{width:100%}.city-suggestions{position:absolute;z-index:1000;top:calc(100% + 4px);left:0;right:0;max-height:230px;overflow-y:auto;background:#fff;border:1px solid #d8e3f0;border-radius:9px;box-shadow:0 12px 28px #132d221c;padding:4px}.city-suggestions[hidden]{display:none}.city-option{width:100%;border:0;background:#fff;color:var(--ink);padding:10px 11px;border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;font:inherit;cursor:pointer}.city-option:hover,.city-option.active{background:#edf5ef}.city-option span{font-size:12px;font-weight:600}.city-option small{font-size:11px;color:#61786a;font-weight:700}.city-no-results{padding:11px;color:#68776e;font-size:11px;line-height:1.5}
