@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=11">
+  <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -406,6 +406,11 @@
                 </div>
 
                 <div>
+                  <label for="employeeTruckId">Caminhão vinculado (opcional)</label>
+                  <select id="employeeTruckId"><option value="">Sem caminhão vinculado</option></select>
+                </div>
+
+                <div>
                   <label for="employeePhone">Telefone (opcional)</label>
                   <input id="employeePhone" placeholder="(00) 00000-0000">
                 </div>
@@ -453,6 +458,8 @@
               <input id="truckName" required maxlength="80" placeholder="Ex.: Scania R450 — placa ABC1D23">
               <label for="truckPlate">Placa (opcional)</label>
               <input id="truckPlate" maxlength="10" placeholder="ABC1D23">
+              <label for="truckDriverId">Motorista vinculado (opcional)</label>
+              <select id="truckDriverId"><option value="">Sem motorista vinculado</option></select>
 
               <div class="import-actions">
                 <button class="btn btn-primary" type="submit" id="truckSave">＋ Adicionar caminhão</button>
@@ -667,8 +674,8 @@
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="config.js?v=11"></script>
-  <script src="app.js?v=12"></script>
-  <script src="sync.js?v=14"></script>
+  <script src="app.js?v=13"></script>
+  <script src="sync.js?v=15"></script>
   <script>
     cloud.start();
   </script>
