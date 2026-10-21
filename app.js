@@ -83,20 +83,64 @@ function renderRegistrations(){
  if(employeeTruck){const old=employeeTruck.value;employeeTruck.innerHTML='<option value="">Sem caminhão vinculado</option>'+trucks.filter(t=>t.active!==false).map(t=>`<option value="${escapeHtml(t.id)}">${escapeHtml(t.name)}${t.plate?" — "+escapeHtml(t.plate):""}</option>`).join("");if([...employeeTruck.options].some(o=>o.value===old))employeeTruck.value=old}
  if(truckDriver){const old=truckDriver.value;truckDriver.innerHTML='<option value="">Sem motorista vinculado</option>'+emps.filter(e=>e.active!==false&&(e.role==="Motorista"||!e.role)).map(e=>`<option value="${escapeHtml(e.id)}">${escapeHtml(e.name)}</option>`).join("");if([...truckDriver.options].some(o=>o.value===old))truckDriver.value=old}
  const visibleEmps=emps.filter(e=>$("showInactiveEmployees")?.checked || e.active!==false);
- $("employeeRows").innerHTML=visibleEmps.map(e=>{const t=trucks.find(x=>x.id===e.truckId);return `<tr><td><strong>${escapeHtml(e.name)}</strong>${e.phone?`<span class="subtext">${escapeHtml(e.phone)}</span>`:""}</td><td>${escapeHtml(e.role||"Motorista")}${(e.role||"Motorista")==="Motorista"?`<span class="subtext">${e.commissionType==="fixed"?"Fixo: "+money(e.commissionValue):Number(e.commissionValue??10)+"%"}</span>`:""}</td><td>${escapeHtml(t?.name||"—")}</td><td><span class="${e.active===false?'status-inactive':'status-active'}">${e.active===false?'Inativo':'Ativo'}</span></td><td><div class="register-actions"><button class="icon-btn" title="Editar" data-edit-employee="${e.id}">✎</button><label class="deactivate-check"><input type="checkbox" data-toggle-employee="${e.id}" ${e.active===false?'checked':''} aria-label="Desativar ${escapeHtml(e.name)}"><span>Inativo</span></label></div></td></tr>`}).join("");
+ $("employeeRows").innerHTML=visibleEmps.map(e=>{const t=trucks.find(x=>x.id===e.truckId);return `<tr><td class="select-column"><input type="checkbox" class="registration-select" data-select-employee="${e.id}" aria-label="Selecionar ${escapeHtml(e.name)}"></td><td><strong>${escapeHtml(e.name)}</strong>${e.phone?`<span class="subtext">${escapeHtml(e.phone)}</span>`:""}</td><td>${escapeHtml(e.role||"Motorista")}${(e.role||"Motorista")==="Motorista"?`<span class="subtext">${e.commissionType==="fixed"?"Fixo: "+money(e.commissionValue):Number(e.commissionValue??10)+"%"}</span>`:""}</td><td>${escapeHtml(t?.name||"—")}</td><td><span class="${e.active===false?'status-inactive':'status-active'}">${e.active===false?'Inativo':'Ativo'}</span></td><td><div class="register-actions"><button class="icon-btn" title="Editar" data-edit-employee="${e.id}">✎</button><button class="icon-btn delete-registration-btn" title="Excluir permanentemente" data-delete-employee="${e.id}">🗑</button><label class="deactivate-check"><input type="checkbox" data-toggle-employee="${e.id}" ${e.active===false?'checked':''} aria-label="Desativar ${escapeHtml(e.name)}"><span>Inativo</span></label></div></td></tr>`}).join("");
  $("employeeEmpty").hidden=emps.length>0;
  const visibleTrucks=trucks.filter(t=>$("showInactiveTrucks")?.checked || t.active!==false);
- $("truckRows").innerHTML=visibleTrucks.map(t=>{const driver=emps.find(e=>e.id===t.driverId);return `<tr><td><strong>${escapeHtml(t.name)}</strong></td><td>${escapeHtml(t.plate||"—")}</td><td>${escapeHtml(driver?.name||"—")}</td><td><span class="${t.active===false?'status-inactive':'status-active'}">${t.active===false?'Inativo':'Ativo'}</span></td><td><div class="register-actions"><button class="icon-btn" title="Editar" data-edit-truck="${t.id}">✎</button><label class="deactivate-check"><input type="checkbox" data-toggle-truck="${t.id}" ${t.active===false?'checked':''} aria-label="Desativar ${escapeHtml(t.name)}"><span>Inativo</span></label></div></td></tr>`}).join("");
+ $("truckRows").innerHTML=visibleTrucks.map(t=>{const driver=emps.find(e=>e.id===t.driverId);return `<tr><td class="select-column"><input type="checkbox" class="registration-select" data-select-truck="${t.id}" aria-label="Selecionar ${escapeHtml(t.name)}"></td><td><strong>${escapeHtml(t.name)}</strong></td><td>${escapeHtml(t.plate||"—")}</td><td>${escapeHtml(driver?.name||"—")}</td><td><span class="${t.active===false?'status-inactive':'status-active'}">${t.active===false?'Inativo':'Ativo'}</span></td><td><div class="register-actions"><button class="icon-btn" title="Editar" data-edit-truck="${t.id}">✎</button><button class="icon-btn delete-registration-btn" title="Excluir permanentemente" data-delete-truck="${t.id}">🗑</button><label class="deactivate-check"><input type="checkbox" data-toggle-truck="${t.id}" ${t.active===false?'checked':''} aria-label="Desativar ${escapeHtml(t.name)}"><span>Inativo</span></label></div></td></tr>`}).join("");
  $("employeeEmpty").hidden=visibleEmps.length>0;
  $("employeeEmpty").textContent=$("showInactiveEmployees")?.checked?"Nenhum funcionário encontrado.":"Nenhum funcionário ativo. Marque INATIVOS para consultar os desativados.";
  $("truckEmpty").hidden=visibleTrucks.length>0;
  $("truckEmpty").textContent=$("showInactiveTrucks")?.checked?"Nenhum caminhão encontrado.":"Nenhum caminhão ativo. Marque INATIVOS para consultar os desativados.";
+ updateRegistrationSelection("employee");updateRegistrationSelection("truck");
  const cats=db.categories||[];$("categoryRows").innerHTML=cats.slice().sort((a,b)=>a.localeCompare(b)).map((c,i)=>{const count=db.expenses.filter(e=>e.category===c).length;return `<tr><td>${escapeHtml(c)}</td><td>${count} lançamento(s)</td><td><div class="register-actions"><button class="icon-btn" title="Editar" data-edit-category="${escapeHtml(c)}">✎</button><button class="icon-btn" title="${count?"Desativar (mantém histórico)":"Excluir"}" data-delete-category="${escapeHtml(c)}">×</button></div></td></tr>`}).join("");
  document.querySelectorAll("[data-edit-employee]").forEach(b=>b.onclick=()=>{const e=db.employees.find(x=>x.id===b.dataset.editEmployee);if(!e)return;$("employeeId").value=e.id;$("employeeName").value=e.name;$("employeeRole").value=e.role||"Motorista";$("employeePhone").value=e.phone||"";if($("employeeTruckId"))$("employeeTruckId").value=e.truckId||"";$("employeeCommissionType").value=e.commissionType||"percent";$("employeeCommissionValue").value=e.commissionValue??10;$("employeeSave").textContent="Salvar alterações";$("employeeCancel").hidden=false;$("employeeName").focus()});
  document.querySelectorAll("[data-toggle-employee]").forEach(b=>b.onchange=()=>{const e=db.employees.find(x=>x.id===b.dataset.toggleEmployee);if(!e)return;e.active=!b.checked;saveDB();toast(e.active?"Funcionário reativado.":"Funcionário desativado.")});
  document.querySelectorAll("[data-edit-truck]").forEach(b=>b.onclick=()=>{const t=db.trucks.find(x=>x.id===b.dataset.editTruck);if(!t)return;$("truckId").value=t.id;$("truckName").value=t.name;$("truckPlate").value=t.plate||"";if($("truckDriverId"))$("truckDriverId").value=t.driverId||"";$("truckSave").textContent="Salvar alterações";$("truckCancel").hidden=false;$("truckName").focus()});
  document.querySelectorAll("[data-toggle-truck]").forEach(b=>b.onchange=()=>{const t=db.trucks.find(x=>x.id===b.dataset.toggleTruck);if(!t)return;t.active=!b.checked;saveDB();toast(t.active?"Caminhão reativado.":"Caminhão desativado.")});
 }
+function selectedRegistrationIds(type){return [...document.querySelectorAll(`[data-select-${type}]:checked`)].map(el=>el.dataset[`select${type[0].toUpperCase()+type.slice(1)}`]);}
+function updateRegistrationSelection(type){
+ const boxes=[...document.querySelectorAll(`[data-select-${type}]`)];
+ const selected=boxes.filter(el=>el.checked).length;
+ const count=$(type==="employee"?"selectedEmployeesCount":"selectedTrucksCount");
+ const all=$(type==="employee"?"selectAllEmployees":"selectAllTrucks");
+ if(count)count.textContent=`${selected} selecionado(s)`;
+ if(all){all.checked=boxes.length>0&&selected===boxes.length;all.indeterminate=selected>0&&selected<boxes.length}
+}
+function deleteEmployees(ids){
+ const list=db.employees.filter(e=>ids.includes(e.id));
+ if(!list.length)return;
+ if(!confirm(`Excluir permanentemente ${list.length} cadastro(s) de funcionário/motorista? Essa ação não pode ser desfeita. Os lançamentos históricos serão mantidos, mas os cadastros serão removidos.`))return;
+ const idSet=new Set(ids);
+ db.trucks.forEach(t=>{if(idSet.has(t.driverId))delete t.driverId});
+ db.employees=db.employees.filter(e=>!idSet.has(e.id));
+ if(idSet.has($("employeeId").value))resetEmployeeForm();
+ saveDB();renderRegistrations();toast(`${list.length} cadastro(s) excluído(s).`);
+}
+function deleteTrucks(ids){
+ const list=db.trucks.filter(t=>ids.includes(t.id));
+ if(!list.length)return;
+ if(!confirm(`Excluir permanentemente ${list.length} caminhão(ões)? Essa ação não pode ser desfeita. Os lançamentos históricos serão mantidos, mas os cadastros serão removidos.`))return;
+ const idSet=new Set(ids);
+ db.trucks.forEach(t=>{if(idSet.has(t.id)&&t.driverId){const e=db.employees.find(x=>x.id===t.driverId);if(e&&e.truckId===t.id)delete e.truckId}});
+ db.employees.forEach(e=>{if(idSet.has(e.truckId))delete e.truckId});
+ db.trucks=db.trucks.filter(t=>!idSet.has(t.id));
+ if(idSet.has($("truckId").value))resetTruckForm();
+ saveDB();renderRegistrations();toast(`${list.length} caminhão(ões) excluído(s).`);
+}
+$("selectAllEmployees")?.addEventListener("change",e=>{document.querySelectorAll("[data-select-employee]").forEach(b=>b.checked=e.target.checked);updateRegistrationSelection("employee")});
+$("selectAllTrucks")?.addEventListener("change",e=>{document.querySelectorAll("[data-select-truck]").forEach(b=>b.checked=e.target.checked);updateRegistrationSelection("truck")});
+$("deleteSelectedEmployees")?.addEventListener("click",()=>deleteEmployees(selectedRegistrationIds("employee")));
+$("deleteSelectedTrucks")?.addEventListener("click",()=>deleteTrucks(selectedRegistrationIds("truck")));
+document.addEventListener("change",e=>{
+ if(e.target.matches("[data-select-employee]"))updateRegistrationSelection("employee");
+ if(e.target.matches("[data-select-truck]"))updateRegistrationSelection("truck");
+});
+document.addEventListener("click",e=>{
+ const delEmployee=e.target.closest("[data-delete-employee]"),delTruck=e.target.closest("[data-delete-truck]");
+ if(delEmployee)deleteEmployees([delEmployee.dataset.deleteEmployee]);
+ if(delTruck)deleteTrucks([delTruck.dataset.deleteTruck]);
+});
 $("showInactiveEmployees")?.addEventListener("change",renderRegistrations);
 $("showInactiveTrucks")?.addEventListener("change",renderRegistrations);
 function resetEmployeeForm(){$("employeeForm").reset();$("employeeId").value="";$("employeeRole").value="Motorista";$("employeeCommissionType").value="percent";$("employeeCommissionValue").value="10";if($("employeeTruckId"))$("employeeTruckId").value="";$("employeeSave").textContent="＋ Adicionar funcionário";$("employeeCancel").hidden=true}
