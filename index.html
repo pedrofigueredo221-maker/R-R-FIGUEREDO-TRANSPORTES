@@ -14,6 +14,7 @@
     <button class="nav-item active" data-page="dashboard"><span>▦</span> Visão geral</button>
     <button class="nav-item" data-page="freights"><span>⇄</span> Fretes</button>
     <button class="nav-item" data-page="expenses"><span>▤</span> Despesas e manutenção</button>
+    <button class="nav-item" data-page="receivables"><span>↗</span> Contas a receber</button>
     <button class="nav-item" data-page="payments"><span>◷</span> Contas a pagar</button>
     <button class="nav-item" data-page="reports"><span>▥</span> Relatórios</button>
     <button class="nav-item" data-page="cadastros"><span>⚙</span> Cadastros</button>
@@ -29,7 +30,7 @@
           <article class="stat-card"><div class="stat-head"><span>Fretes no período</span><span class="stat-icon green">⇄</span></div><strong id="statFreight">R$ 0,00</strong><small id="statFreightCount">0 fretes registrados</small></article>
           <article class="stat-card"><div class="stat-head"><span>Recebido de clientes</span><span class="stat-icon blue">↓</span></div><strong id="statReceived">R$ 0,00</strong><small id="statReceivable">R$ 0,00 a receber</small></article>
           <article class="stat-card"><div class="stat-head"><span>Despesas pagas</span><span class="stat-icon orange">↗</span></div><strong id="statPaid">R$ 0,00</strong><small id="statPayable">R$ 0,00 a pagar</small></article>
-          <article class="stat-card"><div class="stat-head"><span>Resultado simplificado</span><span class="stat-icon purple">＝</span></div><strong id="statResult">R$ 0,00</strong><small>Recebimentos − despesas pagas</small></article>
+          <article class="stat-card"><div class="stat-head"><span>Lucro estimado</span><span class="stat-icon purple">＝</span></div><strong id="statResult">R$ 0,00</strong><small>Resultado gerencial estimado; não substitui apuração contábil</small></article>
         </div>
         <div class="dashboard-grid">
           <article class="panel"><div class="panel-heading"><div><h3>Fretes recentes</h3><p>Últimos lançamentos cadastrados</p></div><button class="text-btn" data-goto="freights">Ver todos →</button></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Rota</th><th>Motorista</th><th>Valor</th><th>Status</th></tr></thead><tbody id="recentFreights"></tbody></table></div></article>
@@ -40,7 +41,7 @@
       </section>
 
       <section class="page" id="page-freights">
-        <div class="section-top"><div><h2>Controle de fretes</h2><p>Registre viagens, calcule comissão e acompanhe recebimentos.</p></div><button class="btn btn-primary" id="addFreight">＋ Cadastrar frete</button></div>
+        <div class="section-top"><div><h2>Controle de fretes</h2><p>Registre viagens, calcule comissão e acompanhe recebimentos.</p></div><div class="import-actions"><button class="refresh-btn" data-refresh title="Atualizar dados">🔄</button><button class="btn btn-primary" id="addFreight">＋ Cadastrar frete</button></div></div>
         <article class="panel import-panel">
           <div class="panel-heading"><div><h3>📥 Lançar vários fretes de uma vez</h3><p>Importe o Excel ou fotografe uma página do caderno. Sempre confira antes de salvar.</p></div></div>
           <div class="import-actions"><button class="btn btn-secondary" id="downloadFreightTemplate">⬇ Baixar modelo Excel</button><label class="btn btn-secondary file-button" for="freightExcelFile">📊 Importar planilha</label><input id="freightExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><label class="btn btn-secondary file-button" for="freightPhotoFile">📷 Fotografar / escolher foto</label><input id="freightPhotoFile" type="file" accept="image/*" capture="environment" hidden></div>
@@ -48,42 +49,56 @@
           <div id="importReview" class="import-review" hidden><div class="panel-heading"><div><h3>Conferir antes de importar</h3><p>Corrija os dados na prévia. Não serão salvos automaticamente.</p></div></div><label for="importText">Prévia (campos separados por ponto e vírgula)</label><textarea id="importText" rows="7" spellcheck="false"></textarea><div class="import-actions"><button class="btn btn-primary" id="confirmFreightImport">✓ Validar e importar</button><button class="btn btn-secondary" id="cancelFreightImport">Cancelar</button></div><div id="importValidation" class="import-validation" aria-live="polite"></div></div>
         </article>
         <div class="filters"><input id="freightSearch" placeholder="Buscar rota ou motorista..."><select id="freightDriverFilter"><option value="">Todos os motoristas</option></select><input type="month" id="freightMonth"><select id="freightStatusFilter"><option value="">Todos os status</option><option value="Pendente">Pendente</option><option value="Parcial">Parcial</option><option value="Pago">Pago</option></select></div>
-        <div class="summary-strip"><div><span>Fretes filtrados</span><strong id="freightTotal">R$ 0,00</strong></div><div><span>Comissões estimadas</span><strong id="commissionTotal">R$ 0,00</strong></div><div><span>Saldo a receber</span><strong id="freightOpen">R$ 0,00</strong></div></div>
+        <div class="summary-strip"><div><span>Fretes filtrados</span><strong id="freightTotal">R$ 0,00</strong></div><div><span>Comissão + bônus</span><strong id="commissionTotal">R$ 0,00</strong></div><div><span>Saldo a receber</span><strong id="freightOpen">R$ 0,00</strong></div></div>
         <article class="panel"><div class="table-wrap"><table><thead><tr><th>Data</th><th>Rota</th><th>Motorista</th><th>Frete</th><th>Pedágio</th><th>Comissão</th><th>Líquido motorista*</th><th>Recebimento</th><th></th></tr></thead><tbody id="freightRows"></tbody></table></div><div class="empty-state" id="freightEmpty" hidden>Nenhum frete encontrado. Cadastre o primeiro lançamento.</div></article>
-        <p class="footnote">*Cálculo ilustrativo: valor do frete menos comissão percentual e, se marcado, pedágio. Ajuste as regras conforme o combinado com cada motorista.</p>
+        <p class="footnote">*O lucro estimado considera descontos, pedágio, comissão, bônus e combustível real informado. Evite lançar o mesmo custo duas vezes.</p>
       </section>
 
       <section class="page" id="page-expenses">
-        <div class="section-top"><div><h2>Despesas e manutenção</h2><p>Boletos, oficinas, óleo, pneus e demais custos da operação.</p></div><button class="btn btn-primary" id="addExpense">＋ Nova despesa</button></div>
+        <div class="section-top"><div><h2>Despesas e manutenção</h2><p>Boletos, oficinas, óleo, pneus e demais custos da operação.</p></div><div class="import-actions"><button class="refresh-btn" data-refresh title="Atualizar dados">🔄</button><button class="btn btn-primary" id="addExpense">＋ Nova despesa</button></div></div>
         <div class="filters"><input id="expenseSearch" placeholder="Buscar descrição ou fornecedor..."><select id="expenseCategoryFilter"><option value="">Todas as categorias</option><option>Manutenção</option><option>Combustível</option><option>Despesas gerais</option><option>Documentação</option><option>Pedágio</option><option>Outros</option></select><select id="expenseTruckFilter"><option value="">Todos os caminhões</option><option>Caminhão 01</option><option>Caminhão 02</option><option>Caminhão 03</option><option>Caminhão 04</option><option>Caminhão 05</option><option>Não definido</option></select><input type="month" id="expenseMonth"></div>
         <div class="summary-strip"><div><span>Total de despesas</span><strong id="expenseTotal">R$ 0,00</strong></div><div><span>Pago</span><strong id="expensePaid">R$ 0,00</strong></div><div><span>Em aberto</span><strong id="expenseOpen">R$ 0,00</strong></div></div>
         <article class="panel"><div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Categoria</th><th>Caminhão</th><th>Valor total</th><th>Pagamento</th><th>Pago</th><th>Em aberto</th><th></th></tr></thead><tbody id="expenseRows"></tbody></table></div><div class="empty-state" id="expenseEmpty" hidden>Nenhuma despesa encontrada.</div></article>
       </section>
 
+      <section class="page" id="page-receivables">
+        <div class="section-top"><div><h2>Contas a receber</h2><p>Recebíveis gerados automaticamente pelos fretes, com saldos parciais e pendentes.</p></div><button class="btn btn-secondary" id="refreshReceivables">🔄</button></div>
+        <div class="filters"><input id="receivableSearch" placeholder="Buscar cliente, motorista ou rota..."><select id="receivableStatus"><option value="">Todas as situações</option><option value="Pendente">Pendente</option><option value="Parcial">Parcial</option><option value="Pago">Pago</option></select><input type="month" id="receivableMonth"></div>
+        <div class="summary-strip"><div><span>Fretes faturados</span><strong id="receivableTotal">R$ 0,00</strong></div><div><span>Recebido</span><strong id="receivablePaid">R$ 0,00</strong></div><div><span>Saldo a receber</span><strong id="receivableOpen">R$ 0,00</strong></div></div>
+        <article class="panel"><div class="table-wrap"><table><thead><tr><th>Data</th><th>Cliente / rota</th><th>Motorista</th><th>Valor do frete</th><th>Recebido</th><th>Saldo</th><th>Situação</th><th></th></tr></thead><tbody id="receivableRows"></tbody></table></div><div class="empty-state" id="receivableEmpty" hidden>Nenhum recebível para os filtros escolhidos.</div></article>
+      </section>
       <section class="page" id="page-payments">
-        <div class="section-top"><div><h2>Contas a pagar</h2><p>Acompanhe vencimentos, parcelas e pagamentos pendentes.</p></div><button class="btn btn-primary" id="addPaymentExpense">＋ Registrar conta</button></div>
+        <div class="section-top"><div><h2>Contas a pagar</h2><p>Acompanhe vencimentos, parcelas e pagamentos pendentes.</p></div><div class="import-actions"><button class="refresh-btn" data-refresh title="Atualizar dados">🔄</button><button class="btn btn-primary" id="addPaymentExpense">＋ Registrar conta</button></div></div>
         <div class="filters"><input id="paymentSearch" placeholder="Buscar conta ou fornecedor..."><select id="paymentStatusFilter"><option value="">Todas as situações</option><option value="atrasada">Atrasadas</option><option value="aberta">Em aberto</option><option value="paga">Pagas</option></select><input type="month" id="paymentMonth"></div>
-        <div class="summary-strip"><div><span>Vencido</span><strong id="overdueTotal">R$ 0,00</strong></div><div><span>Próximos vencimentos</span><strong id="dueTotal">R$ 0,00</strong></div><div><span>Parcelas em aberto</span><strong id="openInstallments">0</strong></div></div>
-        <article class="panel"><div class="table-wrap"><table><thead><tr><th>Vencimento</th><th>Conta</th><th>Parcela</th><th>Valor</th><th>Situação</th><th>Pagamento</th><th></th></tr></thead><tbody id="paymentRows"></tbody></table></div><div class="empty-state" id="paymentEmpty" hidden>Nenhuma conta encontrada.</div></article>
+        <div class="summary-strip"><div><span>Total previsto no mês</span><strong id="monthPayableTotal">R$ 0,00</strong></div><div><span>Pago no mês</span><strong id="monthPayablePaid">R$ 0,00</strong></div><div><span>Falta pagar no mês</span><strong id="monthPayableOpen">R$ 0,00</strong></div></div><div class="summary-strip"><div><span>Vencido em aberto</span><strong id="overdueTotal">R$ 0,00</strong></div><div><span>Próximos vencimentos</span><strong id="dueTotal">R$ 0,00</strong></div><div><span>Parcelas pendentes</span><strong id="openInstallments">0</strong></div></div>
+        <article class="panel"><div class="table-wrap"><table><thead><tr><th>Vencimento</th><th>Conta</th><th>Parcela</th><th>Valor da parcela</th><th>Situação</th><th>Registro de pagamento</th><th></th></tr></thead><tbody id="paymentRows"></tbody></table></div><div class="empty-state" id="paymentEmpty" hidden>Nenhuma conta encontrada.</div></article>
       </section>
 
       <section class="page" id="page-cadastros">
         <div class="section-top"><div><h2>Cadastros da empresa</h2><p>Mantenha nomes de motoristas e caminhões atualizados em um só lugar. Alterações de nome também atualizam os lançamentos antigos.</p></div></div>
         <div class="dashboard-grid">
           <article class="panel"><div class="panel-heading"><div><h3>👤 Funcionários / motoristas</h3><p>Adicione pessoas e edite os nomes cadastrados.</p></div></div>
-            <form id="employeeForm" class="inline-register"><input type="hidden" id="employeeId"><label for="employeeName">Nome do funcionário</label><input id="employeeName" required maxlength="80" placeholder="Nome completo"><div class="form-grid"><div><label for="employeeRole">Função</label><select id="employeeRole"><option>Motorista</option><option>Auxiliar</option><option>Administrativo</option><option>Mecânico</option><option>Outro</option></select></div><div><label for="employeePhone">Telefone (opcional)</label><input id="employeePhone" placeholder="(00) 00000-0000"></div></div><div class="import-actions"><button class="btn btn-primary" type="submit" id="employeeSave">＋ Adicionar funcionário</button><button class="btn btn-secondary" type="button" id="employeeCancel" hidden>Cancelar edição</button></div></form>
+            <form id="employeeForm" class="inline-register"><input type="hidden" id="employeeId"><label for="employeeName">Nome do funcionário</label><input id="employeeName" required maxlength="80" placeholder="Nome completo"><div class="form-grid"><div><label for="employeeRole">Função</label><select id="employeeRole"><option>Motorista</option><option>Auxiliar</option><option>Administrativo</option><option>Mecânico</option><option>Outro</option></select></div><div><label for="employeePhone">Telefone (opcional)</label><input id="employeePhone" placeholder="(00) 00000-0000"></div>
+          <div><label for="employeeCommissionType">Comissão padrão do motorista</label><select id="employeeCommissionType"><option value="percent">Porcentagem</option><option value="fixed">Valor fixo por viagem</option></select></div>
+          <div><label for="employeeCommissionValue">Percentual (%) ou valor (R$)</label><input id="employeeCommissionValue" type="number" min="0" step="0.01" value="10"></div></div><div class="import-actions"><button class="btn btn-primary" type="submit" id="employeeSave">＋ Adicionar funcionário</button><button class="btn btn-secondary" type="button" id="employeeCancel" hidden>Cancelar edição</button></div></form>
             <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Função</th><th>Situação</th><th></th></tr></thead><tbody id="employeeRows"></tbody></table></div><div class="empty-state" id="employeeEmpty" hidden>Nenhum funcionário cadastrado. Adicione o primeiro acima.</div>
           </article>
           <article class="panel"><div class="panel-heading"><div><h3>🚚 Caminhões</h3><p>Altere o nome de exibição ou cadastre outro veículo.</p></div></div>
             <form id="truckForm" class="inline-register"><input type="hidden" id="truckId"><label for="truckName">Nome / identificação</label><input id="truckName" required maxlength="80" placeholder="Ex.: Scania R450 — placa ABC1D23"><label for="truckPlate">Placa (opcional)</label><input id="truckPlate" maxlength="10" placeholder="ABC1D23"><div class="import-actions"><button class="btn btn-primary" type="submit" id="truckSave">＋ Adicionar caminhão</button><button class="btn btn-secondary" type="button" id="truckCancel" hidden>Cancelar edição</button></div></form>
             <div class="table-wrap"><table><thead><tr><th>Caminhão</th><th>Placa</th><th>Situação</th><th></th></tr></thead><tbody id="truckRows"></tbody></table></div><div class="empty-state" id="truckEmpty" hidden>Nenhum caminhão cadastrado.</div>
           </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h3>🏷️ Categorias de despesas</h3><p>Cadastre classificações próprias para organizar os custos.</p></div></div>
+            <form id="categoryForm" class="inline-register"><input type="hidden" id="categoryId"><label for="categoryName">Nome da categoria</label><input id="categoryName" required maxlength="60" placeholder="Ex.: Pneus, oficina, óleo"><div class="import-actions"><button class="btn btn-primary" type="submit" id="categorySave">＋ Adicionar categoria</button><button class="btn btn-secondary" type="button" id="categoryCancel" hidden>Cancelar</button></div></form>
+            <div class="table-wrap"><table><thead><tr><th>Categoria</th><th>Uso</th><th></th></tr></thead><tbody id="categoryRows"></tbody></table></div>
+          </article>
         </div>
-        <p class="notice">Dica: desative quem saiu da empresa em vez de excluir. Assim, o histórico antigo continua correto. Este protótipo ainda guarda os dados somente neste navegador; não é multiusuário nem tem backup automático.</p>
+        <p class="notice">Dica: desative quem saiu da empresa em vez de excluir. Categorias já usadas serão mantidas no histórico.</p>
+        <p class="notice">Acesso gerencial: este sistema não inclui folha salarial. Comissão e bônus por viagem são custos operacionais.</p>
       </section>
 
       <section class="page" id="page-reports">
-        <div class="section-top"><div><h2>Relatórios</h2><p>Consulte os dados cadastrados e exporte para planilhas.</p></div></div>
+        <div class="section-top"><div><h2>Relatórios</h2><p>Consulte os dados cadastrados e exporte para planilhas.</p></div><button class="refresh-btn" data-refresh title="Atualizar dados">🔄</button></div>
         <div class="report-controls panel"><div><label for="reportMonth">Mês de referência</label><input type="month" id="reportMonth"></div><div><label for="reportDriver">Motorista</label><select id="reportDriver"><option value="">Todos</option></select></div><button class="btn btn-primary" id="refreshReport">Gerar relatório</button><button class="btn btn-secondary" id="exportFreights">Exportar fretes CSV</button><button class="btn btn-secondary" id="exportExpenses">Exportar despesas CSV</button></div>
         <div class="stats-grid report-stats"><article class="stat-card"><span>Fretes registrados</span><strong id="repFreight">R$ 0,00</strong></article><article class="stat-card"><span>Recebido dos clientes</span><strong id="repReceived">R$ 0,00</strong></article><article class="stat-card"><span>Despesas pagas</span><strong id="repExpenses">R$ 0,00</strong></article><article class="stat-card"><span>Despesas em aberto</span><strong id="repOpen">R$ 0,00</strong></article></div>
         <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><div><h3>Resumo por motorista</h3><p>Produção e comissões estimadas</p></div></div><div class="table-wrap"><table><thead><tr><th>Motorista</th><th>Fretes</th><th>Valor bruto</th><th>Comissão</th><th>A receber</th></tr></thead><tbody id="driverReportRows"></tbody></table></div></article><article class="panel"><div class="panel-heading"><div><h3>Resumo de despesas</h3><p>Por categoria</p></div></div><div class="table-wrap"><table><thead><tr><th>Categoria</th><th>Total</th><th>Pago</th><th>Em aberto</th></tr></thead><tbody id="expenseReportRows"></tbody></table></div></article></div>
@@ -98,14 +113,24 @@
       <div class="form-grid">
         <div><label for="fDate">Data do frete *</label><input type="date" id="fDate" required></div>
         <div><label for="fDriver">Motorista *</label><select id="fDriver" required><option value="">Selecione um motorista</option></select></div>
+        <div><label for="fCustomer">Cliente (opcional)</label><input id="fCustomer" placeholder="Empresa / cliente"></div>
         <div><label for="fOrigin">Cidade de origem *</label><input id="fOrigin" required placeholder="Ex.: Campinas"></div>
         <div><label for="fDestination">Cidade de destino *</label><input id="fDestination" required placeholder="Ex.: São Paulo"></div>
         <div><label for="fValue">Valor do frete (R$) *</label><input type="number" id="fValue" min="0.01" step="0.01" required placeholder="0,00"></div>
         <div><label for="fToll">Pedágio (R$)</label><input type="number" id="fToll" min="0" step="0.01" value="0"></div>
-        <div><label for="fCommission">Comissão (%)</label><input type="number" id="fCommission" min="0" max="100" step="0.1" value="10"></div>
+        <div><label for="fDiscount">Descontos gerais (R$)</label><input type="number" id="fDiscount" min="0" step="0.01" value="0"></div>
+        <div><label for="fCommissionType">Tipo de comissão</label><select id="fCommissionType"><option value="percent">Porcentagem</option><option value="fixed">Valor fixo por viagem</option></select></div>
+        <div><label for="fCommission">Comissão (%) ou valor (R$)</label><input type="number" id="fCommission" min="0" step="0.01" value="10"></div>
+        <div><label for="fBonus">Bônus ao motorista (R$)</label><input type="number" id="fBonus" min="0" step="0.01" value="0"></div>
+        <div><label for="fKm">KM rodados</label><input type="number" id="fKm" min="0" step="0.1" placeholder="Ex.: 350"></div>
+        <div><label for="fDieselPrice">Preço do diesel (R$/L)</label><input type="number" id="fDieselPrice" min="0" step="0.001" placeholder="Ex.: 6,20"></div>
+        <div><label for="fLiters">Litros abastecidos</label><input type="number" id="fLiters" min="0" step="0.01" placeholder="Ex.: 100"></div>
+        <div><label for="fFuelActual">Gasto real com combustível (R$)</label><input type="number" id="fFuelActual" min="0" step="0.01" value="0"></div>
         <div><label for="fStatus">Recebimento do cliente</label><select id="fStatus"><option>Pendente</option><option>Parcial</option><option>Pago</option></select></div>
-        <div><label for="fReceived">Valor recebido (R$)</label><input type="number" id="fReceived" min="0" step="0.01" value="0"></div>
+        <div><label for="fReceived">Adiantamento / valor já recebido (R$)</label><input type="number" id="fReceived" min="0" step="0.01" value="0"></div>
+        <div><label for="fBalanceCurrent">Saldo atual a receber (R$)</label><input type="number" id="fBalanceCurrent" min="0" step="0.01" placeholder="Se preencher, o frete será adiantamento + saldo"></div>
         <div class="check-field"><input type="checkbox" id="fDeductToll"><label for="fDeductToll">Descontar pedágio do motorista</label></div>
+        <div class="full-width" id="fuelEstimateBox"><label>Gasto estimado de combustível</label><div class="calc-preview" id="fuelEstimate">R$ 0,00</div></div>
         <div class="full-width"><label for="fNotes">Observações (opcional)</label><textarea id="fNotes" rows="2" placeholder="Número do conhecimento, cliente ou observações"></textarea></div>
       </div>
       <div class="calc-preview" id="freightCalc">Preencha o valor para ver a prévia dos cálculos.</div>
@@ -116,13 +141,16 @@
   <dialog id="expenseDialog" class="modal">
     <form id="expenseForm" method="dialog">
       <div class="modal-header"><div><h2 id="expenseModalTitle">Nova despesa</h2><p>Cadastre uma conta à vista ou parcelada.</p></div><button type="button" class="icon-btn" data-close="expenseDialog">✕</button></div>
-      <input type="hidden" id="expenseId">
+      <input type="hidden" id="expenseId"><input type="hidden" id="eSource" value="expense">
       <div class="form-grid">
         <div class="full-width"><label for="eDescription">Descrição da despesa *</label><input id="eDescription" required placeholder="Ex.: troca de óleo, oficina, boleto"></div>
         <div><label for="eCategory">Categoria *</label><select id="eCategory" required><option>Manutenção</option><option>Combustível</option><option>Despesas gerais</option><option>Documentação</option><option>Pedágio</option><option>Outros</option></select></div>
         <div><label for="eTruck">Caminhão</label><select id="eTruck"><option>Caminhão 01</option><option>Caminhão 02</option><option>Caminhão 03</option><option>Caminhão 04</option><option>Caminhão 05</option><option>Não definido</option></select></div>
         <div><label for="eSupplier">Fornecedor / oficina</label><input id="eSupplier" placeholder="Nome do fornecedor"></div>
-        <div><label for="eValue">Valor total (R$) *</label><input type="number" id="eValue" min="0.01" step="0.01" required placeholder="0,00"></div>
+        <div><label for="eValue">Valor base (R$) *</label><input type="number" id="eValue" min="0.01" step="0.01" required placeholder="0,00"></div>
+        <div><label for="eDiscount">Desconto (R$)</label><input type="number" id="eDiscount" min="0" step="0.01" value="0"></div>
+        <div><label for="eAdditional">Adicional / taxa (R$)</label><input type="number" id="eAdditional" min="0" step="0.01" value="0"></div>
+        <div><label for="eMethod">Meio de pagamento</label><select id="eMethod"><option>Pix</option><option>Dinheiro</option><option>Transferência</option><option>Boleto</option><option>Cartão</option><option>Outro</option></select></div>
         <div><label for="eType">Forma de pagamento</label><select id="eType"><option value="avista">À vista</option><option value="parcelado">Parcelado</option></select></div>
         <div><label for="eInstallments">Número de parcelas</label><select id="eInstallments"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>10</option><option>12</option><option>24</option></select></div>
         <div><label for="eFirstDue">Vencimento da 1ª parcela *</label><input type="date" id="eFirstDue" required></div>
@@ -134,15 +162,15 @@
     </form>
   </dialog>
   <dialog id="payDialog" class="modal small-modal">
-    <form id="payForm" method="dialog"><div class="modal-header"><div><h2>Registrar pagamento</h2><p id="paySubtitle">Confirme os dados do pagamento.</p></div><button type="button" class="icon-btn" data-close="payDialog">✕</button></div><input type="hidden" id="payExpenseId"><input type="hidden" id="payInstallmentIndex"><div class="form-grid"><div><label for="payAmount">Valor pago (R$)</label><input type="number" min="0.01" step="0.01" id="payAmount" required></div><div><label for="payDate">Data do pagamento</label><input type="date" id="payDate" required></div><div><label for="payMethod">Meio de pagamento</label><select id="payMethod"><option>Pix</option><option>Dinheiro</option><option>Transferência</option><option>Boleto</option><option>Cartão</option><option>Outro</option></select></div></div><div class="modal-actions"><button type="button" class="btn btn-secondary" data-close="payDialog">Cancelar</button><button class="btn btn-primary" type="submit">Confirmar pagamento</button></div></form>
+    <form id="payForm" method="dialog"><div class="modal-header"><div><h2>Registrar pagamento</h2><p id="paySubtitle">Confirme os dados do pagamento.</p></div><button type="button" class="icon-btn" data-close="payDialog">✕</button></div><input type="hidden" id="payExpenseId"><input type="hidden" id="payInstallmentIndex"><input type="hidden" id="paySource" value="expense"><div class="form-grid"><div><label for="payAmount">Valor pago (R$)</label><input type="number" min="0.01" step="0.01" id="payAmount" required></div><div><label for="payDate">Data do pagamento</label><input type="date" id="payDate" required></div><div><label for="payMethod">Meio de pagamento</label><select id="payMethod"><option>Pix</option><option>Dinheiro</option><option>Transferência</option><option>Boleto</option><option>Cartão</option><option>Outro</option></select></div></div><div class="modal-actions"><button type="button" class="btn btn-secondary" data-close="payDialog">Cancelar</button><button class="btn btn-primary" type="submit">Confirmar pagamento</button></div></form>
   </dialog>
   <div id="toast" class="toast" role="status"></div>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-  <script src="config.js?v=6"></script>
-  <script src="app.js?v=6"></script>
-  <script src="sync.js?v=6"></script>
+  <script src="config.js?v=8"></script>
+  <script src="app.js?v=8"></script>
+  <script src="sync.js?v=8"></script>
   <script>cloud.start();</script>
 </body>
 </html>

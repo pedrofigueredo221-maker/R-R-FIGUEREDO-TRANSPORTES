@@ -26,5 +26,5 @@ on public.app_state for update to anon using (id = 1) with check (id = 1);
 
 -- Cria o registro inicial, sem apagar um registro existente.
 insert into public.app_state (id, data, version)
-values (1, '{"freights":[],"expenses":[],"receivables":[],"employees":[],"trucks":[]}'::jsonb, 0)
+values (1, '{"freights":[],"expenses":[],"receivables":[],"employees":[],"trucks":[],"categories":["Combustível","Pedágio","Óleo e lubrificantes","Mecânico","Oficina","Pneus","Elétrica","Peças","Documentação","Seguro","Lavagem","Manutenção","Despesas gerais","Outros"]}'::jsonb, 0)
 on conflict (id) do nothing;

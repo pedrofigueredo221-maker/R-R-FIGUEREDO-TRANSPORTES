@@ -33,13 +33,24 @@ Não é necessário instalar dependências para a versão inicial.
 - Exportação de fretes e despesas para CSV compatível com Excel.
 - Layout adaptado para celular e computador.
 
+## Melhorias desta versão
+
+- Comissão de motorista por porcentagem ou valor fixo, com valor padrão no cadastro e possibilidade de ajuste no frete.
+- Descontos gerais, pedágio descontável da base da comissão, bônus separado da base, KM, preço do diesel, litros, estimativa de combustível e gasto real.
+- Prévia do cálculo de comissão e lucro estimado por viagem.
+- Contas a receber derivadas automaticamente dos fretes, com saldo e recebimento parcial.
+- Despesas com descontos, adicionais, categoria personalizada, caminhão, forma de pagamento e parcelamento.
+- Cadastro/edição/exclusão de categorias, preservando categorias já utilizadas no histórico.
+- Botões discretos de atualização e painel gerencial com faturamento, recebimentos, obrigações e estimativa de resultado.
+- Sem folha salarial; comissão e bônus por viagem continuam sendo custos operacionais.
+
 ## Limitações importantes desta versão
 
 **Esta versão é um protótipo para testes, não um sistema de produção.**
 
 - Os dados ficam no `localStorage` do navegador. Não sincronizam entre celular e computador, nem entre usuários. Limpar os dados do navegador pode apagar os registros.
-- Não há login, banco de dados em nuvem, permissões por usuário, backup automático nem recuperação de senha.
-- O cálculo de comissão é ilustrativo e precisa ser confirmado com a empresa. O resultado do painel é simplificado: recebimentos registrados nos fretes menos pagamentos de despesas registrados.
+- O pacote usa Supabase sem login conforme a configuração atual. A chave publicável não é uma chave administrativa, mas as políticas SQL abertas permitem que qualquer pessoa com acesso ao site possa ler e alterar o estado financeiro. Restrinja a hospedagem e configure autenticação/políticas antes de usar com dados confidenciais. Não há permissões individuais nem backup automático.
+- O lucro é uma estimativa gerencial e deve ser validado com os critérios contábeis da empresa. Evite registrar o mesmo abastecimento tanto no custo do frete quanto em despesas para não duplicar o custo.
 - O campo de recebimento de fretes acompanha o total recebido, mas não mantém um histórico detalhado de cada recebimento.
 - Ao editar uma despesa já criada, este protótipo não altera os valores nem a agenda de parcelas existentes; apenas permite corrigir os dados descritivos. Exclua e recadastre uma despesa se precisar reconstruir seu parcelamento.
 - Datas das parcelas são mensais e geradas automaticamente a partir do vencimento inicial.
@@ -56,3 +67,18 @@ Antes de usar com dados reais, evoluir para Supabase/PostgreSQL com autenticaç�
 - **Fotografar o caderno:** escolha a opção de foto no celular ou selecione uma imagem. O reconhecimento de texto é uma ajuda, não uma garantia: escrita à mão e números podem ser lidos errado. Confira a prévia manualmente.
 - Os leitores Excel e OCR dependem de conexão à internet para carregar as bibliotecas.
 - **Limitação importante:** os dados continuam salvos somente no navegador/dispositivo atual. Para uso profissional com acesso no celular e computador, será necessário adicionar banco de dados online, autenticação, permissões e backup.
+
+
+## Atualização financeira (outubro/2026)
+
+- Despesas e manutenções criam parcelas financeiras automaticamente e aparecem em **Contas a pagar**.
+- A tela de contas a pagar lista parcelas por vencimento/mês e também inclui contas pagas no mês selecionado, mostrando o histórico de data, meio e valor de cada pagamento.
+- O resumo mensal distingue valor previsto das parcelas, pagamentos registrados no mês e saldo em aberto das parcelas vencendo no mês.
+- O botão **Registrar conta** cria uma conta manual, usando o mesmo formulário financeiro (à vista, boleto/forma de pagamento, parcelas, vencimentos, desconto, adicional e pagamentos). Contas manuais são separadas visualmente da listagem de despesas/manutenções, mas permanecem no financeiro.
+- No frete, o campo **Saldo atual a receber** pode ser informado junto ao adiantamento recebido; o sistema calcula o valor total como adiantamento + saldo. Se o campo de saldo ficar vazio, o valor do frete é mantido como informado.
+- A comissão percentual usa frete menos descontos e, se marcado, pedágio; comissão fixa usa o valor fixo cadastrado. O bônus é somado após a comissão e reduz o lucro estimado sem entrar na base percentual.
+- O custo do pedágio reduz o lucro estimado da viagem; combustível estimado é preço do diesel × litros e o gasto real é usado para o lucro.
+
+### Atenção antes de usar em produção
+
+Faça backup do banco Supabase e dos dados locais antes de substituir a versão publicada. A configuração atual do projeto não tem login e o SQL de exemplo concede acesso anônimo ao registro financeiro compartilhado. Portanto, mesmo que o uso planejado seja só para diretores e gerência, **o sistema ainda não está tecnicamente restrito a essas pessoas**. Não use dados financeiros reais/publicação aberta até configurar autenticação e políticas de acesso adequadas no Supabase.

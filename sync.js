@@ -2,7 +2,7 @@
 // Depende do app.js existente definir `db`, `renderAll()` e, se aplicável, `ensureDefaults()`.
 const cloud = (() => {
   const cfg = window.APP_CONFIG || {};
-  const KEYS = ["freights", "expenses", "receivables", "employees", "trucks"];
+  const KEYS = ["freights", "expenses", "receivables", "employees", "trucks", "categories"];
   const OLD_KEY = "estrada_gestao_v1", CACHE_KEY = "estrada_cache_v2", MIG_KEY = "estrada_migrated_v2";
   let sb, version = 0, base = {}, queue = Promise.resolve(), busy = false, pending = false, timer;
   const clone = o => JSON.parse(JSON.stringify(o));
@@ -27,6 +27,7 @@ const cloud = (() => {
   function normalize(d) {
     d = d || {};
     KEYS.forEach(k => { if (!Array.isArray(d[k])) d[k] = []; });
+    if (!d.categories.length) d.categories = ["Combustível","Pedágio","Óleo e lubrificantes","Mecânico","Oficina","Pneus","Elétrica","Peças","Documentação","Seguro","Lavagem","Manutenção","Despesas gerais","Outros"];
     return d;
   }
   async function fetchRemote() {
@@ -38,6 +39,11 @@ const cloud = (() => {
   function merge3(b, local, remote) {
     const out = { ...remote };
     for (const k of KEYS) {
+      if (k === "categories") {
+        const bs = new Set(b[k] || []), ls = new Set(local[k] || []), rs = new Set(remote[k] || []);
+        out[k] = [...(remote[k] || []).filter(x => !bs.has(x) || ls.has(x)), ...(local[k] || []).filter(x => !bs.has(x) && !rs.has(x))];
+        continue;
+      }
       const bm = new Map((b[k] || []).map(x => [x.id, x]));
       const lm = new Map((local[k] || []).map(x => [x.id, x]));
       const res = [], seen = new Set();
