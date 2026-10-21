@@ -8,6 +8,21 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="loginScreen" class="login-screen">
+    <form id="loginForm" class="login-card">
+      <div class="login-brand">R&amp;R</div>
+      <p class="login-eyebrow">R&amp;R FIGUEREDO TRANSPORTES</p>
+      <h1>Acesso ao sistema</h1>
+      <p class="login-description">Entre com seu usuário e senha para continuar.</p>
+      <label for="loginUsername">Usuário</label>
+      <input id="loginUsername" name="username" autocomplete="username" placeholder="Digite seu usuário" required>
+      <label for="loginPassword">Senha</label>
+      <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" required>
+      <p id="loginError" class="login-error" role="alert" hidden></p>
+      <button id="loginSubmit" class="btn btn-primary login-submit" type="submit">Entrar</button>
+      <small class="login-footnote">Acesso protegido</small>
+    </form>
+  </div>
   <aside class="sidebar" id="sidebar">
     <div class="brand"><div class="brand-mark">R&amp;R</div><div><strong>R&amp;R FIGUEREDO</strong><small>TRANSPORTES</small></div></div>
     <div class="nav-label">MENU PRINCIPAL</div>
@@ -21,7 +36,7 @@
     <div class="sidebar-bottom"><div class="avatar">GF</div><div><strong>Gestão familiar</strong><small>Controle da transportadora</small></div></div>
   </aside>
   <main class="main">
-    <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div><div class="eyebrow">CONTROLE DA TRANSPORTADORA</div><h1 id="pageTitle">Visão geral</h1></div><div class="top-actions"><span class="today" id="today"></span><span id="syncStatus" class="sync-status">Conectando…</span><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
+    <header class="topbar"><button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button><div><div class="eyebrow">CONTROLE DA TRANSPORTADORA</div><h1 id="pageTitle">Visão geral</h1></div><div class="top-actions"><span class="today" id="today"></span><span id="syncStatus" class="sync-status">Conectando…</span><button class="btn btn-secondary" id="logoutButton" type="button" hidden>Sair</button><button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button></div></header>
     <div class="content">
       <section class="page active" id="page-dashboard">
         <div class="welcome"><div><h2>Seu negócio, em uma visão.</h2><p>Fretes, pagamentos e despesas organizados em um só lugar.</p></div><span class="welcome-icon">🚚</span></div>
@@ -168,9 +183,9 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-  <script src="config.js?v=8"></script>
+  <script src="config.js?v=9"></script>
   <script src="app.js?v=9"></script>
-  <script src="sync.js?v=8"></script>
+  <script src="sync.js?v=9"></script>
   <script>cloud.start();</script>
 </body>
 </html>

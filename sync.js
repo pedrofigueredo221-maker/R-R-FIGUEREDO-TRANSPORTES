@@ -1,4 +1,4 @@
-// Sincronização na nuvem (Supabase), sem tela de login.
+// Sincronização na nuvem (Supabase Auth), com login por nome de usuário.
 // Depende do app.js existente definir `db`, `renderAll()` e, se aplicável, `ensureDefaults()`.
 const cloud = (() => {
   const cfg = window.APP_CONFIG || {};
@@ -65,6 +65,8 @@ const cloud = (() => {
   }
   async function doPush() {
     if (!sb) return;
+    const { data: authData } = await sb.auth.getSession();
+    if (!authData.session) return;
     busy = true; status("Salvando na nuvem…", "busy");
     try {
       for (let i = 0; i < 5; i++) {
@@ -97,6 +99,8 @@ const cloud = (() => {
   }
   async function pull() {
     if (!sb || busy) return;
+    const { data: authData } = await sb.auth.getSession();
+    if (!authData.session) return;
     if (pending) { await push(); return; }
     try {
       const { data, error } = await sb.from("app_state").select("version").eq("id", 1).single();
@@ -156,16 +160,68 @@ const cloud = (() => {
       console.error("Falha ao iniciar sincronização. Confira tabela, políticas e colunas do Supabase.", e);
     }
   }
+  function showLogin(show) {
+    const screen = el("loginScreen");
+    if (screen) screen.hidden = !show;
+    document.body.classList.toggle("authenticated", !show);
+    const logout = el("logoutButton");
+    if (logout) logout.hidden = show;
+  }
+  function loginMessage(message) {
+    const box = el("loginError");
+    if (box) { box.textContent = message; box.hidden = !message; }
+  }
+  async function signIn(username, password) {
+    const key = String(username || "").trim().toUpperCase();
+    const email = cfg.USER_EMAILS && cfg.USER_EMAILS[key];
+    if (!email || email.includes("COLOQUE_AQUI")) {
+      throw new Error("O usuário ainda não está vinculado. Configure o e-mail de RAFAEL no arquivo config.js.");
+    }
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    showLogin(false);
+    loginMessage("");
+    await boot();
+  }
+  async function signOut() {
+    clearInterval(timer);
+    const { error } = await sb.auth.signOut();
+    if (error) console.error("Erro ao sair:", error);
+    showLogin(true);
+    const form = el("loginForm");
+    if (form) form.reset();
+    status("Sessão encerrada", "");
+  }
   async function start() {
     ensureStatus();
-    if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY ||
-        cfg.SUPABASE_ANON_KEY.includes("COLE_SUA") || !window.supabase) {
+    if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY || !window.supabase) {
       status("⚠ Configure o Supabase", "err");
       console.error("Configure config.js e carregue a biblioteca do Supabase antes de sync.js.");
       return;
     }
-    sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
-    await boot();
+    sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+    showLogin(true);
+    const form = el("loginForm");
+    if (form) form.addEventListener("submit", async event => {
+      event.preventDefault();
+      const button = el("loginSubmit");
+      if (button) { button.disabled = true; button.textContent = "Entrando…"; }
+      loginMessage("");
+      try { await signIn(el("loginUsername").value, el("loginPassword").value); }
+      catch (e) { loginMessage(e.message === "Invalid login credentials" ? "Usuário ou senha incorretos." : (e.message || "Não foi possível entrar.")); }
+      finally { if (button) { button.disabled = false; button.textContent = "Entrar"; } }
+    });
+    const logout = el("logoutButton");
+    if (logout) logout.addEventListener("click", signOut);
+    try {
+      const { data: { session }, error } = await sb.auth.getSession();
+      if (error) throw error;
+      if (session) { showLogin(false); await boot(); }
+      else { status("Faça login para continuar", ""); }
+    } catch (e) { status("⚠ Falha na autenticação", "err"); console.error(e); }
+    sb.auth.onAuthStateChange((_event, session) => {
+      if (!session) { clearInterval(timer); showLogin(true); }
+    });
   }
   document.addEventListener("visibilitychange", () => { if (!document.hidden) pull(); });
   window.addEventListener("online", pull);
