@@ -805,3 +805,11 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
   #freightDialog #freightCalc .freight-calculation-item span{font-size:17px!important;}
   #freightDialog #freightCalc .freight-calculation-item strong{font-size:18px!important;}
 }
+
+
+/* Perfil Visitante: somente leitura. O bloqueio visual complementa as políticas RLS do Supabase. */
+.read-only-notice{margin:14px 24px 0;padding:12px 16px;border:1px solid #d6b66b;border-radius:10px;background:#fff8df;color:#674d0c;font-weight:700}
+body.read-only button:not(.nav-item):not(.menu-toggle):not(.refresh-btn):not(#logoutButton):not([data-close]):not(.text-btn[data-goto]){display:none!important}
+body.read-only .file-button,body.read-only input[type=file],body.read-only #employeeForm,body.read-only #truckForm,body.read-only #categoryForm,body.read-only dialog{display:none!important}
+body.read-only .register-actions,body.read-only .select-column,body.read-only .bulk-actions{display:none!important}
+body.read-only #quickAdd,body.read-only #seedDemo,body.read-only #addFreight,body.read-only #addExpense,body.read-only #addPaymentExpense,body.read-only #downloadFreightTemplate,body.read-only #confirmFreightImport{display:none!important}
