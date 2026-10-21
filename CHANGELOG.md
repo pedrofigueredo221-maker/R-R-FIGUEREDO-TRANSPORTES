@@ -115,3 +115,12 @@ Facilitar a consulta do sistema em celulares e smartphones, priorizando leitura 
 
 ### Validação
 Revisão estática das regras CSS e do cache. Ainda é necessário conferir visualmente em celular real ou emulador, incluindo o menu, os valores longos e o formulário de frete.
+
+
+## 2026-10-21 — Identificação visual de campos obrigatórios
+
+- `index.html`: o campo Cliente no cadastro de frete deixa de ser obrigatório e o rótulo passa a indicar "(opcional)".
+- `styles.css`: campos `required` recebem fundo cinza-claro para sinalizar visualmente que precisam ser preenchidos.
+- Ao focar um campo obrigatório, o fundo volta a branco para destacar a edição.
+- Nenhuma fórmula financeira ou estrutura do banco foi alterada.
+- Validação estática; confirmar no navegador os formulários de frete, despesas, pagamentos e login.
