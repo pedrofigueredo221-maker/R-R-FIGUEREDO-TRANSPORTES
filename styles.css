@@ -882,3 +882,26 @@ body.read-only #quickAdd,body.read-only #seedDemo,body.read-only #addFreight,bod
 @media (prefers-reduced-motion: reduce) {
   .sidebar { transition: none; }
 }
+
+
+/* Campos obrigatórios: fundo cinza-claro como indicação visual de preenchimento. */
+input:required,
+select:required,
+textarea:required {
+  background-color: #f1f3f5;
+}
+input:required:focus,
+select:required:focus,
+textarea:required:focus {
+  background-color: #fff;
+}
+#freightDialog .freight-section-fields input:required,
+#freightDialog .freight-section-fields select:required,
+#freightDialog .freight-section-fields textarea:required {
+  background-color: #f1f3f5;
+}
+#freightDialog .freight-section-fields input:required:focus,
+#freightDialog .freight-section-fields select:required:focus,
+#freightDialog .freight-section-fields textarea:required:focus {
+  background-color: #fff;
+}
