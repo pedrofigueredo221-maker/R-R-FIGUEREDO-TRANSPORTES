@@ -772,9 +772,14 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
 #freightDialog .freight-calculations-grid{
   grid-template-columns:repeat(3,minmax(0,1fr))!important;
 }
-#freightDialog #freightCalc .freight-calculation-item span,
+#freightDialog #freightCalc .freight-calculation-item span{
+  font-size:17px!important; /* 13 px + 4 px */
+  font-weight:800!important;
+  line-height:1.4;
+  color:#fff!important;
+}
 #freightDialog #freightCalc .freight-calculation-item strong{
-  font-size:17px!important;
+  font-size:18px!important; /* 14 px + 4 px */
   font-weight:800!important;
   line-height:1.4;
   color:#fff!important;
@@ -797,8 +802,6 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
   #freightDialog .freight-calculations-grid{
     grid-template-columns:minmax(0,1fr)!important;
   }
-  #freightDialog #freightCalc .freight-calculation-item span,
-  #freightDialog #freightCalc .freight-calculation-item strong{
-    font-size:17px!important;
-  }
+  #freightDialog #freightCalc .freight-calculation-item span{font-size:17px!important;}
+  #freightDialog #freightCalc .freight-calculation-item strong{font-size:18px!important;}
 }
