@@ -1,8 +1,10 @@
--- R&R Figueredo Transportes: configuração segura do estado compartilhado.
+-- R&R Figueredo Transportes: configuração do estado financeiro compartilhado.
 -- Execute no SQL Editor do Supabase.
--- A política limita leitura e alteração à conta autorizada.
--- Confirme o e-mail abaixo com o usuário criado em Authentication > Users.
--- Este script não apaga nem substitui o registro financeiro existente.
+-- Permite acesso SOMENTE a sessões autenticadas. Desative cadastro público no Supabase
+-- e crie contas manualmente para pessoas autorizadas.
+-- Este script não apaga nem substitui os dados se a linha id=1 já existir.
+
+begin;
 
 create table if not exists public.app_state (
   id integer primary key check (id = 1),
@@ -13,9 +15,9 @@ create table if not exists public.app_state (
 
 alter table public.app_state enable row level security;
 
--- Remova permissões e políticas abertas a visitantes anônimos.
 revoke all on table public.app_state from anon;
 revoke all on table public.app_state from public;
+grant usage on schema public to authenticated;
 grant select, update on table public.app_state to authenticated;
 
 drop policy if exists "public_read_app_state" on public.app_state;
@@ -23,28 +25,19 @@ drop policy if exists "public_insert_app_state" on public.app_state;
 drop policy if exists "public_update_app_state" on public.app_state;
 drop policy if exists "authenticated_read_app_state" on public.app_state;
 drop policy if exists "authenticated_update_app_state" on public.app_state;
+drop policy if exists "app_state_select_authenticated" on public.app_state;
+drop policy if exists "app_state_insert_authenticated" on public.app_state;
+drop policy if exists "app_state_update_authenticated" on public.app_state;
 
 create policy "authenticated_read_app_state"
-on public.app_state
-for select to authenticated
-using (
-  id = 1
-  and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com'
-);
+on public.app_state for select to authenticated
+using (id = 1 and auth.uid() is not null);
 
 create policy "authenticated_update_app_state"
-on public.app_state
-for update to authenticated
-using (
-  id = 1
-  and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com'
-)
-with check (
-  id = 1
-  and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com'
-);
+on public.app_state for update to authenticated
+using (id = 1 and auth.uid() is not null)
+with check (id = 1 and auth.uid() is not null);
 
--- Cria o registro inicial somente se ainda não existir.
 insert into public.app_state (id, data, version)
 values (
   1,
@@ -52,3 +45,5 @@ values (
   0
 )
 on conflict (id) do nothing;
+
+commit;
