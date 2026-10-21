@@ -792,6 +792,14 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
 @media(max-width:1150px){#freightDialog{width:min(1040px,calc(100% - 20px))}#freightDialog form{padding:20px}#freightDialog .freight-form-sections{grid-template-columns:minmax(0,1fr)}#freightDialog .freight-section-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){#freightDialog{width:calc(100% - 12px);max-width:calc(100vw - 12px);max-height:95vh}#freightDialog form{padding:14px}#freightDialog .freight-form-sections{grid-template-columns:minmax(0,1fr);gap:12px}#freightDialog .freight-form-section{padding:12px}#freightDialog .freight-section-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}#freightDialog .freight-check-field,#freightDialog .freight-notes-field,#freightDialog .freight-section-fields .balance-validation{grid-column:1/-1}#freightDialog #freightCalc .freight-calculation-item{align-items:flex-start}}
 @media(max-width:480px){#freightDialog .freight-section-fields{grid-template-columns:minmax(0,1fr)}#freightDialog .freight-check-field,#freightDialog .freight-notes-field,#freightDialog .freight-section-fields .balance-validation{grid-column:1}}
+
+/* Combustível: deixar o gasto real e a estimativa juntos, conforme solicitado. */
+#freightDialog .freight-section-fields>div:has(#fKm){order:1}
+#freightDialog .freight-section-fields>div:has(#fDieselPrice){order:2}
+#freightDialog .freight-section-fields>div:has(#fLiters){order:3}
+#freightDialog .freight-section-fields>div:has(#fDiscount){order:4}
+#freightDialog .freight-section-fields>div:has(#fFuelActual){order:5}
+#freightDialog .freight-section-fields>div:has(#fuelEstimateBox){order:6}
 /* Perfil Visitante: somente leitura. O bloqueio visual complementa as políticas RLS do Supabase. */
 .read-only-notice{margin:14px 24px 0;padding:12px 16px;border:1px solid #d6b66b;border-radius:10px;background:#fff8df;color:#674d0c;font-weight:700}
 body.read-only button:not(.nav-item):not(.menu-toggle):not(.refresh-btn):not(#logoutButton):not([data-close]):not(.text-btn[data-goto]){display:none!important}
