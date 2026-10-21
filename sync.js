@@ -1,14 +1,15 @@
 
 /*
- * R&R Figueredo Transportes
+ * R&R FIGUEREDO TRANSPORTES
  * Login, recuperação de senha e sincronização com Supabase.
  *
- * Depende de app.js definir:
- *   db, renderAll() e, se aplicável, ensureDefaults()
+ * Dependências:
+ * - app.js define db, renderAll() e, opcionalmente, ensureDefaults().
+ * - config.js define SUPABASE_URL, SUPABASE_ANON_KEY e USER_EMAILS.
+ * - index.html contém os elementos de login indicados abaixo.
  *
- * O index.html deve conter:
- *   loginScreen, loginForm, loginUsername, loginPassword,
- *   loginError, loginSubmit, forgotPassword e logoutButton.
+ * Os dados são compartilhados por todos os usuários autenticados
+ * autorizados pelas políticas RLS do Supabase.
  */
 
 const cloud = (() => {
@@ -23,6 +24,14 @@ const cloud = (() => {
     "categories"
   ];
 
+  const RECORD_KEYS = [
+    "freights",
+    "expenses",
+    "receivables",
+    "employees",
+    "trucks"
+  ];
+
   const OLD_KEY = "estrada_gestao_v1";
   const CACHE_KEY = "estrada_cache_v2";
   const MIG_KEY = "estrada_migrated_v2";
@@ -30,75 +39,98 @@ const cloud = (() => {
   const RESET_URL =
     "https://pedrofigueredo221-maker.github.io/RR-FIGUEREDO-TRANSPORTES/redefinir-senha.html";
 
-  let sb;
+  const DEFAULT_CATEGORIES = [
+    "Combustível",
+    "Pedágio",
+    "Óleo e lubrificantes",
+    "Mecânico",
+    "Oficina",
+    "Pneus",
+    "Elétrica",
+    "Peças",
+    "Documentação",
+    "Seguro",
+    "Lavagem",
+    "Manutenção",
+    "Despesas gerais",
+    "Outros"
+  ];
+
+  let sb = null;
   let version = 0;
   let base = {};
   let queue = Promise.resolve();
   let busy = false;
   let pending = false;
-  let timer;
+  let timer = null;
   let started = false;
 
-  const clone = obj => JSON.parse(JSON.stringify(obj));
-  const el = id => document.getElementById(id);
+  const clone = value =>
+    JSON.parse(JSON.stringify(value));
+
+  const el = id =>
+    document.getElementById(id);
+
+  function same(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
 
   function ensureStatus() {
-    let s = el("syncStatus");
+    let element = el("syncStatus");
 
-    if (!s) {
-      s = document.createElement("span");
-      s.id = "syncStatus";
-      s.className = "sync-status";
+    if (!element) {
+      element = document.createElement("span");
+      element.id = "syncStatus";
+      element.className = "sync-status";
 
       const actions = document.querySelector(".top-actions");
-      (actions || document.body).prepend(s);
+      (actions || document.body).prepend(element);
     }
 
-    return s;
+    return element;
   }
 
   function status(message, cls = "") {
-    const s = ensureStatus();
-    s.textContent = message;
-    s.className = "sync-status " + cls;
+    const element = ensureStatus();
+    element.textContent = message;
+    element.className = "sync-status " + cls;
+    element.setAttribute("role", "status");
   }
 
-  function normalize(data) {
-    data = data || {};
+  function normalize(value) {
+    const data =
+      value && typeof value === "object" && !Array.isArray(value)
+        ? clone(value)
+        : {};
 
-    KEYS.forEach(key => {
-      if (!Array.isArray(data[key])) data[key] = [];
-    });
+    for (const key of KEYS) {
+      if (!Array.isArray(data[key])) {
+        data[key] = [];
+      }
+    }
 
-    if (!data.categories.length) {
-      data.categories = [
-        "Combustível",
-        "Pedágio",
-        "Óleo e lubrificantes",
-        "Mecânico",
-        "Oficina",
-        "Pneus",
-        "Elétrica",
-        "Peças",
-        "Documentação",
-        "Seguro",
-        "Lavagem",
-        "Manutenção",
-        "Despesas gerais",
-        "Outros"
-      ];
+    if (data.categories.length === 0) {
+      data.categories = [...DEFAULT_CATEGORIES];
     }
 
     return data;
   }
 
   function getConfiguredEmail(username) {
-    const key = String(username || "").trim().toUpperCase();
-    const email = cfg.USER_EMAILS && cfg.USER_EMAILS[key];
+    const key = String(username || "")
+      .trim()
+      .toUpperCase();
 
-    if (!email || email.includes("COLOQUE_AQUI")) {
+    const email =
+      cfg.USER_EMAILS && cfg.USER_EMAILS[key];
+
+    if (
+      typeof email !== "string" ||
+      !email.trim() ||
+      email.includes("COLOQUE_AQUI")
+    ) {
       throw new Error(
-        "O usuário não está vinculado a um e-mail no config.js."
+        "Este usuário não está vinculado a um e-mail no config.js."
       );
     }
 
@@ -125,14 +157,49 @@ const cloud = (() => {
     }
   }
 
+  function describeError(error) {
+    const code = error && error.code;
+
+    if (code === "PGRST116") {
+      return (
+        "O Supabase não encontrou o registro id=1. " +
+        "Confira public.app_state e as políticas RLS."
+      );
+    }
+
+    if (code === "42501" || code === "PGRST301") {
+      return (
+        "Acesso negado pelo Supabase. Confira o login, " +
+        "os privilégios e as políticas RLS."
+      );
+    }
+
+    if (error && error.message) {
+      return error.message;
+    }
+
+    return "Ocorreu um erro desconhecido.";
+  }
+
+  /*
+   * Lê o único registro compartilhado.
+   * Não cria registros nem substitui dados automaticamente.
+   */
   async function fetchRemote() {
     const { data, error } = await sb
       .from("app_state")
       .select("data,version")
       .eq("id", 1)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
+
+    if (!data) {
+      throw new Error(
+        "Não foi encontrada uma linha visível com id=1 em " +
+        "public.app_state. Confira o registro e as políticas RLS."
+      );
+    }
 
     return {
       data: normalize(data.data),
@@ -140,52 +207,95 @@ const cloud = (() => {
     };
   }
 
-  function merge3(b, local, remote) {
+  /*
+   * Mescla alterações locais com as remotas usando a versão
+   * base como referência.
+   *
+   * Não substitui automaticamente todos os dados remotos
+   * por listas vazias de um computador novo.
+   */
+  function merge3(originalBase, localValue, remoteValue) {
+    const b = normalize(originalBase);
+    const local = normalize(localValue);
+    const remote = normalize(remoteValue);
     const out = { ...remote };
 
     for (const key of KEYS) {
       if (key === "categories") {
-        const bs = new Set(b[key] || []);
-        const ls = new Set(local[key] || []);
-        const rs = new Set(remote[key] || []);
+        const result = [...remote[key]];
 
-        out[key] = [
-          ...(remote[key] || []).filter(
-            item => !bs.has(item) || ls.has(item)
-          ),
-          ...(local[key] || []).filter(
-            item => !bs.has(item) && !rs.has(item)
-          )
-        ];
+        for (const item of local[key]) {
+          if (!result.includes(item)) {
+            result.push(item);
+          }
+        }
 
+        out[key] = result;
         continue;
       }
 
-      const bm = new Map((b[key] || []).map(item => [item.id, item]));
-      const lm = new Map((local[key] || []).map(item => [item.id, item]));
+      const baseMap = new Map(
+        b[key].filter(item => item && item.id != null)
+          .map(item => [String(item.id), item])
+      );
+
+      const localMap = new Map(
+        local[key].filter(item => item && item.id != null)
+          .map(item => [String(item.id), item])
+      );
+
+      const remoteMap = new Map(
+        remote[key].filter(item => item && item.id != null)
+          .map(item => [String(item.id), item])
+      );
 
       const result = [];
       const seen = new Set();
 
-      for (const item of remote[key] || []) {
-        seen.add(item.id);
+      // Mantém os registros remotos e aplica alterações locais
+      // quando o registro local mudou em relação à base.
+      for (const remoteItem of remote[key]) {
+        if (!remoteItem || remoteItem.id == null) {
+          result.push(remoteItem);
+          continue;
+        }
 
-        const before = bm.get(item.id);
-        const localItem = lm.get(item.id);
+        const id = String(remoteItem.id);
+        seen.add(id);
 
-        if (before && !localItem) continue;
+        const before = baseMap.get(id);
+        const localItem = localMap.get(id);
 
-        result.push(
+        // Exclusão local: só a considera se o registro existia
+        // na base usada por este dispositivo.
+        if (before && !localItem) {
+          continue;
+        }
+
+        if (
           localItem &&
-          (!before || JSON.stringify(localItem) !== JSON.stringify(before))
-            ? localItem
-            : item
-        );
+          (!before || !same(localItem, before))
+        ) {
+          result.push(localItem);
+        } else {
+          result.push(remoteItem);
+        }
       }
 
-      for (const [id, localItem] of lm) {
-        if (!seen.has(id) && !bm.has(id)) {
+      // Adiciona registros locais que ainda não estão na nuvem.
+      for (const localItem of local[key]) {
+        if (!localItem || localItem.id == null) {
+          if (!result.includes(localItem)) {
+            result.push(localItem);
+          }
+          continue;
+        }
+
+        const id = String(localItem.id);
+
+        if (!seen.has(id) && !baseMap.has(id)) {
           result.push(localItem);
+          seen.add(id);
         }
       }
 
@@ -194,34 +304,55 @@ const cloud = (() => {
 
     out.defaultsV = remote.defaultsV || local.defaultsV;
 
-    return out;
+    return normalize(out);
   }
 
   function writeCache() {
     try {
       localStorage.setItem(
         CACHE_KEY,
-        JSON.stringify({ db, base, version, pending })
+        JSON.stringify({
+          db: normalize(db),
+          base: normalize(base),
+          version,
+          pending
+        })
       );
     } catch (error) {
-      console.warn("Não foi possível gravar o cache local.", error);
+      console.warn(
+        "Não foi possível salvar o cache local.",
+        error
+      );
     }
   }
 
+  /*
+   * Atualização otimista: só grava se a versão remota ainda
+   * for a versão que este dispositivo leu.
+   */
   async function doPush() {
     if (!sb) return;
 
-    const { data: authData, error: authError } = await sb.auth.getSession();
+    const {
+      data: authData,
+      error: authError
+    } = await sb.auth.getSession();
 
     if (authError) throw authError;
-    if (!authData.session) return;
+
+    if (!authData.session) {
+      status("Faça login para sincronizar.", "err");
+      return;
+    }
+
+    if (busy) return;
 
     busy = true;
     status("Salvando na nuvem…", "busy");
 
     try {
-      for (let i = 0; i < 5; i++) {
-        const snapshot = clone(db);
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const snapshot = normalize(db);
 
         const { data, error } = await sb
           .from("app_state")
@@ -236,8 +367,9 @@ const cloud = (() => {
 
         if (error) throw error;
 
-        if (data && data.length) {
-          version = data[0].version;
+        if (data && data.length > 0) {
+          version = Number(data[0].version);
+          db = snapshot;
           base = clone(snapshot);
           pending = false;
           writeCache();
@@ -245,21 +377,42 @@ const cloud = (() => {
           return;
         }
 
+        // Nenhuma linha atualizada: versão diferente ou registro
+        // não visível. Lê novamente antes de tentar outra vez.
         const remote = await fetchRemote();
 
-        db = merge3(base, db, remote.data);
+        const merged = merge3(base, db, remote.data);
+
         version = remote.version;
         base = clone(remote.data);
+        db = merged;
 
-        if (typeof renderAll === "function") renderAll();
+        if (typeof renderAll === "function") {
+          renderAll();
+        }
+
+        if (same(db, remote.data)) {
+          pending = false;
+          writeCache();
+          status("✓ Sincronizado", "ok");
+          return;
+        }
       }
 
-      throw new Error("Conflito de atualização. Tente salvar novamente.");
+      throw new Error(
+        "Não foi possível concluir a sincronização após várias tentativas. " +
+        "Pode haver alterações simultâneas em outro dispositivo."
+      );
     } catch (error) {
       pending = true;
       writeCache();
       status("⚠ Falha ao sincronizar", "err");
-      console.error("Erro ao salvar no Supabase:", error);
+
+      console.error(
+        "Erro ao salvar no Supabase:",
+        error,
+        describeError(error)
+      );
     } finally {
       busy = false;
     }
@@ -270,149 +423,178 @@ const cloud = (() => {
     return queue;
   }
 
+  /*
+   * Deve ser chamado pelo app.js após um cadastro,
+   * alteração ou exclusão.
+   */
   function save() {
     pending = true;
     writeCache();
 
     if (sb) return push();
+
+    status("⚠ Dados salvos apenas localmente", "err");
   }
 
   async function pull() {
     if (!sb || busy || document.hidden) return;
 
     try {
-      const { data: authData, error: authError } =
-        await sb.auth.getSession();
+      const {
+        data: authData,
+        error: authError
+      } = await sb.auth.getSession();
 
       if (authError) throw authError;
       if (!authData.session) return;
 
+      // Envia primeiro as alterações locais pendentes.
       if (pending) {
         await push();
         return;
       }
 
-      const { data, error } = await sb
-        .from("app_state")
-        .select("version")
-        .eq("id", 1)
-        .single();
-
-      if (error) throw error;
-
-      if (Number(data.version || 0) > version) {
-        const remote = await fetchRemote();
-
-        db = remote.data;
-        version = remote.version;
-        base = clone(remote.data);
-
-        writeCache();
-
-        if (typeof renderAll === "function") renderAll();
-      }
-
-      status("✓ Sincronizado", "ok");
-    } catch (error) {
-      status("⚠ Sem conexão ou sem permissão", "err");
-      console.error("Erro ao atualizar dados:", error);
-    }
-  }
-
-  async function boot() {
-    status("Carregando dados…", "busy");
-
-    try {
-      let cache = null;
-      let old = null;
-
-      try {
-        cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
-      } catch {}
-
-      try {
-        old = JSON.parse(localStorage.getItem(OLD_KEY) || "null");
-      } catch {}
-
       const remote = await fetchRemote();
 
-      const hasOld =
-        old && KEYS.some(key => Array.isArray(old[key]) && old[key].length);
-
-      const migrated = localStorage.getItem(MIG_KEY);
-
-      if (cache && cache.pending) {
-        db = normalize(cache.db);
-        base = normalize(cache.base);
-        version = Number(cache.version || 0);
-        pending = true;
-
-        await push();
-      } else if (
-        !remote.data.defaultsV &&
-        KEYS.every(key => !(remote.data[key] || []).length)
-      ) {
-        db = normalize(hasOld ? old : {});
-
-        if (typeof ensureDefaults === "function") ensureDefaults();
-
-        version = remote.version;
-        base = clone(remote.data);
-        pending = true;
-
-        localStorage.setItem(MIG_KEY, "1");
-
-        await push();
-      } else {
+      if (remote.version > version) {
         db = remote.data;
         version = remote.version;
         base = clone(remote.data);
         pending = false;
 
-        if (hasOld && !migrated) {
-          const ids = new Set();
+        writeCache();
 
-          KEYS.forEach(key => {
-            db[key].forEach(item => ids.add(item.id));
-          });
-
-          let additions = 0;
-
-          for (const key of KEYS) {
-            const names =
-              key === "employees" || key === "trucks"
-                ? new Set(
-                    db[key].map(item =>
-                      String(item.name || "").toLowerCase()
-                    )
-                  )
-                : null;
-
-            const extra = (old[key] || []).filter(
-              item =>
-                !ids.has(item.id) &&
-                !(
-                  names &&
-                  names.has(String(item.name || "").toLowerCase())
-                )
-            );
-
-            db[key] = db[key].concat(extra);
-            additions += extra.length;
-          }
-
-          if (
-            additions &&
-            window.confirm(
-              `Este aparelho tem ${additions} registro(s) antigos que não estão na nuvem. Mesclar com os dados compartilhados?`
-            )
-          ) {
-            pending = true;
-            await push();
-          }
-
-          localStorage.setItem(MIG_KEY, "1");
+        if (typeof renderAll === "function") {
+          renderAll();
         }
+      }
+
+      status("✓ Sincronizado", "ok");
+    } catch (error) {
+      status("⚠ Erro ao atualizar dados", "err");
+
+      console.error(
+        "Erro ao atualizar dados:",
+        error,
+        describeError(error)
+      );
+    }
+  }
+
+  function readLocalJSON(key) {
+    try {
+      const value = localStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      console.warn("Não foi possível ler " + key, error);
+      return null;
+    }
+  }
+
+  function hasRecords(data) {
+    if (!data) return false;
+
+    return RECORD_KEYS.some(key =>
+      Array.isArray(data[key]) && data[key].length > 0
+    );
+  }
+
+  /*
+   * Conta registros locais que não existem na nuvem.
+   * Serve apenas para apresentar uma confirmação de migração.
+   */
+  function countLocalAdditions(local, remote) {
+    let total = 0;
+
+    for (const key of RECORD_KEYS) {
+      const remoteIds = new Set(
+        remote[key]
+          .filter(item => item && item.id != null)
+          .map(item => String(item.id))
+      );
+
+      for (const item of local[key]) {
+        if (!item || item.id == null) {
+          total++;
+        } else if (!remoteIds.has(String(item.id))) {
+          total++;
+        }
+      }
+    }
+
+    return total;
+  }
+
+  async function boot() {
+    status("Carregando dados da nuvem…", "busy");
+
+    try {
+      const cache = readLocalJSON(CACHE_KEY);
+      const old = readLocalJSON(OLD_KEY);
+      const migrated = localStorage.getItem(MIG_KEY) === "1";
+
+      // A nuvem é a referência principal.
+      const remote = await fetchRemote();
+
+      version = remote.version;
+      base = clone(remote.data);
+      db = clone(remote.data);
+      pending = false;
+
+      /*
+       * Se havia alterações pendentes neste dispositivo,
+       * tenta mesclá-las com a nuvem em vez de sobrescrever
+       * diretamente os dados remotos.
+       */
+      if (cache && cache.pending && cache.db) {
+        const localCache = normalize(cache.db);
+        const oldBase = normalize(cache.base || {});
+
+        db = merge3(oldBase, localCache, remote.data);
+
+        pending = !same(db, remote.data);
+
+        if (pending) {
+          writeCache();
+          await push();
+        }
+      }
+
+      /*
+       * Migração do formato antigo: só pergunta quando existem
+       * registros antigos ainda não migrados.
+       */
+      else if (hasRecords(old) && !migrated) {
+        const oldData = normalize(old);
+        const additions = countLocalAdditions(oldData, remote.data);
+
+        if (additions > 0) {
+          const approved = window.confirm(
+            "Este navegador contém registros antigos que podem não " +
+            "estar na nuvem. Foram encontrados aproximadamente " +
+            additions +
+            " registro(s) que podem ser adicionados. " +
+            "Deseja mesclar os dados antigos com os compartilhados? " +
+            "Não confirme se não reconhecer esses dados."
+          );
+
+          if (approved) {
+            db = merge3({}, oldData, remote.data);
+            pending = !same(db, remote.data);
+
+            if (pending) {
+              writeCache();
+              await push();
+            }
+          }
+        }
+
+        // Só marca como migrado após a decisão do usuário.
+        localStorage.setItem(MIG_KEY, "1");
+      }
+
+      if (typeof ensureDefaults === "function") {
+        ensureDefaults();
       }
 
       writeCache();
@@ -420,19 +602,27 @@ const cloud = (() => {
       if (typeof renderAll === "function") {
         renderAll();
       } else {
-        console.warn("A função renderAll() não foi encontrada no app.js.");
+        console.warn(
+          "A função renderAll() não foi encontrada no app.js."
+        );
       }
 
       clearInterval(timer);
       timer = setInterval(pull, 15000);
 
-      status("✓ Sincronizado", "ok");
+      status(
+        pending
+          ? "⚠ Há alterações aguardando sincronização"
+          : "✓ Dados carregados",
+        pending ? "err" : "ok"
+      );
     } catch (error) {
       status("⚠ Erro ao carregar dados", "err");
 
       console.error(
-        "Falha ao iniciar sincronização. Confira tabela, políticas e colunas do Supabase.",
-        error
+        "Falha ao iniciar sincronização:",
+        error,
+        describeError(error)
       );
     }
   }
@@ -459,11 +649,6 @@ const cloud = (() => {
     await boot();
   }
 
-  /*
-   * Recuperação de senha:
-   * converte RAFAEL no e-mail configurado e solicita
-   * ao Supabase o envio da mensagem de recuperação.
-   */
   async function resetPassword(username) {
     const email = getConfiguredEmail(username);
 
@@ -472,21 +657,26 @@ const cloud = (() => {
     });
 
     if (error) {
-      console.error("Erro do Supabase ao recuperar senha:", error);
+      console.error(
+        "Erro do Supabase ao recuperar senha:",
+        error
+      );
 
       throw new Error(
-        "Não foi possível enviar o e-mail. Verifique o serviço de e-mail e as configurações do Supabase."
+        "Não foi possível solicitar a recuperação. " +
+        "Verifique as configurações de e-mail do Supabase."
       );
     }
   }
 
   async function signOut() {
     clearInterval(timer);
+    timer = null;
 
     const { error } = await sb.auth.signOut();
 
     if (error) {
-      console.error("Erro ao sair:", error);
+      console.error("Erro ao encerrar sessão:", error);
     }
 
     showLogin(true);
@@ -510,9 +700,11 @@ const cloud = (() => {
       !window.supabase
     ) {
       status("⚠ Configure o Supabase", "err");
+
       console.error(
-        "Confira config.js e a biblioteca do Supabase antes de sync.js."
+        "Confira config.js e se a biblioteca Supabase foi carregada antes de sync.js."
       );
+
       return;
     }
 
@@ -551,7 +743,9 @@ const cloud = (() => {
             el("loginPassword")?.value
           );
         } catch (error) {
-          loginMessage(error.message || "Não foi possível entrar.");
+          loginMessage(
+            describeError(error) || "Não foi possível entrar."
+          );
         } finally {
           if (button) {
             button.disabled = false;
@@ -559,11 +753,10 @@ const cloud = (() => {
           }
         }
       });
+    } else {
+      console.error('Elemento "loginForm" não encontrado no index.html.');
     }
 
-    /*
-     * O link no index.html precisa ter id="forgotPassword".
-     */
     const forgotPassword = el("forgotPassword");
 
     if (forgotPassword) {
@@ -573,7 +766,10 @@ const cloud = (() => {
         const username = el("loginUsername")?.value;
 
         if (!username || !username.trim()) {
-          loginMessage("Digite RAFAEL no campo de usuário primeiro.");
+          loginMessage(
+            "Digite seu nome de usuário antes de recuperar a senha."
+          );
+
           el("loginUsername")?.focus();
           return;
         }
@@ -590,10 +786,11 @@ const cloud = (() => {
           await resetPassword(username);
 
           loginMessage(
-            "Se o Supabase aceitou a solicitação, confira o e-mail cadastrado e a pasta de spam."
+            "Solicitação enviada, se aceita pelo Supabase. " +
+            "Confira seu e-mail e a pasta de spam."
           );
         } catch (error) {
-          loginMessage(error.message || "Não foi possível solicitar a recuperação.");
+          loginMessage(describeError(error));
         } finally {
           forgotPassword.removeAttribute("aria-busy");
 
@@ -602,10 +799,6 @@ const cloud = (() => {
           }
         }
       });
-    } else {
-      console.warn(
-        'O botão de recuperação não foi encontrado. Confira se o index.html contém id="forgotPassword".'
-      );
     }
 
     const logout = el("logoutButton");
@@ -631,12 +824,18 @@ const cloud = (() => {
       }
     } catch (error) {
       status("⚠ Falha na autenticação", "err");
-      console.error("Erro ao verificar a sessão:", error);
+
+      console.error(
+        "Erro ao verificar a sessão:",
+        error,
+        describeError(error)
+      );
     }
 
     sb.auth.onAuthStateChange((event, session) => {
       if (!session) {
         clearInterval(timer);
+        timer = null;
         showLogin(true);
       }
     });
@@ -646,7 +845,9 @@ const cloud = (() => {
     if (!document.hidden) pull();
   });
 
-  window.addEventListener("online", pull);
+  window.addEventListener("online", () => {
+    pull();
+  });
 
   return {
     start,
