@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="stylesheet" href="styles.css?v=18">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -392,8 +392,10 @@
 
             <form id="employeeForm" class="inline-register">
               <input type="hidden" id="employeeId">
-              <label for="employeeName">Nome do funcionário</label>
-              <input id="employeeName" required maxlength="80" placeholder="Nome completo">
+              <div class="register-field">
+                <label for="employeeName">Nome do funcionário</label>
+                <input id="employeeName" required maxlength="80" placeholder="Nome completo">
+              </div>
 
               <div class="form-grid">
                 <div>
@@ -435,6 +437,10 @@
               </div>
             </form>
 
+            <div class="registration-list-tools">
+              <label class="inactive-filter"><input type="checkbox" id="showInactiveEmployees"> INATIVOS</label>
+              <span>Por padrão, são exibidos somente funcionários ativos.</span>
+            </div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Nome</th><th>Função</th><th>Caminhão vinculado</th><th>Situação</th><th></th></tr></thead>
@@ -454,12 +460,18 @@
 
             <form id="truckForm" class="inline-register">
               <input type="hidden" id="truckId">
-              <label for="truckName">Nome / identificação</label>
-              <input id="truckName" required maxlength="80" placeholder="Ex.: Scania R450 — placa ABC1D23">
-              <label for="truckPlate">Placa (opcional)</label>
-              <input id="truckPlate" maxlength="10" placeholder="ABC1D23">
-              <label for="truckDriverId">Motorista vinculado (opcional)</label>
-              <select id="truckDriverId"><option value="">Sem motorista vinculado</option></select>
+              <div class="register-field">
+                <label for="truckName">Nome / identificação</label>
+                <input id="truckName" required maxlength="80" placeholder="Ex.: Scania R450 — placa ABC1D23">
+              </div>
+              <div class="register-field">
+                <label for="truckPlate">Placa (opcional)</label>
+                <input id="truckPlate" maxlength="10" placeholder="ABC1D23">
+              </div>
+              <div class="register-field">
+                <label for="truckDriverId">Motorista vinculado (opcional)</label>
+                <select id="truckDriverId"><option value="">Sem motorista vinculado</option></select>
+              </div>
 
               <div class="import-actions">
                 <button class="btn btn-primary" type="submit" id="truckSave">＋ Adicionar caminhão</button>
@@ -467,6 +479,10 @@
               </div>
             </form>
 
+            <div class="registration-list-tools">
+              <label class="inactive-filter"><input type="checkbox" id="showInactiveTrucks"> INATIVOS</label>
+              <span>Por padrão, são exibidos somente caminhões ativos.</span>
+            </div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Caminhão</th><th>Placa</th><th>Motorista vinculado</th><th>Situação</th><th></th></tr></thead>
