@@ -791,6 +791,7 @@ const cloud = (() => {
       lastScreen = sessionStorage.getItem("rr_screen_state");
     } catch (_) {}
 
+    applyUserRole(null);
     showLogin(true, false);
 
     const form = el("loginForm");
