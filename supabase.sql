@@ -16,6 +16,7 @@ alter table public.app_state enable row level security;
 -- Remova permissões e políticas abertas a visitantes anônimos.
 revoke all on table public.app_state from anon;
 revoke all on table public.app_state from public;
+revoke all on table public.app_state from authenticated;
 grant select, insert, update on table public.app_state to authenticated;
 
 drop policy if exists "public_read_app_state" on public.app_state;
@@ -30,7 +31,10 @@ on public.app_state
 for select to authenticated
 using (
   id = 1
-  and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com'
+  and lower(coalesce(auth.jwt() ->> 'email', '')) in (
+    'pedrofigueredo221@gmail.com',
+    'pedrofogofogop@gmail.com'
+  )
 );
 
 create policy "authenticated_insert_app_state"

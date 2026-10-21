@@ -11,9 +11,27 @@ const monthName = s => {const d=parseDate((s||todayISO()).slice(0,7)+"-01");retu
 let db = loadDB(); db.categories=db.categories||["Combustível","Pedágio","Óleo e lubrificantes","Mecânico","Oficina","Pneus","Elétrica","Peças","Documentação","Seguro","Lavagem","Manutenção","Despesas gerais","Outros"];
 function loadDB(){try{const d=JSON.parse(localStorage.getItem(DB_KEY))||{};d.freights=d.freights||[];d.expenses=d.expenses||[];d.employees=d.employees||[...new Set(d.freights.map(f=>f.driver).filter(Boolean))].map((name,i)=>({id:uidSafe('emp'+i),name,role:'Motorista',phone:'',active:true}));d.categories=d.categories||["Combustível","Pedágio","Óleo e lubrificantes","Mecânico","Oficina","Pneus","Elétrica","Peças","Documentação","Seguro","Lavagem","Manutenção","Despesas gerais","Outros"];d.trucks=d.trucks||['Caminhão 01','Caminhão 02','Caminhão 03','Caminhão 04','Caminhão 05'].map((name,i)=>({id:uidSafe('truck'+i),name,plate:'',active:true}));return d}catch{return{freights:[],expenses:[],employees:[],trucks:[]}}}
 function uidSafe(s){return s+'_'+Math.random().toString(36).slice(2,8)}
-function saveDB(){localStorage.setItem(DB_KEY,JSON.stringify(db));renderAll();if(typeof cloud!=="undefined"&&cloud&&typeof cloud.save==="function")cloud.save();}
+function saveDB(){if(document.body.classList.contains("read-only")){toast("Perfil visitante: somente visualização.",true);return}localStorage.setItem(DB_KEY,JSON.stringify(db));renderAll();if(typeof cloud!=="undefined"&&cloud&&typeof cloud.save==="function")cloud.save();}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function toast(msg,error=false){const el=$("toast");el.textContent=msg;el.className="toast show"+(error?" error":"");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.className="toast",2800)}
+window.setReadOnlyMode = function(readOnly){
+ document.body.classList.toggle("read-only",!!readOnly);
+ const notice=$("readOnlyNotice");
+ if(notice)notice.hidden=!readOnly;
+};
+document.addEventListener("submit",event=>{
+ if(document.body.classList.contains("read-only")&&event.target.id!=="loginForm"){
+  event.preventDefault();event.stopImmediatePropagation();toast("Perfil visitante: alterações não são permitidas.",true);
+ }
+},true);
+document.addEventListener("click",event=>{
+ if(!document.body.classList.contains("read-only"))return;
+ const button=event.target.closest("button");
+ if(!button)return;
+ if(button.closest("#loginScreen")||button.matches(".nav-item,.menu-toggle,.refresh-btn,#logoutButton,[data-close]")||button.matches(".text-btn[data-goto]"))return;
+ event.preventDefault();event.stopImmediatePropagation();toast("Perfil visitante: somente visualização.",true);
+},true);
+
 function statusPill(status){const cls=status==="Pago"||status==="Paga"?"paid":status==="Atrasada"?"overdue":status==="Parcial"?"partial":"pending";return `<span class="pill ${cls}">${escapeHtml(status)}</span>`}
 function paidAmount(exp){return (exp.installments||[]).reduce((s,i)=>s+Number(i.paid||0),0)}
 function openAmount(exp){return Math.max(0,Number(exp.value)-paidAmount(exp))}

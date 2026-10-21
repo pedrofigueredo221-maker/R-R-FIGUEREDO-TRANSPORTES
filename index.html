@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=31">
+  <link rel="stylesheet" href="styles.css?v=33">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -74,6 +74,8 @@
         <button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button>
       </div>
     </header>
+
+    <div id="readOnlyNotice" class="read-only-notice" hidden>Modo visitante: você pode consultar as informações, mas não pode cadastrar, editar ou excluir dados.</div>
 
     <div class="content">
       <section class="page active" id="page-dashboard">
@@ -729,9 +731,9 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-  <script src="config.js?v=11"></script>
-  <script src="app.js?v=16"></script>
-  <script src="sync.js?v=16"></script>
+  <script src="config.js?v=13"></script>
+  <script src="app.js?v=17"></script>
+  <script src="sync.js?v=18"></script>
   <script>
     cloud.start();
   </script>
