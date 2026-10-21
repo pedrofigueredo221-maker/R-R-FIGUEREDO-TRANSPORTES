@@ -75,3 +75,11 @@ Revisão estática das alterações. Não foi possível testar autenticação re
 - O formulário de frete foi ampliado lateralmente e as quatro seções foram dispostas em duas colunas em telas largas; os campos editáveis usam três colunas por seção, com adaptação para tablets e celulares.
 - Ajustados espaçamentos e tamanho dos rótulos para manter leitura e evitar excesso visual sem remover campos ou alterar fórmulas.
 - A senha não é armazenada no código/repositório; deve ser definida na conta Supabase. Recomenda-se não usar senhas fracas.
+
+
+## 2026-10-21 — Refinamento do tamanho do cadastro de frete
+
+- Reduzida a largura máxima do formulário de frete de 1580 px para 1380 px: continua amplo, mas ocupa menos espaço lateral.
+- Os campos de cada seção passam de três para duas colunas, totalizando até quatro campos por linha entre as duas seções lado a lado.
+- Reduzidos levemente os espaçamentos e a altura dos campos, preservando todos os dados, a responsividade e o resumo financeiro em duas colunas.
+- Nenhuma fórmula ou regra de negócio foi alterada.
