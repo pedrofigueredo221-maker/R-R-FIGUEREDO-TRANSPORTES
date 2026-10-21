@@ -323,3 +323,10 @@ td{font-size:14px}
  #freightDialog .modal-actions{position:sticky;bottom:-17px;background:#fff;padding:12px 0 4px}
  #freightDialog .modal-actions .btn{flex:1;min-width:0}
 }
+
+
+/* Destaque visual dos saldos financeiros */
+#page-payments .summary-strip .summary-payable span,
+#page-payments .summary-strip .summary-payable strong{color:#c62828}
+#page-receivables .summary-strip .summary-receivable span,
+#page-receivables .summary-strip .summary-receivable strong{color:#218838}
