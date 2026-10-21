@@ -25,13 +25,13 @@ grant select, update on table public.app_state to authenticated;
 drop policy if exists "authenticated_read_app_state" on public.app_state;
 create policy "authenticated_read_app_state" on public.app_state
   for select to authenticated
-  using (id = 1 and (auth.jwt() ->> 'email') = 'EMAIL_AQUI');
+  using (id = 1 and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com');
 
 drop policy if exists "authenticated_update_app_state" on public.app_state;
 create policy "authenticated_update_app_state" on public.app_state
   for update to authenticated
-  using (id = 1 and (auth.jwt() ->> 'email') = 'EMAIL_AQUI')
-  with check (id = 1 and (auth.jwt() ->> 'email') = 'EMAIL_AQUI');
+  using (id = 1 and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com')
+  with check (id = 1 and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com');
 
 -- Mantém a criação inicial idempotente: se a linha já existe, não sobrescreve os dados.
 insert into public.app_state (id, data, version)
