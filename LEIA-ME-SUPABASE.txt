@@ -1,10 +1,24 @@
-R&R FIGUEREDO TRANSPORTES — versão sem login
+R&R FIGUEREDO TRANSPORTES — versão com login e sincronização Supabase
 
-1. No painel do Supabase, abra SQL Editor e execute supabase.sql.
-2. Publique TODOS os arquivos deste pacote juntos no mesmo diretório/serviço de hospedagem.
-3. Abra o endereço publicado e confira o indicador de sincronização.
-4. Abra o mesmo endereço em outro aparelho para testar.
+Arquivos principais:
+- index.html: interface principal e formulário de login.
+- app.js: telas, lançamentos, relatórios e cálculos.
+- config.js: URL e chave publicável do Supabase e mapeamento do usuário RAFAEL para o e-mail da conta.
+- sync.js: login, recuperação de senha e sincronização.
+- redefinir-senha.html: tela de redefinição de senha.
+- supabase.sql: cria a tabela e configura políticas RLS restritas ao usuário autenticado autorizado.
+- supabase-login.sql: script alternativo para configurar a tabela e o acesso autenticado.
 
-IMPORTANTE: esta configuração não exige login. Como consequência, qualquer pessoa com acesso ao site e à chave publicável poderá ler e alterar os dados se as políticas SQL estiverem abertas como neste pacote. Não use para dados financeiros confidenciais em um site público. Para proteger os dados, seria necessário autenticação ou restrição de acesso.
+Configuração:
+1. No Supabase, confirme que o usuário existe em Authentication > Users e que o e-mail corresponde a config.js.
+2. No SQL Editor, execute supabase.sql. O script não substitui os dados se a linha id=1 já existir.
+3. Em Authentication > URL Configuration, configure a URL do site e inclua o endereço publicado de redefinir-senha.html nas Redirect URLs.
+4. Publique todos os arquivos do repositório juntos no mesmo diretório.
+5. Teste o login, a recuperação de senha e a sincronização em dois dispositivos.
 
-A versão mantém as funcionalidades já presentes no app.js. Ela não cria automaticamente uma tela de contas a receber se essa funcionalidade ainda não estiver implementada no arquivo.
+Segurança:
+- Não coloque service_role key nem senhas no repositório.
+- A chave publishable/anon é destinada ao cliente; a proteção dos dados depende das políticas RLS.
+- O SQL deste projeto restringe o estado compartilhado ao e-mail pedrofigueredo221@gmail.com. Se a conta autorizada usar outro e-mail, altere a política no SQL e confira USER_EMAILS em config.js.
+- Não execute o antigo SQL com políticas abertas para anon.
+- Faça backup do banco e teste com dados não críticos antes do uso real.
