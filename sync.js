@@ -624,6 +624,8 @@ const cloud = (() => {
         error,
         describeError(error)
       );
+      // Impede que uma falha de leitura seja tratada como login concluído.
+      throw error;
     }
   }
 
@@ -643,10 +645,10 @@ const cloud = (() => {
       throw error;
     }
 
-    showLogin(false);
     loginMessage("");
-
+    // Só libera o painel depois de carregar os dados remotos com sucesso.
     await boot();
+    showLogin(false);
   }
 
   async function resetPassword(username) {
@@ -816,14 +818,15 @@ const cloud = (() => {
       if (error) throw error;
 
       if (session) {
-        showLogin(false);
         await boot();
+        showLogin(false);
       } else {
         showLogin(true);
         status("Faça login para continuar", "");
       }
     } catch (error) {
-      status("⚠ Falha na autenticação", "err");
+      showLogin(true);
+      status("⚠ Falha na autenticação ou no carregamento", "err");
 
       console.error(
         "Erro ao verificar a sessão:",
