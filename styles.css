@@ -942,3 +942,48 @@ textarea:required:focus {
   border-color: #c87373 !important;
   box-shadow: 0 0 0 2px rgba(190, 91, 91, .14) !important;
 }
+
+
+/* Cadastro: abas independentes para funcionários e caminhões. */
+#page-cadastros .registration-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:0 0 18px;
+  padding:5px;
+  border:1px solid var(--border,#e3e8e4);
+  border-radius:12px;
+  background:var(--surface-soft,#f5f7f6);
+}
+#page-cadastros .registration-tab{
+  appearance:none;
+  border:1px solid transparent;
+  border-radius:9px;
+  background:transparent;
+  color:var(--text,#273444);
+  padding:11px 20px;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .15s ease,border-color .15s ease,box-shadow .15s ease;
+}
+#page-cadastros .registration-tab.active{
+  background:var(--panel,#fff);
+  border-color:var(--border,#dbe2de);
+  box-shadow:0 1px 3px rgba(20,35,28,.08);
+  color:var(--primary,#1769b2);
+}
+#page-cadastros .registration-tab:focus-visible{
+  outline:2px solid var(--primary,#1769b2);
+  outline-offset:2px;
+}
+#page-cadastros .dashboard-grid{grid-template-columns:minmax(0,1fr)}
+#page-cadastros [hidden]{display:none!important}
+#page-cadastros .registration-tab-panel>.panel-heading{align-items:center;gap:14px}
+#page-cadastros .registration-tab-panel>.panel-heading .btn{flex-shrink:0}
+@media(max-width:600px){
+  #page-cadastros .registration-tabs{gap:6px}
+  #page-cadastros .registration-tab{flex:1;padding:10px 12px}
+  #page-cadastros .registration-tab-panel>.panel-heading{align-items:stretch;flex-direction:column}
+  #page-cadastros .registration-tab-panel>.panel-heading .btn{width:100%}
+}
