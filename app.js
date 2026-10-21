@@ -186,8 +186,7 @@ $("exportFreights").addEventListener("click",()=>csvDownload(`fretes-${$("report
 ["expenseSearch","expenseCategoryFilter","expenseTruckFilter","expenseMonth"].forEach(id=>$(id).addEventListener("input",renderExpenses));
 ["paymentSearch","paymentStatusFilter","paymentMonth"].forEach(id=>$(id).addEventListener("input",renderPayments));
 ["receivableSearch","receivableStatus","receivableMonth"].forEach(id=>$(id).addEventListener("input",renderReceivables));
-$("refreshReceivables").addEventListener("click",()=>{renderReceivables();toast("Contas a receber atualizadas.")});
-document.querySelectorAll("[data-refresh]").forEach(b=>b.addEventListener("click",()=>{renderAll();if(typeof cloud!=="undefined"&&cloud&&cloud.pull)cloud.pull();toast("Dados atualizados.")}));
+document.querySelectorAll("[data-refresh]").forEach(b=>b.addEventListener("click",async()=>{renderAll();try{if(typeof cloud!=="undefined"&&cloud&&typeof cloud.pull==="function"){await cloud.pull();renderAll()}}catch(error){console.warn("Falha ao sincronizar ao atualizar:",error)}toast("Dados atualizados.")}));
 $("seedDemo").addEventListener("click",()=>{if(db.freights.length||db.expenses.length){if(!confirm("Já existem dados neste navegador. Adicionar exemplos junto com eles?"))return}const m=monthISO();db.freights.unshift({id:uid(),date:todayISO(),driver:"Motorista 1",origin:"Campinas",destination:"São Paulo",value:2200,toll:145,commission:10,received:2200,deductToll:true,notes:"Exemplo demonstrativo"},{id:uid(),date:todayISO(),driver:"Motorista 2",origin:"Capivari",destination:"Santos",value:1850,toll:110,commission:12,received:800,deductToll:false,notes:"Pagamento parcial"});const due=dateAddMonths(todayISO(),0);db.expenses.unshift({id:uid(),description:"Troca de óleo e filtros",category:"Manutenção",truck:"Caminhão 01",supplier:"Oficina Exemplo",value:850,type:"avista",installments:[{value:850,paid:850,due,payments:[{amount:850,date:todayISO(),method:"Pix"}]}],notes:"Exemplo demonstrativo",created:todayISO()},{id:uid(),description:"Reparo mecânico",category:"Manutenção",truck:"Caminhão 03",supplier:"Mecânica Exemplo",value:1800,type:"parcelado",installments:[{value:600,paid:0,due:dateAddMonths(due,0),payments:[]},{value:600,paid:0,due:dateAddMonths(due,1),payments:[]},{value:600,paid:0,due:dateAddMonths(due,2),payments:[]}],notes:"Exemplo demonstrativo",created:todayISO()});saveDB();toast("Exemplos adicionados. Você pode editar ou excluir depois.")});
 // Importação em lote de fretes via Excel/CSV e leitura assistida de foto
 const FREIGHT_HEADERS=["Data","Motorista","Origem","Destino","Valor","Pedágio","Comissão (%)","Recebido","Observações"];
@@ -204,6 +203,45 @@ $("freightPhotoFile").addEventListener("change",async e=>{const f=e.target.files
 function splitImport(line){let out=[],s="",q=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'&&line[i+1]==='"'&&q){s+='"';i++}else if(ch==='"')q=!q;else if((ch===';'||ch==='|'||ch==='\t')&&!q){out.push(s.trim());s=""}else s+=ch}out.push(s.trim());return out}
 $("confirmFreightImport").addEventListener("click",()=>{const rows=$("importText").value.split(/\r?\n/).filter(s=>s.trim()).map(splitImport),hi=rows.findIndex(r=>r.some(v=>nh(v)==="data")&&r.some(v=>["motorista","condutor"].includes(nh(v))));if(hi<0){$("importValidation").innerHTML='<p class="error-line">O cabeçalho precisa conter Data e Motorista.</p>';return}const imported=[],errors=[];rows.slice(hi+1).forEach((r,i)=>{const line=hi+i+2;if(!r.some(x=>x.trim()))return;const date=impDate(r[0]),driver=(r[1]||"").trim(),value=impMoney(r[4]),toll=impMoney(r[5]),commission=r[6]===""||r[6]==null?10:impMoney(r[6]),received=impMoney(r[7]);if(!date||!driver||!Number.isFinite(value)||value<=0||!Number.isFinite(toll)||toll<0||!Number.isFinite(commission)||commission<0||!Number.isFinite(received)||received<0||received>value){errors.push(`Linha ${line}: confira data, motorista, valor, pedágio, comissão e recebido.`);return}imported.push({id:uid(),date,driver,origin:(r[2]||"").trim(),destination:(r[3]||"").trim(),value,toll,commission,received,deductToll:false,notes:(r[8]||"").trim()})});if(errors.length){$("importValidation").innerHTML='<p class="error-line"><strong>Corrija antes de importar:</strong></p><ul>'+errors.map(x=>`<li>${escapeHtml(x)}</li>`).join("")+'</ul>';return}if(!imported.length){$("importValidation").textContent="Nenhuma linha válida encontrada.";return}if(!confirm(`Adicionar ${imported.length} frete(s) ao sistema?`))return;db.freights=[...imported,...db.freights];saveDB();$("importReview").hidden=true;$("ocrStatus").hidden=true;toast(`${imported.length} frete(s) importado(s).`)});
 $("cancelFreightImport").addEventListener("click",()=>{$("importReview").hidden=true;$("importValidation").innerHTML=""});
+
+// Ordenação genérica: clicar no título de qualquer coluna ordena a grade; clicar novamente inverte.
+(function enableGridSorting(){
+ const sortStates=new WeakMap();
+ const normalize=value=>String(value||"").replace(/\s+/g," ").trim();
+ const parseValue=value=>{
+   const s=normalize(value);if(!s)return {type:"empty",value:""};
+   const date=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})$/);
+   if(date){let year=Number(date[3]);if(year<100)year+=2000;return {type:"number",value:year*10000+Number(date[2])*100+Number(date[1])}}
+   const numeric=s.replace(/[R$\s%]/g,"").replace(/\./g,"").replace(",",".");
+   if(/^-?\d+(?:\.\d+)?$/.test(numeric))return {type:"number",value:Number(numeric)};
+   return {type:"text",value:s.toLocaleLowerCase("pt-BR")};
+ };
+ document.addEventListener("click",event=>{
+   const th=event.target.closest("table thead th");
+   if(!th || !th.textContent.trim() || th.colSpan>1) return;
+   const table=th.closest("table"), headerRow=th.closest("tr");
+   if(!table || !headerRow) return;
+   const col=[...headerRow.children].indexOf(th), body=table.tBodies[0];
+   if(col<0||!body)return;
+   const rows=[...body.rows].filter(r=>r.cells.length>col&&!r.querySelector("td[colspan]"));
+   if(rows.length<2)return;
+   const previous=sortStates.get(table),direction=previous&&previous.col===col&&previous.direction==="asc"?"desc":"asc";
+   const decorated=rows.map((r,index)=>({r,index,v:parseValue(r.cells[col].innerText||r.cells[col].textContent)}));
+   decorated.sort((a,b)=>{
+     if(a.v.type==="empty"&&b.v.type!=="empty")return 1;
+     if(b.v.type==="empty"&&a.v.type!=="empty")return -1;
+     let result=a.v.type==="number"&&b.v.type==="number"?a.v.value-b.v.value:String(a.v.value).localeCompare(String(b.v.value),"pt-BR",{numeric:true,sensitivity:"base"});
+     return (direction==="asc"?result:-result)||a.index-b.index;
+   });
+   decorated.forEach(item=>body.appendChild(item.r));
+   sortStates.set(table,{col,direction});
+   headerRow.querySelectorAll("th").forEach(cell=>{cell.removeAttribute("aria-sort");cell.classList.remove("grid-sort-asc","grid-sort-desc");const old=cell.querySelector(".grid-sort-indicator");if(old)old.remove()});
+   th.setAttribute("aria-sort",direction==="asc"?"ascending":"descending");th.classList.add(direction==="asc"?"grid-sort-asc":"grid-sort-desc");
+   const indicator=document.createElement("span");indicator.className="grid-sort-indicator";indicator.setAttribute("aria-hidden","true");indicator.textContent=direction==="asc"?" ▲":" ▼";th.appendChild(indicator);
+ });
+ document.querySelectorAll("table thead th").forEach(th=>{if(th.textContent.trim()&&!th.querySelector("button,input,select")){th.title="Clique para ordenar por esta coluna";th.classList.add("grid-sortable")}});
+})();
+
 renderAll();
 
 
