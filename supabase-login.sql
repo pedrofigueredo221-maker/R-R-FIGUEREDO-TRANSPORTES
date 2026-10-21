@@ -20,8 +20,8 @@ drop policy if exists "public_update_app_state" on public.app_state;
 revoke all on table public.app_state from anon;
 grant select, update on table public.app_state to authenticated;
 
--- Restrinja ao e-mail da conta RAFAEL. Substitua EMAIL_AQUI pelo e-mail exato
--- cadastrado em Supabase > Authentication > Users antes de executar este SQL.
+-- Restrinja ao e-mail autorizado cadastrado em Supabase > Authentication > Users.
+-- Confirme que este e-mail também corresponde ao mapeamento RAFAEL em config.js.
 drop policy if exists "authenticated_read_app_state" on public.app_state;
 create policy "authenticated_read_app_state" on public.app_state
   for select to authenticated
