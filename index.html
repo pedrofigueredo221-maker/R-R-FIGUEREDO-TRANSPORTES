@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -431,6 +431,12 @@
                   <label for="employeeCommissionValue">Percentual (%) ou valor (R$)</label>
                   <input id="employeeCommissionValue" type="number" min="0" step="0.01" value="10">
                 </div>
+
+                <div class="check-field driver-toll-default-field">
+                  <input type="checkbox" id="employeeDeductToll">
+                  <label for="employeeDeductToll">Descontar pedágio da base da comissão por padrão</label>
+                  <small>Esta preferência será aplicada aos novos fretes e poderá ser alterada em cada viagem.</small>
+                </div>
               </div>
 
               <div class="import-actions">
@@ -624,7 +630,7 @@
         <div><label for="fStatus">Recebimento do cliente *</label><select id="fStatus" required><option>Pendente</option><option>Parcial</option><option>Pago</option></select></div>
         <div><label for="fReceived">Adiantamento / valor já recebido (R$) *</label><input type="number" id="fReceived" min="0" step="any" value="0" required></div>
         <div><label class="optional-label" for="fBalanceCurrent">Saldo atual a receber (R$) <span>(opcional — calculado automaticamente se vazio)</span></label><input type="number" id="fBalanceCurrent" min="0" step="any" placeholder="Calculado automaticamente se vazio"></div>
-        <div class="check-field toll-deduct-field"><input type="checkbox" id="fDeductToll"><label for="fDeductToll">Descontar pedágio do motorista</label></div>
+        <div class="check-field toll-deduct-field"><input type="checkbox" id="fDeductToll"><label for="fDeductToll">Descontar pedágio da base da comissão</label><small>Usa o padrão do motorista; você pode alterar neste frete.</small></div>
         <div class="full-width balance-validation" id="balanceValidation" role="alert" hidden></div>
         <div class="full-width"><label class="optional-label" for="fNotes">Observações <span>(opcional)</span></label><textarea id="fNotes" rows="2" placeholder="Número do conhecimento, cliente ou observações"></textarea></div>
       </div>
