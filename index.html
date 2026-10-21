@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -52,7 +52,7 @@
           <article class="panel"><div class="panel-heading"><div><h3>Próximas contas</h3><p>Parcelas e despesas pendentes</p></div><button class="text-btn" data-goto="payments">Ver contas →</button></div><div id="upcomingBills" class="bill-list"></div></article>
         </div>
         <article class="panel"><div class="panel-heading"><div><h3>Despesas por categoria</h3><p>Valores pagos no período selecionado</p></div></div><div id="categoryBars" class="category-bars"></div></article>
-        <p class="notice">Sistema sem tela de login. Os dados são sincronizados pelo Supabase entre os aparelhos que acessarem este endereço. Como não há autenticação, mantenha o endereço privado e use apenas em ambiente confiável.</p>
+        <p class="notice">Os dados são sincronizados com segurança pelo Supabase após a autenticação.</p>
       </section>
 
       <section class="page" id="page-freights">
@@ -183,9 +183,9 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-  <script src="config.js?v=9"></script>
-  <script src="app.js?v=9"></script>
-  <script src="sync.js?v=9"></script>
+  <script src="config.js?v=10"></script>
+  <script src="app.js?v=10"></script>
+  <script src="sync.js?v=10"></script>
   <script>cloud.start();</script>
 </body>
 </html>

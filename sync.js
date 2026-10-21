@@ -199,7 +199,7 @@ const cloud = (() => {
       console.error("Configure config.js e carregue a biblioteca do Supabase antes de sync.js.");
       return;
     }
-    sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+    sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, { auth: { persistSession: false, autoRefreshToken: true, detectSessionInUrl: false } });
     showLogin(true);
     const form = el("loginForm");
     if (form) form.addEventListener("submit", async event => {
