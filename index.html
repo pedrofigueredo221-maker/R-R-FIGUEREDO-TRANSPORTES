@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=26">
+  <link rel="stylesheet" href="styles.css?v=27">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -213,9 +213,9 @@
         </article>
 
         <div class="filters">
-          <input id="freightSearch" placeholder="Buscar rota ou motorista...">
+          <input id="freightSearch" placeholder="Buscar rota ou motorista..." aria-label="Buscar fretes por rota ou motorista">
           <select id="freightDriverFilter"><option value="">Todos os motoristas</option></select>
-          <input type="month" id="freightMonth">
+          <input type="month" id="freightMonth" aria-label="Filtrar fretes por mês">
           <select id="freightStatusFilter">
             <option value="">Todos os status</option>
             <option value="Pendente">Pendente</option>
@@ -258,7 +258,7 @@
         </div>
 
         <div class="filters">
-          <input id="expenseSearch" placeholder="Buscar descrição ou fornecedor...">
+          <input id="expenseSearch" placeholder="Buscar descrição ou fornecedor..." aria-label="Buscar despesas por descrição ou fornecedor">
           <select id="expenseCategoryFilter">
             <option value="">Todas as categorias</option>
             <option>Manutenção</option><option>Combustível</option><option>Despesas gerais</option>
@@ -269,7 +269,7 @@
             <option>Caminhão 01</option><option>Caminhão 02</option><option>Caminhão 03</option>
             <option>Caminhão 04</option><option>Caminhão 05</option><option>Não definido</option>
           </select>
-          <input type="month" id="expenseMonth">
+          <input type="month" id="expenseMonth" aria-label="Filtrar despesas por mês">
         </div>
 
         <div class="summary-strip">
@@ -301,12 +301,12 @@
         </div>
 
         <div class="filters">
-          <input id="receivableSearch" placeholder="Buscar cliente, motorista ou rota...">
+          <input id="receivableSearch" placeholder="Buscar cliente, motorista ou rota..." aria-label="Buscar recebimentos por cliente, motorista ou rota">
           <select id="receivableStatus">
             <option value="">Todas as situações</option>
             <option value="Pendente">Pendente</option><option value="Parcial">Parcial</option><option value="Pago">Pago</option>
           </select>
-          <input type="month" id="receivableMonth">
+          <input type="month" id="receivableMonth" aria-label="Filtrar recebimentos por mês">
         </div>
 
         <div class="summary-strip">
@@ -341,12 +341,12 @@
         </div>
 
         <div class="filters">
-          <input id="paymentSearch" placeholder="Buscar conta ou fornecedor...">
+          <input id="paymentSearch" placeholder="Buscar conta ou fornecedor..." aria-label="Buscar contas a pagar por conta ou fornecedor">
           <select id="paymentStatusFilter">
             <option value="">Todas as situações</option>
             <option value="atrasada">Atrasadas</option><option value="aberta">Em aberto</option><option value="paga">Pagas</option>
           </select>
-          <input type="month" id="paymentMonth">
+          <input type="month" id="paymentMonth" aria-label="Filtrar contas a pagar por mês">
         </div>
 
         <div class="summary-strip">
