@@ -924,3 +924,21 @@ textarea:required:focus {
 .login-card label{text-align:left}
 /* Mantém o espaço visual logo–título igual ao título–campo Usuário. */
 .login-card label:first-of-type{margin-top:38px}
+
+
+/* Cadastro de frete: campos obrigatórios vazios com fundo vermelho moderado. */
+#freightDialog input[required]:invalid:not([type="checkbox"]):not([type="radio"]),
+#freightDialog select[required]:invalid,
+#freightDialog textarea[required]:invalid {
+  background-color: #f9dddd !important;
+  border-color: #d58b8b !important;
+  color: #5f2424 !important;
+  box-shadow: none;
+}
+#freightDialog input[required]:invalid:focus:not([type="checkbox"]):not([type="radio"]),
+#freightDialog select[required]:invalid:focus,
+#freightDialog textarea[required]:invalid:focus {
+  background-color: #f9dddd !important;
+  border-color: #c87373 !important;
+  box-shadow: 0 0 0 2px rgba(190, 91, 91, .14) !important;
+}
