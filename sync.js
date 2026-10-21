@@ -64,6 +64,16 @@ const cloud = (() => {
   let pending = false;
   let timer = null;
   let started = false;
+  let currentUserEmail = "";
+  let readOnly = false;
+
+  function applyUserRole(user) {
+    currentUserEmail = String(user?.email || "").trim().toLowerCase();
+    const visitorEmail = String(cfg.USER_EMAILS?.VISITANTE || "").trim().toLowerCase();
+    readOnly = !!visitorEmail && currentUserEmail === visitorEmail;
+    if (typeof window.setReadOnlyMode === "function") window.setReadOnlyMode(readOnly);
+    return readOnly;
+  }
 
   const clone = value =>
     JSON.parse(JSON.stringify(value));
@@ -380,7 +390,10 @@ const cloud = (() => {
    * for a versão que este dispositivo leu.
    */
   async function doPush() {
-    if (!sb) return;
+    if (!sb || readOnly) {
+      if (readOnly) { pending = false; status("Modo visitante — somente leitura", ""); }
+      return;
+    }
 
     const {
       data: authData,
@@ -477,6 +490,10 @@ const cloud = (() => {
    * alteração ou exclusão.
    */
   function save() {
+    if (readOnly) {
+      status("Modo visitante — alterações bloqueadas", "err");
+      return Promise.resolve();
+    }
     pending = true;
     writeCache();
 
@@ -497,6 +514,8 @@ const cloud = (() => {
       if (authError) throw authError;
       if (!authData.session) return;
 
+      // O visitante nunca envia alterações locais ao banco.
+      if (readOnly) pending = false;
       // Envia primeiro as alterações locais pendentes.
       if (pending) {
         await push();
@@ -595,7 +614,7 @@ const cloud = (() => {
        * tenta mesclá-las com a nuvem em vez de sobrescrever
        * diretamente os dados remotos.
        */
-      if (cache && cache.pending && cache.db) {
+      if (!readOnly && cache && cache.pending && cache.db) {
         const localCache = normalize(cache.db);
         const oldBase = normalize(cache.base || {});
 
@@ -613,7 +632,7 @@ const cloud = (() => {
        * Migração do formato antigo: só pergunta quando existem
        * registros antigos ainda não migrados.
        */
-      else if (hasRecords(old) && !migrated) {
+      else if (!readOnly && hasRecords(old) && !migrated) {
         const oldData = normalize(old);
         const additions = countLocalAdditions(oldData, remote.data);
 
@@ -646,7 +665,7 @@ const cloud = (() => {
       // Não substitui nem modifica cadastros reais já existentes na nuvem.
       let addedStarterRecords = false;
 
-      if (Array.isArray(db.employees) && db.employees.length === 0) {
+      if (!readOnly && Array.isArray(db.employees) && db.employees.length === 0) {
         db.employees = Array.from({ length: 5 }, (_, index) => ({
           id: "starter-driver-" + (index + 1),
           name: "Motorista " + String(index + 1).padStart(2, "0"),
@@ -659,7 +678,7 @@ const cloud = (() => {
         addedStarterRecords = true;
       }
 
-      if (Array.isArray(db.trucks) && db.trucks.length === 0) {
+      if (!readOnly && Array.isArray(db.trucks) && db.trucks.length === 0) {
         db.trucks = Array.from({ length: 5 }, (_, index) => ({
           id: "starter-truck-" + (index + 1),
           name: "Caminhão " + String(index + 1).padStart(2, "0"),
@@ -676,7 +695,7 @@ const cloud = (() => {
         if (pending) await push();
       }
 
-      if (typeof ensureDefaults === "function") {
+      if (!readOnly && typeof ensureDefaults === "function") {
         ensureDefaults();
       }
 
@@ -715,7 +734,7 @@ const cloud = (() => {
   async function signIn(username, password) {
     const email = getConfiguredEmail(username);
 
-    const { error } = await sb.auth.signInWithPassword({
+    const { data: authResult, error } = await sb.auth.signInWithPassword({
       email,
       password
     });
@@ -728,6 +747,7 @@ const cloud = (() => {
       throw error;
     }
 
+    applyUserRole(authResult?.user || { email });
     loginMessage("");
     // Só libera o painel depois de carregar os dados remotos com sucesso.
     await boot();
@@ -907,6 +927,7 @@ const cloud = (() => {
 
       if (error) throw error;
 
+      applyUserRole(session?.user || null);
       if (session && lastScreen === "authenticated") {
         // Só restaura o painel se ele já estava aberto antes da atualização.
         await boot();
@@ -930,6 +951,7 @@ const cloud = (() => {
 
     sb.auth.onAuthStateChange((event, session) => {
       if (!session) {
+        applyUserRole(null);
         clearInterval(timer);
         timer = null;
         showLogin(true);
@@ -948,6 +970,8 @@ const cloud = (() => {
   return {
     start,
     save,
-    pull
+    pull,
+    get isReadOnly() { return readOnly; },
+    get currentUserEmail() { return currentUserEmail; }
   };
 })();
