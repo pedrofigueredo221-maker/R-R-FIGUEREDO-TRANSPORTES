@@ -554,3 +554,14 @@ td{font-size:14px}
   .registration-list-tools{align-items:flex-start;flex-direction:column;gap:7px}
   .deactivate-check{font-size:12px}
 }
+
+
+/* Botão azul padronizado com ícone de atualização em todas as telas */
+.refresh-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:8px 13px;border:1px solid #1d5fa7;border-radius:8px;background:#1769b2;color:#fff;font-size:13px;font-weight:700;box-shadow:0 2px 5px rgba(23,105,178,.16)}
+.refresh-btn:hover{background:#0f5594;border-color:#0f5594;color:#fff}
+.refresh-btn span{font-size:19px;line-height:.8;font-weight:800}
+.grid-sortable{cursor:pointer;user-select:none;white-space:nowrap}
+.grid-sortable:hover{background:#e8f1fb;color:#155c9f}
+.grid-sort-indicator{display:inline-block;margin-left:3px;color:#1769b2;font-size:10px;white-space:nowrap}
+table thead th[aria-sort]{background:#e8f1fb;color:#155c9f}
+@media(max-width:760px){.refresh-btn{min-height:40px;padding:9px 12px}}
