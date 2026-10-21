@@ -124,3 +124,12 @@ Revisão estática das regras CSS e do cache. Ainda é necessário conferir visu
 - Ao focar um campo obrigatório, o fundo volta a branco para destacar a edição.
 - Nenhuma fórmula financeira ou estrutura do banco foi alterada.
 - Validação estática; confirmar no navegador os formulários de frete, despesas, pagamentos e login.
+
+
+## 2026-10-21 — Logotipo e ícone do site
+
+- Adicionados `logo.svg` com a identidade visual da R&amp;R Figueredo Transportes e `favicon.svg` para a aba do navegador e favoritos.
+- O logotipo passa a aparecer na tela de login, no menu lateral e no painel inicial.
+- Incluídos metadados de descrição e atualizado o cache do CSS para `v=37`.
+- SVGs locais evitam depender de imagens hospedadas em terceiros.
+- Validação estática; confirmar a exibição no navegador após a publicação. Navegadores podem manter o favicon antigo em cache por algum tempo.
