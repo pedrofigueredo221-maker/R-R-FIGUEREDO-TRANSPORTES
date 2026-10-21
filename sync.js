@@ -69,7 +69,7 @@ const cloud = (() => {
 
   function applyUserRole(user) {
     currentUserEmail = String(user?.email || "").trim().toLowerCase();
-    const visitorEmail = String(cfg.USER_EMAILS?.VISITANTE || "").trim().toLowerCase();
+    const visitorEmail = String(cfg.USER_EMAILS?.VISITANTES || cfg.USER_EMAILS?.VISITANTE || "").trim().toLowerCase();
     readOnly = !!visitorEmail && currentUserEmail === visitorEmail;
     if (typeof window.setReadOnlyMode === "function") window.setReadOnlyMode(readOnly);
     return readOnly;
