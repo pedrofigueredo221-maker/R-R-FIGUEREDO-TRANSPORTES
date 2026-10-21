@@ -183,10 +183,11 @@ const cloud = (() => {
 
   /*
    * Lê o único registro compartilhado.
-   * Não cria registros nem substitui dados automaticamente.
+   * Se estiver ausente, tenta criá-lo sem sobrescrever um registro
+   * existente. A política INSERT do Supabase precisa permitir id=1.
    */
   async function fetchRemote() {
-    const { data, error } = await sb
+    let { data, error } = await sb
       .from("app_state")
       .select("data,version")
       .eq("id", 1)
@@ -195,10 +196,51 @@ const cloud = (() => {
     if (error) throw error;
 
     if (!data) {
-      throw new Error(
-        "Não foi encontrada uma linha visível com id=1 em " +
-        "public.app_state. Confira o registro e as políticas RLS."
-      );
+      const initialData = normalize({
+        freights: [],
+        expenses: [],
+        receivables: [],
+        employees: [],
+        trucks: [],
+        categories: [...DEFAULT_CATEGORIES]
+      });
+
+      // ignoreDuplicates gera ON CONFLICT DO NOTHING: nunca substitui
+      // dados já existentes no registro id=1.
+      const { error: insertError } = await sb
+        .from("app_state")
+        .upsert(
+          { id: 1, data: initialData, version: 0 },
+          { onConflict: "id", ignoreDuplicates: true }
+        );
+
+      if (insertError) {
+        throw new Error(
+          "O registro id=1 não está visível e não foi possível criá-lo. " +
+          "Confira se o SQL do Supabase criou a política INSERT para usuários autenticados. " +
+          "Detalhe: " + insertError.message
+        );
+      }
+
+      // Lê novamente: pode ter sido criado agora ou já existir, mas estar
+      // oculto por uma política RLS.
+      const retry = await sb
+        .from("app_state")
+        .select("data,version")
+        .eq("id", 1)
+        .maybeSingle();
+
+      data = retry.data;
+      error = retry.error;
+
+      if (error) throw error;
+
+      if (!data) {
+        throw new Error(
+          "Não foi possível ler public.app_state com id=1 após a tentativa de inicialização. " +
+          "Confira os privilégios GRANT e as políticas RLS de SELECT/INSERT no Supabase."
+        );
+      }
     }
 
     return {
