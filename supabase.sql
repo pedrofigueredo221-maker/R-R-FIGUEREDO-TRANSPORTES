@@ -1,6 +1,9 @@
+-- R&R Figueredo Transportes: configuração segura do estado compartilhado.
 -- Execute no SQL Editor do Supabase.
--- Atenção: as políticas abaixo deixam TODOS os visitantes anônimos lerem e alterarem
--- o registro financeiro completo. Use somente se aceitar conscientemente esse risco.
+-- A política limita leitura e alteração à conta autorizada.
+-- Confirme o e-mail abaixo com o usuário criado em Authentication > Users.
+-- Este script não apaga nem substitui o registro financeiro existente.
+
 create table if not exists public.app_state (
   id integer primary key check (id = 1),
   data jsonb not null default '{}'::jsonb,
@@ -10,21 +13,42 @@ create table if not exists public.app_state (
 
 alter table public.app_state enable row level security;
 
-grant select, insert, update on public.app_state to anon;
+-- Remova permissões e políticas abertas a visitantes anônimos.
+revoke all on table public.app_state from anon;
+revoke all on table public.app_state from public;
+grant select, update on table public.app_state to authenticated;
 
 drop policy if exists "public_read_app_state" on public.app_state;
-create policy "public_read_app_state"
-on public.app_state for select to anon using (id = 1);
-
 drop policy if exists "public_insert_app_state" on public.app_state;
-create policy "public_insert_app_state"
-on public.app_state for insert to anon with check (id = 1);
-
 drop policy if exists "public_update_app_state" on public.app_state;
-create policy "public_update_app_state"
-on public.app_state for update to anon using (id = 1) with check (id = 1);
+drop policy if exists "authenticated_read_app_state" on public.app_state;
+drop policy if exists "authenticated_update_app_state" on public.app_state;
 
--- Cria o registro inicial, sem apagar um registro existente.
+create policy "authenticated_read_app_state"
+on public.app_state
+for select to authenticated
+using (
+  id = 1
+  and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com'
+);
+
+create policy "authenticated_update_app_state"
+on public.app_state
+for update to authenticated
+using (
+  id = 1
+  and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com'
+)
+with check (
+  id = 1
+  and (auth.jwt() ->> 'email') = 'pedrofigueredo221@gmail.com'
+);
+
+-- Cria o registro inicial somente se ainda não existir.
 insert into public.app_state (id, data, version)
-values (1, '{"freights":[],"expenses":[],"receivables":[],"employees":[],"trucks":[],"categories":["Combustível","Pedágio","Óleo e lubrificantes","Mecânico","Oficina","Pneus","Elétrica","Peças","Documentação","Seguro","Lavagem","Manutenção","Despesas gerais","Outros"]}'::jsonb, 0)
+values (
+  1,
+  '{"freights":[],"expenses":[],"receivables":[],"employees":[],"trucks":[],"categories":["Combustível","Pedágio","Óleo e lubrificantes","Mecânico","Oficina","Pneus","Elétrica","Peças","Documentação","Seguro","Lavagem","Manutenção","Despesas gerais","Outros"]}'::jsonb,
+  0
+)
 on conflict (id) do nothing;
