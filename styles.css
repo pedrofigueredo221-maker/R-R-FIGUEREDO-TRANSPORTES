@@ -708,3 +708,23 @@ table thead th.grid-sortable:hover{background:#bec2c7 !important;color:#000000 !
 #freightDialog .toll-deduct-field{display:grid;grid-template-columns:16px minmax(0,1fr);align-content:center;justify-content:stretch;column-gap:9px;row-gap:4px}
 #freightDialog .toll-deduct-field small{grid-column:2;color:#657181;font-size:11px;line-height:1.4}
 @media(max-width:760px){#page-cadastros .driver-toll-default-field{padding:11px}#freightDialog .toll-deduct-field{align-self:stretch}}
+
+
+/* Cadastro de frete: campos obrigatórios primeiro e opcionais no final */
+#freightDialog .form-section-title{grid-column:1/-1;display:flex;flex-direction:column;gap:4px;margin-top:5px;padding:0 0 9px;border-bottom:1px solid #d7dce2}
+#freightDialog .form-section-title strong{font-size:15px;color:#263449}
+#freightDialog .form-section-title small{font-size:12px;color:#687386;line-height:1.4}
+#freightDialog .optional-section-title{margin-top:14px}
+#freightDialog #freightCalc{background:#343a40!important;border:1px solid #252a2e!important;color:#f4f6f8!important;border-radius:10px;padding:16px}
+#freightDialog #freightCalc .freight-calculation-item{background:#454c53;border-color:#5b636b}
+#freightDialog #freightCalc .freight-calculation-item span{color:#e2e6ea}
+#freightDialog #freightCalc .freight-calculation-item strong{color:#fff}
+#freightDialog #freightCalc .freight-calculation-item.cost-total{background:#b94b52;border-color:#a93c44}
+#freightDialog #freightCalc .freight-calculation-item.cost-total span,
+#freightDialog #freightCalc .freight-calculation-item.cost-total strong{color:#fff}
+#freightDialog #freightCalc .freight-calculation-item.profit-total{background:#275c40;border-color:#36734f}
+#freightDialog #freightCalc .freight-calculation-item.profit-total span,
+#freightDialog #freightCalc .freight-calculation-item.profit-total strong{color:#fff}
+@media(max-width:760px){
+  #freightDialog .form-section-title{grid-column:1/-1}
+}
