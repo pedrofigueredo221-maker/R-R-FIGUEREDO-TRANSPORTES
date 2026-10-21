@@ -193,6 +193,77 @@
   <script src="config.js?v=10"></script>
   <script src="app.js?v=10"></script>
   <script src="sync.js?v=10"></script>
-  <script>cloud.start();</script>
+  
+<script>
+  cloud.start();
+
+  // Recuperação de senha pelo Supabase
+  (() => {
+    const button = document.getElementById("forgotPassword");
+    if (!button) return;
+
+    button.addEventListener("click", async () => {
+      const cfg = window.APP_CONFIG || {};
+      const users = cfg.USER_EMAILS || {};
+
+      const username = prompt(
+        "Digite seu usuário para receber o link de recuperação:"
+      );
+
+      if (!username) return;
+
+      const email = users[username.trim().toUpperCase()];
+
+      if (!email) {
+        alert("Usuário não encontrado ou sem e-mail configurado.");
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Enviando e-mail...";
+
+      try {
+        const client = window.supabase.createClient(
+          cfg.SUPABASE_URL,
+          cfg.SUPABASE_ANON_KEY,
+          {
+            auth: {
+              persistSession: false,
+              autoRefreshToken: false,
+              detectSessionInUrl: false
+            }
+          }
+        );
+
+        const redirectUrl = new URL(
+          "redefinir-senha.html",
+          window.location.href
+        ).href;
+
+        const { error } = await client.auth.resetPasswordForEmail(
+          email,
+          { redirectTo: redirectUrl }
+        );
+
+        if (error) throw error;
+
+        alert(
+          "Se a conta estiver cadastrada, confira o e-mail vinculado " +
+          "ao usuário para redefinir a senha."
+        );
+      } catch (error) {
+        console.error("Erro na recuperação de senha:", error);
+        alert(
+          "Não foi possível enviar o e-mail. Verifique a configuração " +
+          "do Supabase e tente novamente."
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Esqueci minha senha";
+      }
+    });
+  })();
+</script>
 </body>
 </html>
+
