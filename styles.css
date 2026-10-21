@@ -905,3 +905,11 @@ textarea:required:focus {
 #freightDialog .freight-section-fields textarea:required:focus {
   background-color: #fff;
 }
+
+
+/* Logotipo da transportadora e ícone da aba/favoritos. */
+.sidebar .brand{padding:0 4px 38px;display:flex;align-items:center;justify-content:flex-start;min-width:0}
+.sidebar .brand-logo{display:block;width:100%;max-width:214px;height:auto;object-fit:contain}
+.login-logo{display:block;width:min(100%,270px);height:auto;object-fit:contain;align-self:flex-start;margin:0 0 12px}
+.welcome-logo{display:block;width:clamp(90px,15vw,150px);height:auto;object-fit:contain;flex:0 0 auto}
+@media(max-width:760px){.sidebar .brand{padding-bottom:27px}.sidebar .brand-logo{max-width:205px}.login-logo{width:min(100%,245px)}.welcome-logo{width:88px}}
