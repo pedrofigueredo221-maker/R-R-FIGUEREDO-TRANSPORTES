@@ -10,7 +10,7 @@
   <link rel="shortcut icon" href="favicon.svg?v=1">
   <link rel="apple-touch-icon" href="favicon.svg?v=1">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=39">
+  <link rel="stylesheet" href="styles.css?v=40">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -383,16 +383,21 @@
           <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span> Atualizar</button>
         </div>
 
+        <div class="registration-tabs" role="tablist" aria-label="Tipo de cadastro">
+          <button type="button" class="registration-tab active" id="employeesTab" role="tab" aria-selected="true" aria-controls="employeePanel" data-registration-tab="employees">Funcionários</button>
+          <button type="button" class="registration-tab" id="trucksTab" role="tab" aria-selected="false" aria-controls="truckPanel" data-registration-tab="trucks">Caminhões</button>
+        </div>
         <div class="dashboard-grid">
-          <article class="panel">
+          <article class="panel registration-tab-panel" id="employeePanel" role="tabpanel" aria-labelledby="employeesTab" data-registration-panel="employees">
             <div class="panel-heading">
               <div>
                 <h3>Funcionários e motoristas</h3>
-                <p>Adicione pessoas e edite os nomes cadastrados.</p>
+                <p>Consulte e edite os funcionários cadastrados.</p>
               </div>
+              <button class="btn btn-primary" type="button" id="addEmployeeBtn">＋ Adicionar funcionário</button>
             </div>
 
-            <form id="employeeForm" class="inline-register">
+            <form id="employeeForm" class="inline-register" hidden>
               <input type="hidden" id="employeeId">
               <div class="register-field">
                 <label for="employeeName">Nome do funcionário</label>
@@ -463,15 +468,16 @@
             <div class="empty-state" id="employeeEmpty" hidden>Nenhum funcionário cadastrado. Adicione o primeiro acima.</div>
           </article>
 
-          <article class="panel">
+          <article class="panel registration-tab-panel" id="truckPanel" role="tabpanel" aria-labelledby="trucksTab" data-registration-panel="trucks" hidden>
             <div class="panel-heading">
               <div>
                 <h3>Caminhões</h3>
-                <p>Altere o nome de exibição ou cadastre outro veículo.</p>
+                <p>Consulte e edite os caminhões cadastrados.</p>
               </div>
+              <button class="btn btn-primary" type="button" id="addTruckBtn">＋ Adicionar caminhão</button>
             </div>
 
-            <form id="truckForm" class="inline-register">
+            <form id="truckForm" class="inline-register" hidden>
               <input type="hidden" id="truckId">
               <div class="register-field">
                 <label for="truckName">Nome / identificação</label>
@@ -731,7 +737,7 @@
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="config.js?v=13"></script>
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=19"></script>
   <script src="sync.js?v=18"></script>
   <script>
     cloud.start();
