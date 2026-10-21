@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163a32">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=23">
+  <link rel="stylesheet" href="styles.css?v=24">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -620,11 +620,12 @@
         <div><label for="fDieselPrice">Preço do diesel (R$/L)</label><input type="number" id="fDieselPrice" min="0" step="0.001" placeholder="Ex.: 6,20"></div>
         <div><label for="fLiters">Litros abastecidos</label><input type="number" id="fLiters" min="0" step="0.01" placeholder="Ex.: 100"></div>
         <div><label for="fFuelActual">Gasto real com combustível (R$)</label><input type="number" id="fFuelActual" min="0" step="0.01" value="0"></div>
+        <div id="fuelEstimateBox"><label>Gasto estimado de combustível (R$)</label><div class="calc-preview fuel-estimate-value" id="fuelEstimate">R$ 0,00</div></div>
         <div><label for="fStatus">Recebimento do cliente</label><select id="fStatus"><option>Pendente</option><option>Parcial</option><option>Pago</option></select></div>
         <div><label for="fReceived">Adiantamento / valor já recebido (R$)</label><input type="number" id="fReceived" min="0" step="0.01" value="0"></div>
-        <div><label for="fBalanceCurrent">Saldo atual a receber (R$)</label><input type="number" id="fBalanceCurrent" min="0" step="0.01" placeholder="Se preencher, o frete será adiantamento + saldo"></div>
-        <div class="check-field"><input type="checkbox" id="fDeductToll"><label for="fDeductToll">Descontar pedágio do motorista</label></div>
-        <div class="full-width" id="fuelEstimateBox"><label>Gasto estimado de combustível</label><div class="calc-preview" id="fuelEstimate">R$ 0,00</div></div>
+        <div><label for="fBalanceCurrent">Saldo atual a receber (R$)</label><input type="number" id="fBalanceCurrent" min="0" step="0.01" placeholder="Informe o saldo atual"></div>
+        <div class="check-field toll-deduct-field"><input type="checkbox" id="fDeductToll"><label for="fDeductToll">Descontar pedágio do motorista</label></div>
+        <div class="full-width balance-validation" id="balanceValidation" role="alert" hidden></div>
         <div class="full-width"><label for="fNotes">Observações (opcional)</label><textarea id="fNotes" rows="2" placeholder="Número do conhecimento, cliente ou observações"></textarea></div>
       </div>
 
