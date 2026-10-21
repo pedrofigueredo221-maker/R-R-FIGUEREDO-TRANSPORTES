@@ -5,6 +5,6 @@ window.APP_CONFIG = {
   SUPABASE_ANON_KEY: "sb_publishable_jXoGdEwcHd2VYaca2nPKKg_4_OUztoN",
   USER_EMAILS: {
     RAFAEL: "pedrofigueredo221@gmail.com",
-    VISITANTE: "pedrofogofogop@gmail.com"
+    VISITANTES: "pedrofogofogop@gmail.com"
   }
 };
