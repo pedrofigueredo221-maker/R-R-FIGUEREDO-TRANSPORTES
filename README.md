@@ -48,8 +48,9 @@ Não é necessário instalar dependências para a versão inicial.
 
 **Esta versão é um protótipo para testes, não um sistema de produção.**
 
-- Os dados ficam no `localStorage` do navegador. Não sincronizam entre celular e computador, nem entre usuários. Limpar os dados do navegador pode apagar os registros.
-- O pacote usa Supabase sem login conforme a configuração atual. A chave publicável não é uma chave administrativa, mas as políticas SQL abertas permitem que qualquer pessoa com acesso ao site possa ler e alterar o estado financeiro. Restrinja a hospedagem e configure autenticação/políticas antes de usar com dados confidenciais. Não há permissões individuais nem backup automático.
+- O aplicativo tem tela de login com Supabase Auth e usa `localStorage` como cache/migração local; o estado compartilhado é armazenado em `public.app_state`.
+- A chave `publishable/anon` pode aparecer no navegador, mas a segurança depende das políticas RLS do banco. Use o SQL autenticado e limite o acesso ao e-mail autorizado. Não publique chaves administrativas nem senhas.
+- O sistema não substitui backups: configure backups no Supabase e exportações periódicas dos dados.
 - O lucro é uma estimativa gerencial e deve ser validado com os critérios contábeis da empresa. Evite registrar o mesmo abastecimento tanto no custo do frete quanto em despesas para não duplicar o custo.
 - O campo de recebimento de fretes acompanha o total recebido, mas não mantém um histórico detalhado de cada recebimento.
 - Ao editar uma despesa já criada, este protótipo não altera os valores nem a agenda de parcelas existentes; apenas permite corrigir os dados descritivos. Exclua e recadastre uma despesa se precisar reconstruir seu parcelamento.
@@ -58,7 +59,7 @@ Não é necessário instalar dependências para a versão inicial.
 
 ## Próxima etapa recomendada
 
-Antes de usar com dados reais, evoluir para Supabase/PostgreSQL com autenticação, regras de acesso e backup. Assim, o mesmo dado poderá ser acessado com segurança em diferentes dispositivos. Nunca coloque chaves secretas ou senhas no repositório público.
+Antes de usar com dados reais, confirme que o SQL autenticado foi executado no Supabase, que o usuário correto existe em Authentication > Users e que o e-mail autorizado na política corresponde à conta. Configure também backups. Nunca coloque chaves secretas ou senhas no repositório público.
 
 
 ## Recursos adicionados
@@ -66,7 +67,7 @@ Antes de usar com dados reais, evoluir para Supabase/PostgreSQL com autenticaç�
 - **Importar fretes:** em Fretes, baixe o modelo Excel, preencha uma linha por frete e importe `.xlsx`, `.xls` ou `.csv`. Revise e valide antes de salvar.
 - **Fotografar o caderno:** escolha a opção de foto no celular ou selecione uma imagem. O reconhecimento de texto é uma ajuda, não uma garantia: escrita à mão e números podem ser lidos errado. Confira a prévia manualmente.
 - Os leitores Excel e OCR dependem de conexão à internet para carregar as bibliotecas.
-- **Limitação importante:** os dados continuam salvos somente no navegador/dispositivo atual. Para uso profissional com acesso no celular e computador, será necessário adicionar banco de dados online, autenticação, permissões e backup.
+- **Limitação importante:** o estado é sincronizado por um único registro JSON compartilhado. A aplicação usa controle de versão e mesclagem, mas não oferece permissões detalhadas por função nem histórico contábil/auditoria por lançamento.
 
 
 ## Atualização financeira (outubro/2026)
@@ -81,7 +82,7 @@ Antes de usar com dados reais, evoluir para Supabase/PostgreSQL com autenticaç�
 
 ### Atenção antes de usar em produção
 
-Faça backup do banco Supabase e dos dados locais antes de substituir a versão publicada. A configuração atual do projeto não tem login e o SQL de exemplo concede acesso anônimo ao registro financeiro compartilhado. Portanto, mesmo que o uso planejado seja só para diretores e gerência, **o sistema ainda não está tecnicamente restrito a essas pessoas**. Não use dados financeiros reais/publicação aberta até configurar autenticação e políticas de acesso adequadas no Supabase.
+Faça backup do banco Supabase e dos dados locais antes de substituir a versão publicada. O arquivo `supabase.sql` foi ajustado para restringir o acesso ao usuário autenticado com o e-mail configurado na política. Executar um arquivo SQL no GitHub não altera automaticamente o banco: execute o script no SQL Editor do Supabase e confirme que as políticas antigas para `anon` foram removidas. A política deste pacote autoriza apenas `pedrofigueredo221@gmail.com`; altere-a somente se o usuário correto usar outro e-mail. Teste login, recuperação de senha e sincronização antes de inserir dados reais.
 
 
 ### Busca de cidades brasileiras
