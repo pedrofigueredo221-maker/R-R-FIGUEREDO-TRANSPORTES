@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { freightCommission, freightProfit } from "./domain/freightCalculations.js";
+import EditablePage from "./EditablePage.jsx";
 
 const config = window.APP_CONFIG || {};
 const supabase = config.SUPABASE_URL && config.SUPABASE_ANON_KEY
@@ -23,6 +24,7 @@ const dateLabel = (value) => {
   return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString("pt-BR");
 };
 const currentMonth = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; };
+const todayISO = () => new Date().toISOString().slice(0, 10);
 
 function Login({ onLogin, onReset, busy, error }) {
   const [username, setUsername] = useState("");
@@ -233,6 +235,7 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const [authError, setAuthError] = useState("");
   const [data, setData] = useState({ freights: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] });
+  const [version, setVersion] = useState(0);
   const [dataError, setDataError] = useState("");
   const [loadingData, setLoadingData] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
@@ -259,6 +262,7 @@ export default function App() {
       const { data: row, error } = await supabase.from("app_state").select("data,version").eq("id", 1).maybeSingle();
       if (error) throw error;
       if (!row || !row.data || typeof row.data !== "object") throw new Error("O registro public.app_state (id=1) não foi encontrado ou não está visível pelas políticas RLS. Nenhum dado foi criado ou sobrescrito.");
+      setVersion(Number(row.version) || 0);
       setData({
         freights: Array.isArray(row.data.freights) ? row.data.freights : [],
         expenses: Array.isArray(row.data.expenses) ? row.data.expenses : [],
@@ -272,6 +276,34 @@ export default function App() {
   }, [session]);
 
   useEffect(() => { if (session) loadData(); else { setDataError(""); setData({ freights: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] }); } }, [session, loadData]);
+
+  // Escrita otimista por versão: se outro computador salvar primeiro, recusamos
+  // a gravação local e recarregamos os dados em vez de sobrescrever silenciosamente.
+  const saveData = useCallback(async (nextData) => {
+    if (!supabase || !session) throw new Error("Sua sessão expirou. Entre novamente antes de salvar.");
+    const next = {
+      freights: Array.isArray(nextData.freights) ? nextData.freights : [],
+      expenses: Array.isArray(nextData.expenses) ? nextData.expenses : [],
+      receivables: Array.isArray(nextData.receivables) ? nextData.receivables : [],
+      employees: Array.isArray(nextData.employees) ? nextData.employees : [],
+      trucks: Array.isArray(nextData.trucks) ? nextData.trucks : [],
+      categories: Array.isArray(nextData.categories) ? nextData.categories : []
+    };
+    const expectedVersion = version;
+    const { data: updated, error } = await supabase.from("app_state")
+      .update({ data: next, version: expectedVersion + 1, updated_at: new Date().toISOString() })
+      .eq("id", 1)
+      .eq("version", expectedVersion)
+      .select("version");
+    if (error) throw new Error("O Supabase recusou a gravação. Nenhuma alteração foi confirmada: " + error.message);
+    if (!updated || updated.length === 0) {
+      await loadData();
+      throw new Error("Outro computador alterou os dados primeiro. Atualizei a consulta; confira as informações e tente novamente para evitar sobrescrever alterações.");
+    }
+    setData(next);
+    setVersion(Number(updated[0].version) || expectedVersion + 1);
+    setDataError("");
+  }, [session, version, loadData]);
 
   const resetPassword = async (username) => {
     if (!supabase) throw new Error("Configuração do Supabase não encontrada.");
@@ -323,7 +355,7 @@ export default function App() {
     <div className="content-area">
       {dataError && <div className="error-banner" role="alert"><strong>Não foi possível carregar os dados.</strong><p>{dataError}</p><button className="secondary-button" onClick={loadData} disabled={loadingData}>Tentar novamente</button></div>}
       {loadingData && !dataError && <div className="inline-loading"><span className="spinner" />Carregando dados compartilhados…</div>}
-      {activePage === "dashboard" ? <Dashboard data={data} onRefresh={loadData} loading={loadingData} /> : <ReadOnlyPage page={activePage} data={data} />}
+      {activePage === "dashboard" ? <Dashboard data={data} onRefresh={loadData} loading={loadingData} /> : activePage === "reports" ? <ReadOnlyPage page={activePage} data={data} /> : <EditablePage page={activePage} data={data} onSave={saveData} readOnly={readOnly} loading={loadingData} />}
       <footer className="app-footer">Versão React em migração gradual · Este painel apenas lê o Supabase.</footer>
     </div></main>
   </div>;
