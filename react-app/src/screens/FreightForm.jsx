@@ -1,4 +1,4 @@
-import { freightBase, freightCommission, freightProfit } from "../domain/freightCalculations.js";
+import { freightBase, freightCommission, freightProfit, freightDriverPayment, freightOperatingCosts } from "../domain/freightCalculations.js";
 
 const amount = (value) => Math.max(0, Number(value) || 0);
 const money = (value) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(value) || 0);
@@ -13,7 +13,7 @@ function FreightField({ label, value, onChange, type = "text", required = false,
   </label>;
 }
 
-export default function FreightForm({ title, value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [] }) {
+export default function FreightForm({ title, value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
   const estimatedFuel = amount(value.liters) * amount(value.dieselPrice);
   const calculationInput = { ...value, value: amount(value.value), discount: amount(value.discount), toll: amount(value.toll), commission: amount(value.commission), bonus: amount(value.bonus), fuelActual: amount(value.fuelActual) };
@@ -21,8 +21,10 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
     ["Base da comissão", money(freightBase(calculationInput))],
     ["Comissão estimada", money(freightCommission(calculationInput))],
     ["Bônus", money(value.bonus)],
+    ["Pagamento estimado ao motorista", money(freightDriverPayment(calculationInput))],
     ["Pedágio", money(value.toll)],
     ["Combustível estimado", money(estimatedFuel)],
+    ["Custos da empresa (pedágio + combustível real + outros)", money(freightOperatingCosts(calculationInput))],
     ["Lucro estimado", money(freightProfit(calculationInput))]
   ];
   const fields = [
@@ -38,13 +40,15 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
     { key: "commissionType", label: "Tipo de comissão", options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] },
     { key: "commission", label: "Comissão (% ou R$)", type: "number", min: "0", step: "0.01" },
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "otherCosts", label: "Outros custos da viagem (R$)", type: "number", min: "0", step: "0.01" },
     { key: "km", label: "Quilometragem", type: "number", min: "0", step: "1" },
-    { key: "received", label: "Total já recebido (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "received", label: "Recebido na viagem (R$)", type: "number", min: "0", step: "0.01" },
     { key: "notes", label: "Observações", placeholder: "Informações adicionais" }
   ];
   return <form className="record-editor freight-editor" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
     <div className="editor-heading"><h3>{title}</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
-    <div className="editor-grid freight-fields">{fields.map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
+    <div className="editor-grid freight-fields">{fields.filter((field) => field.key !== "received" || !editing).map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
+    {!editing && <p className="receipt-sync-note">Se houve pagamento no momento da viagem, informe o valor recebido aqui. Ele será registrado no histórico e o status do frete será atualizado automaticamente.</p>}
     <section className="fuel-section" aria-labelledby="fuel-section-title">
       <div className="fuel-section-heading"><h4 id="fuel-section-title">Combustível</h4><p>Estimativa automática a partir dos litros e do preço por litro.</p></div>
       <div className="fuel-grid">
@@ -62,6 +66,7 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
       <div className="freight-summary-heading"><h4>Resumo financeiro</h4><span>Valores calculados automaticamente</span></div>
       <div className="freight-summary-grid">{summary.map(([label, total]) => <div className="freight-summary-item" key={label}><span>{label}</span><strong>{total}</strong></div>)}</div>
     </section>
+    <p className="receipt-sync-note">Os custos informados neste frete já entram no lucro estimado. Não lance o mesmo gasto novamente em Despesas para evitar contá-lo duas vezes.</p>
     <div className="editor-actions"><button className="primary-button" type="submit" disabled={saving}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
   </form>;
 }

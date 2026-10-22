@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { freightBase, freightCommission, freightBonus, freightCost, freightProfit, freightNet } from "./freightCalculations.js";
+import { freightBase, freightCommission, freightBonus, freightCost, freightProfit, freightNet, freightDriverPayment, freightOperatingCosts } from "./freightCalculations.js";
 
 test("desconto geral e pedágio selecionado alteram a base da comissão", () => {
   const f = { value: 1000, discount: 100, toll: 80, commission: 10, commissionType: "percent" };
@@ -25,4 +25,12 @@ test("líquido respeita a regra legada do pedágio descontável", () => {
 });
 test("valores ausentes são tratados como zero", () => {
   for (const fn of [freightBase, freightCommission, freightBonus, freightCost, freightProfit, freightNet]) assert.equal(fn({}), 0);
+});
+
+test("pagamento estimado do motorista separa comissão e bônus dos custos da empresa", () => {
+  const f = { value: 2000, discount: 200, toll: 100, deductToll: true, commission: 10, commissionType: "percent", bonus: 50, fuelActual: 300, otherCosts: 25 };
+  assert.equal(freightDriverPayment(f), 220);
+  assert.equal(freightOperatingCosts(f), 425);
+  assert.equal(freightCost(f), 645);
+  assert.equal(freightProfit(f), 1155);
 });
