@@ -24,5 +24,7 @@ jobs:
           node --check app.js
           node --check sync.js
           node --check config.js
+      - name: Testar regras financeiras
+        run: npm test
       - name: Construir versão React isolada
         run: npm run build
