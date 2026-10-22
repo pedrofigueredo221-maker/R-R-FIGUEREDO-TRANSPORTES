@@ -24,9 +24,11 @@ const dateLabel = (value) => {
 };
 const currentMonth = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; };
 
-function Login({ onLogin, busy, error }) {
+function Login({ onLogin, onReset, busy, error }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [resetBusy, setResetBusy] = useState(false);
+  const [resetMessage, setResetMessage] = useState("");
   return <main className="login-page"><form className="login-card" onSubmit={(e) => { e.preventDefault(); onLogin(username, password); }}>
     <img className="login-logo" src="./logo.svg" alt="R&R Figueredo Transportes" />
     <p className="eyebrow">SISTEMA DE GESTÃO</p><h1>Acesse sua conta</h1>
@@ -35,6 +37,17 @@ function Login({ onLogin, busy, error }) {
     <label htmlFor="login-password">Senha</label><input id="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" placeholder="Digite sua senha" required />
     {error && <p className="error-message" role="alert">{error}</p>}
     <button className="primary-button login-submit" type="submit" disabled={busy || !supabase}>{busy ? "Entrando…" : "Entrar"}</button>
+    <button className="secondary-button login-submit" type="button" disabled={busy || resetBusy || !supabase} onClick={async () => {
+      setResetMessage("");
+      setResetBusy(true);
+      try {
+        await onReset(username);
+        setResetMessage("Se a solicitação for aceita, você receberá um e-mail. Confira também a pasta de spam.");
+      } catch (resetError) {
+        setResetMessage(resetError?.message || "Não foi possível solicitar a recuperação de senha.");
+      } finally { setResetBusy(false); }
+    }}>{resetBusy ? "Solicitando…" : "Esqueci minha senha"}</button>
+    {resetMessage && <p className="reset-message" role="status">{resetMessage}</p>}
     {!supabase && <p className="error-message">Configuração do Supabase não encontrada. Confira public/app-config.js.</p>}
     <small className="muted login-note">Acesso protegido pelo Supabase.</small>
   </form></main>;
@@ -135,6 +148,16 @@ export default function App() {
 
   useEffect(() => { if (session) loadData(); else { setDataError(""); setData({ freights: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] }); } }, [session, loadData]);
 
+  const resetPassword = async (username) => {
+    if (!supabase) throw new Error("Configuração do Supabase não encontrada.");
+    const email = config.USER_EMAILS?.[String(username || "").trim().toUpperCase()];
+    if (typeof email !== "string" || !email.trim()) throw new Error("Digite um usuário válido antes de solicitar a recuperação.");
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: "https://pedrofigueredo221-maker.github.io/RR-FIGUEREDO-TRANSPORTES/redefinir-senha.html"
+    });
+    if (error) throw new Error("Não foi possível solicitar a recuperação. Confira as configurações de e-mail do Supabase.");
+  };
+
   const login = async (username, password) => {
     if (!supabase) return;
     setBusy(true); setAuthError("");
@@ -159,7 +182,7 @@ export default function App() {
   const readOnly = Boolean(visitor && email === visitor);
 
   if (!authReady) return <main className="loading-page"><span className="spinner" /><p>Verificando sessão segura…</p></main>;
-  if (!session) return <Login onLogin={login} busy={busy} error={authError} />;
+  if (!session) return <Login onLogin={login} onReset={resetPassword} busy={busy} error={authError} />;
 
   return <div className="app-shell">
     <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./logo.svg" alt="R&R Figueredo Transportes" /></div>
