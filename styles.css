@@ -1011,3 +1011,38 @@ textarea:required:focus {
 /* Ações em massa nos cadastros ficam disponíveis, mas sem competir com ações principais. */
 .btn-subtle-danger{background:#f7f4f4!important;border:1px solid #e2d8d8!important;color:#805b5b!important;box-shadow:none!important;font-weight:600!important}
 .btn-subtle-danger:hover{background:#eee6e6!important;border-color:#d8c8c8!important;color:#704747!important}
+
+
+/* Cadastros: formulários de inclusão/edição em modal, no mesmo padrão do frete. */
+.registration-dialog {
+  width: min(760px, calc(100% - 28px));
+  max-height: 92vh;
+  overflow-y: auto;
+}
+.registration-dialog .inline-register {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.registration-dialog .inline-register .register-field {
+  margin-bottom: 12px;
+}
+.registration-dialog .modal-header {
+  position: sticky;
+  top: -25px;
+  z-index: 2;
+  padding-top: 2px;
+  background: #fff;
+}
+.registration-dialog .import-actions {
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+@media (max-width: 760px) {
+  .registration-dialog { width: calc(100% - 14px); max-height: 94vh; }
+  .registration-dialog form { padding: 18px; }
+  .registration-dialog .modal-header { top: -18px; }
+}
