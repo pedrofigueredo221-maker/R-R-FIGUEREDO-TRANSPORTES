@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import FreightsPage from "./screens/FreightsPage.jsx";
 import ExpensesPage from "./screens/ExpensesPage.jsx";
 import ReceivablesPage from "./screens/ReceivablesPage.jsx";
@@ -48,7 +48,6 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   const [payment, setPayment] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState("");
   const [paymentDate, setPaymentDate] = useState(today());
-  const [paymentMethod, setPaymentMethod] = useState("PIX");
 
   const startCreate = (kind) => {
     if (readOnly) return;
@@ -78,11 +77,12 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     if (!window.confirm("Confirma excluir este registro? Esta ação será salva no banco compartilhado.")) return;
     await commit({ ...data, [key]: data[key].filter((item) => item.id !== record.id) });
   };
-  const filter = (rows, fields) => rows.filter((row) => (!query || fields.some((key) => String(row[key] ?? "").toLocaleLowerCase("pt-BR").includes(query))) && (!month || !row.date || String(row.date).startsWith(month)));
+  const normalizedQuery = query.trim().toLocaleLowerCase("pt-BR");
+  const filter = (rows, fields) => rows.filter((row) => (!normalizedQuery || fields.some((key) => String(row[key] ?? "").toLocaleLowerCase("pt-BR").includes(normalizedQuery))) && (!month || !row.date || String(row.date).startsWith(month)));
   const allFreights = data.freights || [];
   const allExpenses = data.expenses || [];
   const filteredFreights = filter(allFreights, ["customer", "driver", "truck", "origin", "destination", "notes"]);
-  const filteredExpenses = allExpenses.filter((row) => (!query || ["description", "category", "truck", "supplier", "notes"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(query))) && (!month || String(row.created || "").startsWith(month) || (row.installments || []).some((i) => String(i.due || "").startsWith(month))));
+  const filteredExpenses = allExpenses.filter((row) => (!normalizedQuery || ["description", "category", "truck", "supplier", "notes"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(normalizedQuery))) && (!month || String(row.created || "").startsWith(month) || (row.installments || []).some((i) => String(i.due || "").startsWith(month))));
   const categories = data.categories?.length ? data.categories : defaultCategories;
   const employees = (data.employees || []).filter((row) => !query || ["name", "role", "phone"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(query)));
   const trucks = (data.trucks || []).filter((row) => !query || ["name", "plate"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(query)));
@@ -127,7 +127,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     startCreate, startEdit, saveFreight, saveExpense, showError, toolbar,
     filteredFreights, filteredExpenses, dateLabel, money, Actions, RecordForm, Field,
     remove, payment, setPayment, setPaymentAmount, setPaymentDate, paymentAmount,
-    paymentDate, paymentMethod, allFreights, allExpenses, number, commit, setError,
+    paymentDate, allFreights, allExpenses, number, commit, setError,
     categories, employees, trucks, tab, setTab, query, uid, today
   };
   if (page === "freights") return <FreightsPage controller={controller} />;
