@@ -9,7 +9,7 @@ Requer Node.js 18 ou superior.
 3. Abra o endereço informado pelo Vite.
 
 ## Escopo desta etapa
-- Login pelo Supabase Auth e restauração da sessão ao atualizar.
+- Login pelo Supabase Auth, restauração da sessão ao atualizar e recuperação de senha por e-mail.
 - Leitura do registro compartilhado `public.app_state`, sem criar, editar ou sobrescrever dados.
 - Painel com faturamento mensal, lucro estimado, valores a receber, contas a pagar e fretes recentes.
 - Identificação do perfil visitante como somente leitura.
