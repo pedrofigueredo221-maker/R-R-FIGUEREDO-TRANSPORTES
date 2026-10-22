@@ -1,12 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import OverviewPage from "./screens/OverviewPage.jsx";
-import FreightsPage from "./screens/FreightsPage.jsx";
-import ExpensesPage from "./screens/ExpensesPage.jsx";
-import ReceivablesPage from "./screens/ReceivablesPage.jsx";
-import PayablesPage from "./screens/PayablesPage.jsx";
+import EditablePage from "./EditablePage.jsx";
 import ReportsPage from "./screens/ReportsPage.jsx";
-import CadastrosPage from "./screens/CadastrosPage.jsx";
 
 const config = window.APP_CONFIG || {};
 const supabase = config.SUPABASE_URL && config.SUPABASE_ANON_KEY
@@ -24,12 +20,12 @@ const pages = [
 const titles = Object.fromEntries(pages.map((page) => [page.id, page.label]));
 const screenComponents = {
   dashboard: OverviewPage,
-  freights: FreightsPage,
-  expenses: ExpensesPage,
-  receivables: ReceivablesPage,
-  payments: PayablesPage,
+  freights: EditablePage,
+  expenses: EditablePage,
+  receivables: EditablePage,
+  payments: EditablePage,
   reports: ReportsPage,
-  cadastros: CadastrosPage
+  cadastros: EditablePage
 };
 
 function Login({ onLogin, onReset, busy, error }) {
@@ -202,7 +198,7 @@ export default function App() {
     <div className="content-area">
       {dataError && <div className="error-banner" role="alert"><strong>Não foi possível carregar os dados.</strong><p>{dataError}</p><button className="secondary-button" onClick={loadData} disabled={loadingData}>Tentar novamente</button></div>}
       {loadingData && !dataError && <div className="inline-loading"><span className="spinner" />Carregando dados compartilhados…</div>}
-      {(() => { const Screen = screenComponents[activePage] || OverviewPage; return <Screen data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} />; })()}
+      {(() => { const Screen = screenComponents[activePage] || OverviewPage; return <Screen page={activePage} data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} />; })()}
       <footer className="app-footer">Versão React em migração gradual · Dados compartilhados com controle de gravação.</footer>
     </div></main>
   </div>;
