@@ -1,9 +1,9 @@
 import { useState } from "react";
-import FreightsPage from "./screens/FreightsPage.jsx";
-import ExpensesPage from "./screens/ExpensesPage.jsx";
-import ReceivablesPage from "./screens/ReceivablesPage.jsx";
-import PayablesPage from "./screens/PayablesPage.jsx";
-import CadastrosPage from "./screens/CadastrosPage.jsx";
+import FreightsPage from "./screens/Fretes.jsx";
+import ExpensesPage from "./screens/Despesas.jsx";
+import ReceivablesPage from "./screens/ContasAReceber.jsx";
+import PayablesPage from "./screens/ContasAPagar.jsx";
+import CadastrosPage from "./screens/Cadastros.jsx";
 
 const today = () => {
   const date = new Date();
