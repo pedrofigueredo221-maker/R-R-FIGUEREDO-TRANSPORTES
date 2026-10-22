@@ -14,7 +14,7 @@ export default function FreightsPage({ controller }) {
   return <section className="panel">
     <div className="panel-heading"><div><h3>Fretes</h3><p>Cadastre viagens e acompanhe custos, comissão e recebimentos.</p></div>{!readOnly && <button className="primary-button" disabled={loading || saving} onClick={() => startCreate("freight")}>+ Novo frete</button>}</div>
     {showError}
-    {!readOnly && form && <FreightForm title={editingId ? "Editar frete" : "Novo frete"} value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} />}
+    {!readOnly && form && <FreightForm title={editingId ? "Editar frete" : "Novo frete"} value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} />}
     {toolbar}
     <div className="table-scroll"><table><thead><tr><th>Data</th><th>Cliente</th><th>Motorista</th><th>Rota</th><th>Valor</th><th>Recebido</th><th>Saldo</th><th>Situação</th>{!readOnly && <th>Ações</th>}</tr></thead><tbody>
       {filteredFreights.map((freight) => {
