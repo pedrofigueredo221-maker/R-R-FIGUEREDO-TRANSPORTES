@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { freightReceivableBalance } from "../domain/freightReceivables.js";
+import { freightReceivableBalance, applyFreightReceipt } from "../domain/freightReceivables.js";
 
 const today = () => {
   const now = new Date();
@@ -23,12 +23,12 @@ export default function FreightReceiptPanel({ freight, data, number, money, savi
     if (!date) { setError("Informe a data do recebimento."); return; }
 
     const receipt = { id: globalThis.crypto?.randomUUID?.() || `receipt-${Date.now()}`, date, amount: Math.round(receivedAmount * 100) / 100, method };
-    const receipts = [...(Array.isArray(current.receipts) ? current.receipts : []), receipt];
-    const nextReceived = Math.round((Math.max(0, number(current.received)) + receipt.amount) * 100) / 100;
-    onSave({
-      ...data,
-      freights: data.freights.map((item) => item.id === current.id ? { ...item, received: nextReceived, receipts } : item)
-    });
+    try {
+      const freights = applyFreightReceipt(data.freights || [], current.id, receipt, number);
+      onSave({ ...data, freights });
+    } catch (saveError) {
+      setError(saveError?.message || "Não foi possível vincular o recebimento ao frete.");
+    }
   };
 
   return <section className="record-editor receipt-editor" aria-label="Registrar recebimento do frete">
