@@ -46,8 +46,6 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
   const [tab, setTab] = useState("employees");
   const [payment, setPayment] = useState(null);
-  const [paymentAmount, setPaymentAmount] = useState("");
-  const [paymentDate, setPaymentDate] = useState(today());
 
   const startCreate = (kind) => {
     if (readOnly) return;
@@ -136,8 +134,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     page, data, readOnly, loading, saving, form, setForm, editingId, setEditingId,
     startCreate, startEdit, saveFreight, saveExpense, showError, toolbar,
     filteredFreights, filteredExpenses, dateLabel, money, Actions, RecordForm, Field,
-    remove, payment, setPayment, setPaymentAmount, setPaymentDate, paymentAmount,
-    paymentDate, allFreights, allExpenses, number, commit, setError,
+    remove, payment, setPayment, allFreights, allExpenses, number, commit, setError,
     categories, employees, trucks, tab, setTab, query, uid, today
   };
   if (page === "freights") return <FreightsPage controller={controller} />;
