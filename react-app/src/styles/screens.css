@@ -90,3 +90,8 @@
   .freight-summary-heading { align-items: flex-start; flex-direction: column; }
   .freight-summary-item strong { font-size: 18px; }
 }
+
+.balance-positive { color: #20764b; font-weight: 800; }
+.balance-negative { color: #b93838; font-weight: 800; }
+.nav-label { font-size: 13px; letter-spacing: 1.35px; }
+.nav-item { min-height: 47px; font-size: 14px; }
