@@ -3,13 +3,11 @@ import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
 import { freightReceivableBalance, freightReceivableStatus } from "../domain/freightReceivables.js";
 
 export default function FreightsPage({ controller }) {
-  const { data, readOnly, loading, saving, form, setForm, editingId, setEditingId, startCreate, startEdit, saveFreight, showError, toolbar, filteredFreights, dateLabel, money, Actions, remove, payment, setPayment, setPaymentAmount, setPaymentDate, allFreights, number, commit, employees, trucks, today } = controller;
+  const { data, readOnly, loading, saving, form, setForm, editingId, setEditingId, startCreate, startEdit, saveFreight, showError, toolbar, filteredFreights, dateLabel, money, Actions, remove, payment, setPayment, allFreights, number, commit, employees, trucks } = controller;
   const openReceipt = (freight) => {
     setForm(null);
     setEditingId(null);
     setPayment({ kind: "receive", record: freight });
-    setPaymentAmount("");
-    setPaymentDate(today());
   };
   return <section className="panel">
     <div className="panel-heading"><div><h3>Fretes</h3><p>Cadastre viagens e acompanhe custos, comissão e recebimentos.</p></div>{!readOnly && <button className="primary-button" disabled={loading || saving} onClick={() => startCreate("freight")}>+ Novo frete</button>}</div>
