@@ -833,7 +833,14 @@ const cloud = (() => {
       }
     );
 
-    showLogin(true);
+    // Preserve o estado da aba antes de alterar a tela; showLogin(true)
+    // sem remember evita apagar o estado "authenticated" durante o refresh.
+    let lastScreen = null;
+    try {
+      lastScreen = sessionStorage.getItem("rr_screen_state");
+    } catch (_) {}
+
+    showLogin(true, false);
 
     const form = el("loginForm");
 
