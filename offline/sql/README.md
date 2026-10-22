@@ -1,11 +1,16 @@
-# SQL da camada offline
+# SQL e banco da camada offline
 
-Esta pasta guarda o esquema de referência para a futura API local da R&R Figueredo Transportes.
+A escolha atual para o banco central offline é **PostgreSQL local**, configurado em `offline/postgres/`.
 
-- `local-offline-schema.sql`: estrutura inicial para SQLite atrás de um serviço local autenticado.
-- `../local-store.js`: protótipo de cache/fila por navegador (IndexedDB), separado do banco central.
+- `../postgres/docker-compose.yml`: inicia o serviço PostgreSQL local com volume persistente.
+- `../postgres/.env.example`: modelo de configuração; copie para `.env` e altere a senha.
+- `../postgres/init/001-local-metadata.sql`: registra o estado da migração, sem dados reais.
+- `../postgres/README.md`: instruções, exportação e cuidados de migração.
+- `../local-store.js`: protótipo separado de cache/fila por navegador (IndexedDB).
 - `../../supabase.sql`, `../../supabase-login.sql`, `../../supabase-visitor-role.sql` e `../../supabase/migrations/`: scripts do Supabase atual; revisar antes de executar.
 
-## Importante
+## Situação real
 
-O SQL local é uma base de desenvolvimento, não foi aplicado em produção nem integrado ao sistema. Não contém dados reais. Não salve neste repositório dumps do Supabase, credenciais, connection strings ou cópias reais de clientes/fretes/financeiro. O backup real deve ficar em armazenamento privado fora do GitHub.
+A configuração do PostgreSQL local está versionada, mas os dados reais ainda precisam ser exportados do Supabase e importados/validados no computador autorizado. Nenhum dado de produção foi copiado por esta PR, nenhum SQL foi executado no Supabase e o site publicado permanece inalterado.
+
+Nunca coloque dumps reais, dados de clientes/fretes/financeiro, senhas, chaves privadas ou strings de conexão neste repositório público. Backups reais devem ficar em `backups/local/`, ignorada pelo Git, e em outra cópia privada independente.
