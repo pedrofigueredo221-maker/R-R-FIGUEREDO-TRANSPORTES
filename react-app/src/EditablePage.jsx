@@ -14,7 +14,7 @@ const number = (value) => Math.max(0, Number(value) || 0);
 const money = (value) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(number(value));
 const dateLabel = (value) => value ? new Date(`${value}T12:00:00`).toLocaleDateString("pt-BR") : "—";
 const defaultCategories = ["Combustível", "Pedágio", "Óleo e lubrificantes", "Mecânico", "Oficina", "Pneus", "Elétrica", "Peças", "Documentação", "Seguro", "Lavagem", "Manutenção", "Despesas gerais", "Outros"];
-const blankFreight = () => ({ date: today(), customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "0", toll: "0", deductToll: false, commissionType: "percent", commission: "13", bonus: "0", km: "", liters: "", dieselPrice: "", fuelActual: "0", notes: "", received: "0" });
+const blankFreight = () => ({ date: today(), customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "0", toll: "0", deductToll: false, commissionType: "percent", commission: "13", bonus: "0", km: "", liters: "", dieselPrice: "", fuelActual: "0", otherCosts: "0", notes: "", received: "0" });
 const blankExpense = () => ({ created: today(), description: "", category: "Despesas gerais", truck: "", supplier: "", value: "", due: today(), installmentsCount: "1", notes: "" });
 const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "13", active: true });
 const blankTruck = () => ({ name: "", plate: "", driverId: "", active: true });
@@ -96,7 +96,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
       setError("O valor do frete não pode ficar abaixo do total já recebido.");
       return;
     }
-    const value = { ...form, id: editingId || uid(), value: freightValue, discount: number(form.discount), toll: number(form.toll), bonus: number(form.bonus), commission: number(form.commission), received: receivedAtTrip, km: number(form.km), liters: number(form.liters), dieselPrice: number(form.dieselPrice), fuelActual: number(form.fuelActual) };
+    const value = { ...form, id: editingId || uid(), value: freightValue, discount: number(form.discount), toll: number(form.toll), bonus: number(form.bonus), commission: number(form.commission), received: receivedAtTrip, km: number(form.km), liters: number(form.liters), dieselPrice: number(form.dieselPrice), fuelActual: number(form.fuelActual), otherCosts: number(form.otherCosts) };
     value.fuelEstimated = number(value.liters) * number(value.dieselPrice);
     if (original) {
       value.receipts = Array.isArray(original.receipts) ? original.receipts : [];
