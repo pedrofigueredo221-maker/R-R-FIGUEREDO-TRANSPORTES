@@ -276,11 +276,19 @@ export default function App() {
     finally { setLoadingData(false); }
   }, [session]);
 
-  useEffect(() => { if (session) loadData(); else { setDataError(""); setData({ freights: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] }); } }, [session, loadData]);
+  useEffect(() => { if (session) loadData(); else { setDataError(""); setVersion(0); setData({ freights: [], expenses: [], receivables: [], employees: [], trucks: [], categories: [] }); } }, [session, loadData]);
+
+  useEffect(() => {
+    if (!session) return undefined;
+    const refresh = () => { if (!document.hidden) loadData(); };
+    const interval = window.setInterval(refresh, 15000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => { window.clearInterval(interval); document.removeEventListener("visibilitychange", refresh); };
+  }, [session, loadData]);
 
   // Escrita otimista por versão: se outro computador salvar primeiro, recusamos
   // a gravação local e recarregamos os dados em vez de sobrescrever silenciosamente.
-  const saveData = useCallback(async (nextData) => {
+  const saveData = useCallback(async (nextData, formVersion = version) => {
     if (!supabase || !session) throw new Error("Sua sessão expirou. Entre novamente antes de salvar.");
     const next = {
       ...data,
@@ -292,6 +300,10 @@ export default function App() {
       trucks: Array.isArray(nextData.trucks) ? nextData.trucks : [],
       categories: Array.isArray(nextData.categories) ? nextData.categories : []
     };
+    if (formVersion !== version) {
+      await loadData();
+      throw new Error("Os dados mudaram em outro computador. Atualizei a consulta e fechei o formulário para evitar sobrescrever alterações; abra o registro novamente e confira os valores.");
+    }
     const expectedVersion = version;
     const { data: updated, error } = await supabase.from("app_state")
       .update({ data: next, version: expectedVersion + 1, updated_at: new Date().toISOString() })
@@ -301,7 +313,7 @@ export default function App() {
     if (error) throw new Error("O Supabase recusou a gravação. Nenhuma alteração foi confirmada: " + error.message);
     if (!updated || updated.length === 0) {
       await loadData();
-      throw new Error("Outro computador alterou os dados primeiro. Atualizei a consulta; confira as informações e tente novamente para evitar sobrescrever alterações.");
+      throw new Error("Outro computador alterou os dados primeiro. Atualizei a consulta e fechei o formulário; abra o registro novamente para conferir os valores.");
     }
     setData(next);
     setVersion(Number(updated[0].version) || expectedVersion + 1);
@@ -358,7 +370,7 @@ export default function App() {
     <div className="content-area">
       {dataError && <div className="error-banner" role="alert"><strong>Não foi possível carregar os dados.</strong><p>{dataError}</p><button className="secondary-button" onClick={loadData} disabled={loadingData}>Tentar novamente</button></div>}
       {loadingData && !dataError && <div className="inline-loading"><span className="spinner" />Carregando dados compartilhados…</div>}
-      {activePage === "dashboard" ? <Dashboard data={data} onRefresh={loadData} loading={loadingData} /> : activePage === "reports" ? <ReadOnlyPage page={activePage} data={data} /> : <EditablePage page={activePage} data={data} onSave={saveData} readOnly={readOnly} loading={loadingData} />}
+      {activePage === "dashboard" ? <Dashboard data={data} onRefresh={loadData} loading={loadingData} /> : activePage === "reports" ? <ReadOnlyPage page={activePage} data={data} /> : <EditablePage page={activePage} data={data} onSave={saveData} readOnly={readOnly} loading={loadingData} version={version} />}
       <footer className="app-footer">Versão React em migração gradual · Este painel apenas lê o Supabase.</footer>
     </div></main>
   </div>;
