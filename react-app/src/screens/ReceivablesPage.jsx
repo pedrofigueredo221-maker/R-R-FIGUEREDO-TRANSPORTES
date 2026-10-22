@@ -1,4 +1,29 @@
+import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
+import { freightReceivableBalance, freightReceivableStatus } from "../domain/freightReceivables.js";
+
 export default function ReceivablesPage({ controller }) {
-  const { page, data, readOnly, loading, saving, form, setForm, editingId, setEditingId, startCreate, startEdit, saveFreight, saveExpense, showError, toolbar, filteredFreights, filteredExpenses, dateLabel, money, Actions, RecordForm, Field, remove, payment, setPayment, setPaymentAmount, setPaymentDate, paymentAmount, paymentDate, paymentMethod, allFreights, allExpenses, number, commit, setError, categories, employees, trucks, tab, setTab, query, uid, today } = controller;
-  return <section className="panel"><div className="panel-heading"><div><h3>Contas a receber</h3><p>Registre recebimentos parciais ou totais vinculados aos fretes.</p></div></div>{showError}{toolbar}<div className="table-scroll"><table><thead><tr><th>Data</th><th>Cliente</th><th>Rota</th><th>Valor</th><th>Recebido</th><th>Saldo</th>{!readOnly && <th>Ação</th>}</tr></thead><tbody>{filteredFreights.map((f)=><tr key={f.id}><td>{dateLabel(f.date)}</td><td>{f.customer||"—"}</td><td>{[f.origin,f.destination].filter(Boolean).join(" → ")||"—"}</td><td>{money(f.value)}</td><td>{money(f.received)}</td><td className="balance-positive">{money(Math.max(0,number(f.value)-number(f.received)))}</td>{!readOnly && <td><button className="secondary-button" onClick={()=>{setPayment({kind:"receive",record:f});setPaymentAmount("");setPaymentDate(today());}}>Registrar recebimento</button></td>}</tr>)}</tbody></table></div>{!readOnly && payment?.kind==="receive" && <div className="record-editor"><h3>Registrar recebimento</h3><p>{payment.record.customer || "Cliente"} — saldo em aberto: {money(number(payment.record.value)-number(payment.record.received))}</p><div className="editor-grid"><Field label="Valor recebido (R$)" type="number" min="0.01" step="0.01" value={paymentAmount} onChange={setPaymentAmount} required/><Field label="Data" type="date" value={paymentDate} onChange={setPaymentDate} required/><Field label="Forma de recebimento" value={paymentMethod} onChange={setPaymentMethod} options={["PIX","Transferência","Dinheiro","Boleto","Adiantamento inicial","Outro"]}/></div><button className="primary-button" disabled={saving||number(paymentAmount)<=0} onClick={()=>{const current=allFreights.find(f=>f.id===payment.record.id);const amount=number(paymentAmount);if(amount>Math.max(0,number(current.value)-number(current.received))&&!window.confirm("O valor informado ultrapassa o saldo. Deseja registrar mesmo assim?"))return;const receipts=[...(current.receipts||[]),{date:paymentDate,amount,method:paymentMethod}];commit({...data,freights:allFreights.map(f=>f.id===current.id?{...f,received:number(f.received)+amount,receipts}:f)});}}>Salvar recebimento</button><button className="secondary-button" onClick={()=>setPayment(null)}>Cancelar</button></div>}</section>;
+  const { data, readOnly, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, setPaymentAmount, setPaymentDate, allFreights, number, commit, today } = controller;
+  const openReceipt = (freight) => {
+    setPayment({ kind: "receive", record: freight });
+    setPaymentAmount(freightReceivableBalance(freight, number).toFixed(2));
+    setPaymentDate(today());
+  };
+  return <section className="panel">
+    <div className="panel-heading"><div><h3>Contas a receber</h3><p>Cada frete gera um recebível vinculado ao mesmo registro. O status é atualizado conforme os pagamentos.</p></div></div>
+    {showError}{toolbar}
+    <div className="table-scroll"><table><thead><tr><th>Data</th><th>Cliente</th><th>Rota</th><th>Valor do frete</th><th>Recebido</th><th>Saldo em aberto</th><th>Situação</th>{!readOnly && <th>Ação</th>}</tr></thead><tbody>
+      {filteredFreights.map((freight) => {
+        const balance = freightReceivableBalance(freight, number);
+        const status = freightReceivableStatus(freight, number);
+        return <tr key={freight.id}>
+          <td>{dateLabel(freight.date)}</td><td>{freight.customer || "—"}</td><td>{[freight.origin, freight.destination].filter(Boolean).join(" → ") || "—"}</td>
+          <td className="numeric">{money(freight.value)}</td><td className="numeric">{money(freight.received)}</td><td className="numeric">{money(balance)}</td>
+          <td><span className={`status-pill status-${status.toLocaleLowerCase("pt-BR")}`}>{status}</span></td>
+          {!readOnly && <td>{balance > 0 ? <button className="primary-button" type="button" disabled={saving} onClick={() => openReceipt(freight)}>{status === "Parcial" ? "Receber saldo" : "Marcar como pago"}</button> : <span className="muted">Recebido integralmente</span>}</td>}
+        </tr>;
+      })}
+    </tbody></table></div>
+    {filteredFreights.length === 0 && <div className="empty-state">Nenhuma conta a receber encontrada para os filtros selecionados.</div>}
+    {!readOnly && payment?.kind === "receive" && <FreightReceiptPanel freight={allFreights.find((item) => item.id === payment.record.id) || payment.record} data={data} number={number} money={money} saving={saving} onSave={(next) => commit(next)} onCancel={() => setPayment(null)} />}
+  </section>;
 }
