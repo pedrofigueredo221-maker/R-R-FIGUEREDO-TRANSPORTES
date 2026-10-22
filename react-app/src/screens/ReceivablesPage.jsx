@@ -2,7 +2,7 @@ import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
 import { freightReceivableBalance, freightReceivableStatus } from "../domain/freightReceivables.js";
 
 export default function ReceivablesPage({ controller }) {
-  const { data, readOnly, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, allFreights, number, commit } = controller;
+  const { data, readOnly, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, setForm, setEditingId, allFreights, number, commit } = controller;
   const openReceipt = (freight) => {
     setPayment({ kind: "receive", record: freight });
   };
