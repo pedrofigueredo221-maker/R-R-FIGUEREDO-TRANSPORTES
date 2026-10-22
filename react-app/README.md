@@ -13,7 +13,8 @@ Requer Node.js 18 ou superior.
 - Leitura do registro compartilhado `public.app_state`, sem criar, editar ou sobrescrever dados.
 - Painel com faturamento mensal, lucro estimado, valores a receber, contas a pagar e fretes recentes.
 - Identificação do perfil visitante como somente leitura.
-- Demais telas sinalizadas como em migração; os formulários antigos continuam sendo a referência funcional.
+- Consultas somente leitura para fretes, despesas, contas a receber, contas a pagar, relatórios e cadastros, com filtros e tabelas responsivas.
+- Formulários de criação/edição, registro de pagamentos/recebimentos e exclusões ainda permanecem na versão HTML estável; esta etapa React não grava dados.
 
 ## Segurança
 A chave publicável do Supabase é destinada ao cliente; nunca adicionar `service_role` ou senha de banco. A proteção dos dados depende das políticas RLS. Não inclua backups reais nem dados de clientes no GitHub.
