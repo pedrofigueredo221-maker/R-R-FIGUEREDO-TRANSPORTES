@@ -56,9 +56,9 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   const startEdit = (kind, record) => {
     setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0) } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
   };
-  const commit = async (next) => {
+  const commit = async (next, expectedVersion = (form ? formVersion : version)) => {
     setSaving(true); setError("");
-    try { await onSave(next, formVersion); setForm(null); setEditingId(null); setPayment(null); }
+    try { await onSave(next, expectedVersion); setForm(null); setEditingId(null); setPayment(null); }
     catch (e) { const message = e?.message || "Não foi possível salvar. Os dados locais foram preservados."; setError(message); if (message.includes("mudaram") || message.includes("alterou os dados")) { setForm(null); setEditingId(null); setPayment(null); } }
     finally { setSaving(false); }
   };
