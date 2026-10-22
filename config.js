@@ -1,10 +1,5 @@
-/* Configuração pública do Supabase para R&R Figueredo Transportes.
-   Nunca coloque a chave service_role aqui. */
-window.APP_CONFIG = {
-  SUPABASE_URL: "https://feevzqkqruyzoskowxrw.supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_jXoGdEwcHd2VYaca2nPKKg_4_OUztoN",
-  USER_EMAILS: {
-    RAFAEL: "pedrofigueredo221@gmail.com",
-    VISITANTES: "pedrofogofogop@gmail.com"
-  }
-};
+/* Compatibilidade com verificações e páginas antigas.
+   A configuração oficial está em banco-de-dados/supabase/config.js. */
+if (typeof window !== "undefined" && !window.APP_CONFIG && typeof document !== "undefined") {
+  document.write("<scr" + "ipt src='banco-de-dados/supabase/config.js?v=13'></scr" + "ipt>");
+}

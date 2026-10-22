@@ -1,12 +1,11 @@
 # Backups reais: nunca enviar dados de clientes/funcionários/financeiros ao GitHub
 /backups/local/*
-!/backups/local/README.md
 
 # Segredos e configurações locais
 .env
 .env.*
 !.env.example
-supabase/.temp/
+banco-de-dados/supabase/.temp/
 node_modules/
 dist/
 dist-react/

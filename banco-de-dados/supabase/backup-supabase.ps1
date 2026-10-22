@@ -12,7 +12,7 @@ if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
     throw "Docker não encontrado. Instale e inicie o Docker Desktop; o Supabase CLI usa container para o dump."
 }
 
-$projectRoot = Split-Path -Parent $PSScriptRoot
+$projectRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $backupRoot = Join-Path $projectRoot "backups/local"
 $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("rr-figueredo-backup-" + [guid]::NewGuid().ToString("N"))
 $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"

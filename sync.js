@@ -5,7 +5,7 @@
  *
  * Dependências:
  * - app.js define db, renderAll() e, opcionalmente, ensureDefaults().
- * - config.js define SUPABASE_URL, SUPABASE_ANON_KEY e USER_EMAILS.
+ * - banco-de-dados/supabase/config.js define SUPABASE_URL, SUPABASE_ANON_KEY e USER_EMAILS.
  * - index.html contém os elementos de login indicados abaixo.
  *
  * Os dados são compartilhados por todos os usuários autenticados
@@ -140,7 +140,7 @@ const cloud = (() => {
       email.includes("COLOQUE_AQUI")
     ) {
       throw new Error(
-        "Este usuário não está vinculado a um e-mail no config.js."
+        "Este usuário não está vinculado a um e-mail configurado em banco-de-dados/supabase/config.js."
       );
     }
 
@@ -815,7 +815,7 @@ const cloud = (() => {
       status("⚠ Configure o Supabase", "err");
 
       console.error(
-        "Confira config.js e se a biblioteca Supabase foi carregada antes de sync.js."
+        "Confira banco-de-dados/supabase/config.js e se a biblioteca Supabase foi carregada antes de sync.js."
       );
 
       return;

@@ -82,7 +82,7 @@ Antes de usar com dados reais, confirme que o SQL autenticado foi executado no S
 
 ### Atenção antes de usar em produção
 
-Faça backup do banco Supabase e dos dados locais antes de substituir a versão publicada. O arquivo `banco-de-dados/supabase.sql` foi ajustado para restringir o acesso ao usuário autenticado com o e-mail configurado na política. Executar um arquivo SQL no GitHub não altera automaticamente o banco: execute o script no SQL Editor do Supabase e confirme que as políticas antigas para `anon` foram removidas. A política deste pacote autoriza apenas `pedrofigueredo221@gmail.com`; altere-a somente se o usuário correto usar outro e-mail. Teste login, recuperação de senha e sincronização antes de inserir dados reais.
+Faça backup do banco Supabase e dos dados locais antes de substituir a versão publicada. O arquivo `banco-de-dados/supabase/supabase.sql` foi ajustado para restringir o acesso ao usuário autenticado com o e-mail configurado na política. Executar um arquivo SQL no GitHub não altera automaticamente o banco: execute o script no SQL Editor do Supabase e confirme que as políticas antigas para `anon` foram removidas. A política deste pacote autoriza apenas `pedrofigueredo221@gmail.com`; altere-a somente se o usuário correto usar outro e-mail. Teste login, recuperação de senha e sincronização antes de inserir dados reais.
 
 
 ### Busca de cidades brasileiras
@@ -97,7 +97,7 @@ O usuário visitante usa o login **VISITANTES**, vinculado a `pedrofogofogop@gma
 ### Ativação no Supabase existente
 
 1. Abra o projeto Supabase correto e entre em **SQL Editor**.
-2. Abra o arquivo `banco-de-dados/supabase-visitor-role.sql` deste repositório, copie todo o conteúdo e execute. A migração preserva os dados existentes e recria as políticas RLS de `app_state`: administrador e visitante podem ler; somente o administrador pode inserir/atualizar.
+2. Abra o arquivo `banco-de-dados/supabase/supabase-visitor-role.sql` deste repositório, copie todo o conteúdo e execute. A migração preserva os dados existentes e recria as políticas RLS de `app_state`: administrador e visitante podem ler; somente o administrador pode inserir/atualizar.
 3. Em **Authentication → Users**, crie o usuário `pedrofogofogop@gmail.com` e defina ou envie uma senha segura (evite senhas simples como `123456` para proteger dados financeiros). Essa criação precisa ser feita no painel Supabase; o código do site não cria contas Auth.
 4. Depois que o PR for revisado e mesclado, abra o site e entre usando **VISITANTES** e a senha criada.
 5. Teste com o visitante: consultar páginas e relatórios deve funcionar; tentar alterar dados deve ser bloqueado pela interface e pelo Supabase RLS. Confirme também que a conta administrativa continua podendo salvar alterações.
@@ -107,8 +107,8 @@ O usuário visitante usa o login **VISITANTES**, vinculado a `pedrofogofogop@gma
 
 ## Organização dos arquivos
 
-- `banco-de-dados/`: scripts SQL relacionados ao Supabase. Os arquivos devem ser revisados e executados manualmente no SQL Editor; mover arquivos no GitHub não altera o banco de produção.
-- `imagens/`: imagens usadas pelo site, incluindo a logo e o favicon. Para substituir a logo futuramente, troque `imagens/logo.svg` e mantenha esse nome para preservar as referências atuais.
+- `banco-de-dados/supabase/`: arquivos específicos do Supabase, incluindo scripts SQL, configurações públicas usadas pelo site, instruções e script de backup. Os scripts SQL devem ser revisados e executados manualmente no SQL Editor; mover arquivos no GitHub não altera o banco de produção.
+- `imagens/`: imagens usadas pelo site, incluindo a logo e o favicon. A logo oficial usada no login, no menu lateral e no painel é `imagens/logo.jpg`; para substituí-la futuramente, mantenha esse nome para preservar as referências.
 - `react-app/src/screens/`: telas React separadas por função: `VisaoGeral.jsx`, `Fretes.jsx`, `Despesas.jsx`, `ContasAReceber.jsx`, `ContasAPagar.jsx`, `Cadastros.jsx` e `Relatorios.jsx`. Novas telas devem ganhar um arquivo próprio e imports explícitos.
 
 Os componentes continuam em React/JSX. Não foram convertidos para HTML separado porque a versão React é uma aplicação de página única; cada tela é um componente independente. O `index.html` da versão estática permanece como entrada da versão antiga para evitar quebrar os fluxos existentes.
