@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { freightProfit } from "./domain/freightCalculations.js";
 
 const config = window.APP_CONFIG || {};
 const supabase = config.SUPABASE_URL && config.SUPABASE_ANON_KEY
@@ -21,11 +22,6 @@ const dateLabel = (value) => {
   const date = new Date(`${value}T12:00:00`);
   return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString("pt-BR");
 };
-const commission = (f) => {
-  const base = Math.max(0, Number(f.value || 0) - Number(f.discount || 0) - (f.deductToll ? Number(f.toll || 0) : 0));
-  return f.commissionType === "fixed" ? Number(f.commission || 0) : base * Number(f.commission || 0) / 100;
-};
-const profit = (f) => Number(f.value || 0) - Number(f.discount || 0) - Number(f.toll || 0) - Number(f.fuelActual || 0) - commission(f) - Number(f.bonus || 0) - Number(f.otherCosts || 0);
 const currentMonth = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; };
 
 function Login({ onLogin, busy, error }) {
@@ -60,7 +56,7 @@ function Dashboard({ data, onRefresh, loading }) {
       : Math.max(0, Number(exp.value || 0) - Number(exp.paid || 0))), 0);
     return {
       selected, revenue: selected.reduce((sum, f) => sum + Number(f.value || 0), 0),
-      profit: selected.reduce((sum, f) => sum + profit(f), 0), receivable, payable,
+      profit: selected.reduce((sum, f) => sum + freightProfit(f), 0), receivable, payable,
       recent: [...freights].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6)
     };
   }, [data, month]);
