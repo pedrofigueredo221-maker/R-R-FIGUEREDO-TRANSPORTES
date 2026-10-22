@@ -4,7 +4,7 @@ import { money, currentMonth } from "../lib/formatters.js";
 import { DataTable } from "../components/DataTable.jsx";
 import StatCard from "../components/StatCard.jsx";
 
-export default function ReportsPage({ data }) {
+export default function Relatorios({ data }) {
   const [month, setMonth] = useState(currentMonth());
   const monthFreights = useMemo(() => (data.freights || []).filter((f) => String(f.date || "").startsWith(month)), [data.freights, month]);
   const expensesPaid = (expense) => (expense.installments || []).reduce((sum, item) => sum + Number(item.paid || 0), 0);
