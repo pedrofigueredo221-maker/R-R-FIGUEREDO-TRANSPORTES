@@ -1,6 +1,6 @@
 import EmployeeForm from "./EmployeeForm.jsx";
 
-export default function CadastrosPage({ controller }) {
+export default function Cadastros({ controller }) {
   const {
     data, readOnly, saving, form, setForm, editingId, setEditingId, startCreate,
     startEdit, showError, toolbar, Actions, RecordForm, remove, number, commit,
