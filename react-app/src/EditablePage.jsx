@@ -89,9 +89,19 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
 
   const saveFreight = () => {
     const original = editingId ? allFreights.find((freight) => freight.id === editingId) : null;
-    const value = { ...form, id: editingId || uid(), value: number(form.value), discount: number(form.discount), toll: number(form.toll), bonus: number(form.bonus), commission: number(form.commission), received: original ? number(original.received) : number(form.received), km: number(form.km), liters: number(form.liters), dieselPrice: number(form.dieselPrice), fuelActual: number(form.fuelActual) };
+    const freightValue = number(form.value);
+    const receivedAtTrip = original ? number(original.received) : number(form.received);
+    if (receivedAtTrip > freightValue + 0.009) {
+      setError("O valor do frete não pode ficar abaixo do total já recebido.");
+      return;
+    }
+    const value = { ...form, id: editingId || uid(), value: freightValue, discount: number(form.discount), toll: number(form.toll), bonus: number(form.bonus), commission: number(form.commission), received: receivedAtTrip, km: number(form.km), liters: number(form.liters), dieselPrice: number(form.dieselPrice), fuelActual: number(form.fuelActual) };
     value.fuelEstimated = number(value.liters) * number(value.dieselPrice);
-    value.receipts = Array.isArray(form.receipts) ? form.receipts : (editingId ? (allFreights.find((f) => f.id === editingId)?.receipts || []) : []);
+    if (original) {
+      value.receipts = Array.isArray(original.receipts) ? original.receipts : [];
+    } else {
+      value.receipts = receivedAtTrip > 0 ? [{ id: uid(), date: value.date || today(), amount: receivedAtTrip, method: "Lançamento na viagem" }] : [];
+    }
     return commit({ ...data, freights: editingId ? allFreights.map((f) => f.id === editingId ? value : f) : [value, ...allFreights] });
   };
   const saveExpense = () => {
