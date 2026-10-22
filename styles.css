@@ -1046,3 +1046,9 @@ textarea:required:focus {
   .registration-dialog form { padding: 18px; }
   .registration-dialog .modal-header { top: -18px; }
 }
+
+
+/* Cadastros: indica que a linha pode ser aberta com duplo clique. */
+#employeeRows tr[data-view-employee],#truckRows tr[data-view-truck]{cursor:zoom-in}
+#employeeRows tr[data-view-employee]:hover,#truckRows tr[data-view-truck]:hover{background:#f4f8fc}
+#employeeRows tr[data-view-employee] button,#employeeRows tr[data-view-employee] input,#employeeRows tr[data-view-employee] label,#truckRows tr[data-view-truck] button,#truckRows tr[data-view-truck] input,#truckRows tr[data-view-truck] label{cursor:pointer}
