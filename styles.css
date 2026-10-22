@@ -1011,3 +1011,24 @@ textarea:required:focus {
 /* Ações em massa nos cadastros ficam disponíveis, mas sem competir com ações principais. */
 .btn-subtle-danger{background:#f7f4f4!important;border:1px solid #e2d8d8!important;color:#805b5b!important;box-shadow:none!important;font-weight:600!important}
 .btn-subtle-danger:hover{background:#eee6e6!important;border-color:#d8c8c8!important;color:#704747!important}
+
+
+/* Ajuste da identidade visual: logo menor na lateral com base clara. */
+.sidebar .brand {
+  padding: 0 6px 30px;
+}
+.sidebar .brand-logo {
+  width: min(100%, 176px);
+  max-width: 176px;
+  height: auto;
+  padding: 10px;
+  background: #f7f7f7;
+  border: 1px solid #e4e4e4;
+  border-radius: 10px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, .12);
+  object-fit: contain;
+}
+@media (max-width: 760px) {
+  .sidebar .brand { padding-bottom: 24px; }
+  .sidebar .brand-logo { max-width: 170px; }
+}
