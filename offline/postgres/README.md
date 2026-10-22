@@ -33,30 +33,36 @@ docker compose --env-file offline/postgres/.env -f offline/postgres/docker-compo
 
 A porta 5433 é acessível apenas no próprio computador nesta configuração. Para outros computadores acessarem o banco, será necessário configurar uma API local autenticada e regras de rede/firewall; não exponha diretamente a porta do PostgreSQL à internet.
 
-## 4. Exportar os dados reais do Supabase
+## 4. Backup e importação validada do estado principal
 
-O esquema atual do projeto armazena o estado principal do sistema em `public.app_state` (JSONB). Faça um backup independente antes de migrar. Use o script já existente `scripts/backup-supabase.ps1` para guardar o backup completo acessível da aplicação em `backups/local/`; esse diretório é ignorado pelo Git.
+Antes de migrar, faça um backup geral usando `scripts/backup-supabase.ps1`. O backup deve ficar em `backups/local/`, ignorado pelo Git. Esse procedimento requer Docker Desktop e Supabase CLI instalados, além da connection string PostgreSQL do Supabase. Guarde uma segunda cópia privada do ZIP e nunca a envie ao GitHub.
 
-Para exportar também o registro de estado principal em um SQL portátil, com o PostgreSQL client instalado, execute no PowerShell. A connection string é solicitada sem ser gravada em arquivo:
+Para importar o registro principal para uma base local vazia, use o script `scripts/import-supabase-app-state-to-local.ps1`. Ele requer os utilitários `psql` e `pg_dump` do PostgreSQL instalados e disponíveis no PATH.
+
+Na raiz do projeto, no PowerShell:
 
 ```powershell
-$env:SUPABASE_DB_URL = Read-Host "Cole a connection string PostgreSQL do Supabase"
-$env:PGPASSWORD = Read-Host "Senha do banco local (POSTGRES_PASSWORD do .env)"
-$stamp = Get-Date -Format "yyyyMMdd-HHmmss"
-New-Item -ItemType Directory -Force backups/local | Out-Null
-pg_dump --dbname="$env:SUPABASE_DB_URL" --table=public.app_state --no-owner --no-privileges --file="backups/local/app-state-$stamp.sql"
-if ($LASTEXITCODE -ne 0) { throw "Exportação de app_state falhou; não prossiga." }
-Remove-Item Env:SUPABASE_DB_URL
-Remove-Item Env:PGPASSWORD
+Copy-Item offline/postgres/.env.example offline/postgres/.env
+notepad offline/postgres/.env
+# Defina uma senha local forte; não compartilhe o .env.
+
+docker compose --env-file offline/postgres/.env -f offline/postgres/docker-compose.yml up -d
+docker compose --env-file offline/postgres/.env -f offline/postgres/docker-compose.yml ps
+
+# Só depois de criar e conferir o backup geral:
+$env:SUPABASE_DB_URL = Read-Host "Connection string PostgreSQL do Supabase"
+.scriptsimport-supabase-app-state-to-local.ps1
 ```
 
-> O comando acima exporta apenas os dados de `public.app_state`; ele **não** é uma exportação de todas as tabelas. O backup geral continua necessário.
+O script solicita a connection string quando necessário, verifica que a origem contém exatamente o registro esperado, recusa importar por cima de uma tabela local que já tenha dados e compara uma assinatura do registro após a importação. Ao terminar, remove as variáveis sensíveis da sessão. O dump intermediário fica em pasta temporária e é removido ao final.
 
-## 5. Importação: não executar às cegas
+**Escopo:** esse script importa apenas `public.app_state`, que contém o JSONB principal do sistema, sua versão e a data de atualização. Não migra usuários do Supabase Auth nem arquivos do Storage, não conecta o React ao PostgreSQL e não configura o backup PostgreSQL → Supabase. A importação só deve ser considerada aprovada se a assinatura coincidir e os dados financeiros forem revisados.
 
-Não importe diretamente para uma base já utilizada. Primeiro crie um ambiente descartável e teste a restauração do backup geral, incluindo extensões, funções, tabelas e permissões. A estrutura do Supabase pode depender de schemas gerenciados e funções que não existem em um PostgreSQL comum.
+Se a execução falhar após iniciar a importação, não conecte a aplicação ao banco local. Investigue a tabela de destino e repita somente em um banco local vazio, mantendo o backup geral preservado.
 
-O esquema principal `public.app_state` guarda dados de fretes, despesas, contas a receber, funcionários, caminhões e categorias dentro do JSONB `data`. A estrutura real deve ser conferida no dump e no conteúdo exportado antes de mapear os dados para tabelas normalizadas.
+## 5. Não conectar a aplicação ainda
+
+Não altere a configuração do site de produção. A estrutura de `public.app_state` é somente o primeiro passo; antes de ativar o PostgreSQL como principal, ainda precisamos implementar uma API autenticada acessível aos computadores autorizados e o processo de backup PostgreSQL → Supabase com verificação, logs e tratamento de falhas.
 
 ## Usuários e autenticação
 
