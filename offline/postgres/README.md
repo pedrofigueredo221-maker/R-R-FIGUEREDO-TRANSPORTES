@@ -44,7 +44,7 @@ $env:SUPABASE_DB_URL = Read-Host "Cole a connection string PostgreSQL do Supabas
 $env:PGPASSWORD = Read-Host "Senha do banco local (POSTGRES_PASSWORD do .env)"
 $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
 New-Item -ItemType Directory -Force backups/local | Out-Null
-pg_dump --dbname="$env:SUPABASE_DB_URL" --table=public.app_state --data-only --column-inserts --no-owner --no-privileges --file="backups/local/app-state-$stamp.sql"
+pg_dump --dbname="$env:SUPABASE_DB_URL" --table=public.app_state --no-owner --no-privileges --file="backups/local/app-state-$stamp.sql"
 if ($LASTEXITCODE -ne 0) { throw "Exportação de app_state falhou; não prossiga." }
 Remove-Item Env:SUPABASE_DB_URL
 Remove-Item Env:PGPASSWORD
