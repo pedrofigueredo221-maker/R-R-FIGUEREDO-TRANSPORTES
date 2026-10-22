@@ -1,10 +1,7 @@
 import { useMemo, useState } from "react";
 import { freightProfit } from "../domain/freightCalculations.js";
 import { money, dateLabel, currentMonth } from "../lib/formatters.js";
-
-export function Stat({ label, value, hint, tone = "" }) {
-  return <article className={`stat-card ${tone}`}><span>{label}</span><strong>{value}</strong><small>{hint}</small></article>;
-}
+import StatCard from "../components/StatCard.jsx";
 
 export default function OverviewPage({ data, onRefresh, loading }) {
   const [month, setMonth] = useState(currentMonth());
@@ -30,10 +27,10 @@ export default function OverviewPage({ data, onRefresh, loading }) {
     <section className="welcome-panel"><div><p className="eyebrow">PAINEL DA TRANSPORTADORA</p><h2>Seu negócio, em uma visão.</h2><p>Acompanhe os fretes e os principais números financeiros.</p></div>
       <label className="month-picker">Período do painel<input type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></label></section>
     <div className="stats-grid">
-      <Stat label="Faturamento do mês" value={money(summary.revenue)} hint={`${summary.selected.length} frete(s) no período`} />
-      <Stat label="Lucro estimado do mês" value={money(summary.profit)} hint="Estimativa calculada a partir dos fretes" tone="positive" />
-      <Stat label="Valores a receber" value={money(summary.receivable)} hint="Saldo estimado dos fretes" tone="attention" />
-      <Stat label="Contas a pagar" value={money(summary.payable)} hint="Parcelas ainda não pagas" tone="negative" />
+      <StatCard label="Faturamento do mês" value={money(summary.revenue)} hint={`${summary.selected.length} frete(s) no período`} />
+      <StatCard label="Lucro estimado do mês" value={money(summary.profit)} hint="Estimativa calculada a partir dos fretes" tone="positive" />
+      <StatCard label="Valores a receber" value={money(summary.receivable)} hint="Saldo estimado dos fretes" tone="attention" />
+      <StatCard label="Contas a pagar" value={money(summary.payable)} hint="Parcelas ainda não pagas" tone="negative" />
     </div>
     <section className="panel"><div className="panel-heading"><div><h3>Fretes recentes</h3><p>Últimos lançamentos registrados no banco compartilhado.</p></div><button className="secondary-button" onClick={onRefresh} disabled={loading}>{loading ? "Atualizando…" : "↻ Atualizar"}</button></div>
       {summary.recent.length === 0 ? <div className="empty-state"><strong>Nenhum frete encontrado</strong><p>Os fretes cadastrados no Supabase aparecerão aqui.</p></div> :
