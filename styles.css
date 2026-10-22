@@ -78,7 +78,7 @@ td{color:#172033}
 }
 html,body,button,input,select,textarea{font-family:Calibri,Arial,sans-serif}
 body{background:#f2f2f2;color:#191919;font-size:15px;line-height:1.45}
-.sidebar{background:#171717;color:#f5f5f5;border-right:1px solid #333;padding-top:24px}
+.sidebar{background:#252525;color:#f5f5f5;border-right:1px solid #414141;padding-top:24px}
 .brand-mark{background:#fff;color:#171717;border-radius:8px}
 .brand strong{font-family:Calibri,Arial,sans-serif;letter-spacing:.2px}
 .brand small,.sidebar-bottom small,.nav-label{color:#bdbdbd}
@@ -375,7 +375,7 @@ td{font-size:14px}
   color:#fff;
   transform:translateX(2px);
 }
-.sidebar .nav-item:hover span{background:#3a3a3a;color:#fff}
+.sidebar .nav-item:hover span{background:#484848;color:#fff}
 .sidebar .nav-item.active{
   background:#f0f0f0;
   border-color:#f0f0f0;
@@ -1006,3 +1006,8 @@ textarea:required:focus {
 #page-cadastros .btn-danger{background:#f6a3a8!important;border-color:#f6a3a8!important;color:#76262c!important}
 #page-cadastros .btn-danger:hover{background:#f28b92!important;border-color:#f28b92!important}
 @media(max-width:650px){.action-menu{width:100%}.action-menu>summary{width:100%;justify-content:center}.action-menu-content{left:0;right:0;min-width:0}.refresh-btn{min-width:38px}.bulk-registration-tools{align-items:flex-start!important}}
+
+
+/* Ações em massa nos cadastros ficam disponíveis, mas sem competir com ações principais. */
+.btn-subtle-danger{background:#f7f4f4!important;border:1px solid #e2d8d8!important;color:#805b5b!important;box-shadow:none!important;font-weight:600!important}
+.btn-subtle-danger:hover{background:#eee6e6!important;border-color:#d8c8c8!important;color:#704747!important}
