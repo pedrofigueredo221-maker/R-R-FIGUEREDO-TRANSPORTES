@@ -36,7 +36,7 @@ function Login({ onLogin, onReset, busy, error }) {
   const [resetBusy, setResetBusy] = useState(false);
   const [resetMessage, setResetMessage] = useState("");
   return <main className="login-page"><form className="login-card" onSubmit={(e) => { e.preventDefault(); onLogin(username, password); }}>
-    <img className="login-logo" src="./imagens/logo.svg" alt="R&R Figueredo Transportes" />
+    <img className="login-logo" src="./imagens/logo.jpg" alt="R&R Figueredo Transportes" />
     <p className="eyebrow">SISTEMA DE GESTÃO</p><h1>Acesse sua conta</h1>
     <p className="muted">Entre para consultar os dados da transportadora.</p>
     <label htmlFor="login-username">Usuário</label><input id="login-username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" placeholder="Digite seu usuário" required />
@@ -54,7 +54,7 @@ function Login({ onLogin, onReset, busy, error }) {
       } finally { setResetBusy(false); }
     }}>{resetBusy ? "Solicitando…" : "Esqueci minha senha"}</button>
     {resetMessage && <p className="reset-message" role="status">{resetMessage}</p>}
-    {!supabase && !demoMode && <p className="error-message">Configuração do Supabase não encontrada. Confira public/app-config.js.</p>}
+    {!supabase && !demoMode && <p className="error-message">Configuração do Supabase não encontrada. Confira banco-de-dados/supabase/app-config.js.</p>}
     <small className="muted login-note">Acesso protegido pelo Supabase.</small>
   </form></main>;
 }
@@ -207,7 +207,7 @@ export default function App() {
   if (!session) return <Login onLogin={login} onReset={resetPassword} busy={busy} error={authError} />;
 
   return <div className={`app-shell ${readOnly ? "read-only" : ""}`}>
-    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo.svg" alt="R&R Figueredo Transportes" /></div>
+    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo.jpg" alt="R&R Figueredo Transportes" /></div>
       <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><span aria-hidden="true">{p.symbol}</span>{p.label}</button>)}</nav>
       <div className="sidebar-bottom"><span className="session-dot" /> Sessão autenticada</div>
     </aside>
