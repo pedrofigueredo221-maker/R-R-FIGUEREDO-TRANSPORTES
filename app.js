@@ -1,13 +1,3 @@
-const $ = id => document.getElementById(id);
-const DB_KEY = "estrada_gestao_v1";
-const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
-const monthISO = () => todayISO().slice(0,7);
-const money = n => Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-const num = id => Number($(id).value || 0);
-const escapeHtml = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const parseDate = s => s ? new Date(s+"T12:00:00") : null;
-const dateBR = s => {const d=parseDate(s);return d?d.toLocaleDateString("pt-BR"):"—";};
-const monthName = s => {const d=parseDate((s||todayISO()).slice(0,7)+"-01");return d.toLocaleDateString("pt-BR",{month:"short"}).replace(".","").toUpperCase();};
 let db = loadDB(); db.categories=db.categories||["Combustível","Pedágio","Óleo e lubrificantes","Mecânico","Oficina","Pneus","Elétrica","Peças","Documentação","Seguro","Lavagem","Manutenção","Despesas gerais","Outros"];
 function loadDB(){try{const d=JSON.parse(localStorage.getItem(DB_KEY))||{};d.freights=d.freights||[];d.expenses=d.expenses||[];d.employees=d.employees||[...new Set(d.freights.map(f=>f.driver).filter(Boolean))].map((name,i)=>({id:uidSafe('emp'+i),name,role:'Motorista',phone:'',active:true}));d.categories=d.categories||["Combustível","Pedágio","Óleo e lubrificantes","Mecânico","Oficina","Pneus","Elétrica","Peças","Documentação","Seguro","Lavagem","Manutenção","Despesas gerais","Outros"];d.trucks=d.trucks||['Caminhão 01','Caminhão 02','Caminhão 03','Caminhão 04','Caminhão 05'].map((name,i)=>({id:uidSafe('truck'+i),name,plate:'',active:true}));return d}catch{return{freights:[],expenses:[],employees:[],trucks:[]}}}
 function uidSafe(s){return s+'_'+Math.random().toString(36).slice(2,8)}
