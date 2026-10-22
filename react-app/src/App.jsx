@@ -54,7 +54,7 @@ function Login({ onLogin, onReset, busy, error }) {
       } finally { setResetBusy(false); }
     }}>{resetBusy ? "Solicitando…" : "Esqueci minha senha"}</button>
     {resetMessage && <p className="reset-message" role="status">{resetMessage}</p>}
-    {!supabase && <p className="error-message">Configuração do Supabase não encontrada. Confira public/app-config.js.</p>}
+    {!supabase && !demoMode && <p className="error-message">Configuração do Supabase não encontrada. Confira public/app-config.js.</p>}
     <small className="muted login-note">Acesso protegido pelo Supabase.</small>
   </form></main>;
 }
