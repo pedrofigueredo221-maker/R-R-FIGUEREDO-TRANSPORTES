@@ -19,7 +19,7 @@ const syncRefs = [...sync.matchAll(/\bel\(["']([^"']+)["']\)/g)].map((match) => 
 const missingSync = [...new Set(syncRefs.filter((id) => !idSet.has(id)))];
 if (missingSync.length) failures.push(`IDs usados em sync.js ausentes no HTML: ${missingSync.join(", ")}`);
 
-const requiredFiles = ["styles.css", "config.js", "app.js", "sync.js", "imagens/logo.svg", "imagens/favicon.svg", "redefinir-senha.html"];
+const requiredFiles = ["styles.css", "banco-de-dados/supabase/config.js", "app.js", "sync.js", "imagens/logo.jpg", "imagens/favicon.svg", "redefinir-senha.html"];
 for (const path of requiredFiles) if (!existsSync(new URL(`../${path}`, import.meta.url))) failures.push(`Arquivo necessário ausente: ${path}`);
 
 if (!sync.includes('lastScreen = sessionStorage.getItem("rr_screen_state")') || !sync.includes("showLogin(true, false)")) {
