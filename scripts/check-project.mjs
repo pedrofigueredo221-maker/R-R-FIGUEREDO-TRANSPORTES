@@ -5,17 +5,17 @@ const html = read("index.html");
 const app = read("app.js");
 const sync = read("sync.js");
 const failures = [];
-const ids = [...html.matchAll(/\\bid=["']([^"']+)["']/g)].map((match) => match[1]);
+const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]);
 const idSet = new Set(ids);
 const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
 if (duplicates.length) failures.push(`IDs duplicados no index.html: ${duplicates.join(", ")}`);
 
-const appRefs = [...app.matchAll(/\\$\\(["']([^"']+)["']\\)/g)].map((match) => match[1]);
+const appRefs = [...app.matchAll(/\$\(["']([^"']+)["']\)/g)].map((match) => match[1]);
 const dynamicIds = new Set(["ocrRawText"]); // criado dinamicamente após OCR da foto
 const missingApp = [...new Set(appRefs.filter((id) => !idSet.has(id) && !dynamicIds.has(id)))];
 if (missingApp.length) failures.push(`IDs usados em app.js ausentes no HTML: ${missingApp.join(", ")}`);
 
-const syncRefs = [...sync.matchAll(/\\bel\\(["']([^"']+)["']\\)/g)].map((match) => match[1]);
+const syncRefs = [...sync.matchAll(/\bel\(["']([^"']+)["']\)/g)].map((match) => match[1]);
 const missingSync = [...new Set(syncRefs.filter((id) => !idSet.has(id)))];
 if (missingSync.length) failures.push(`IDs usados em sync.js ausentes no HTML: ${missingSync.join(", ")}`);
 
