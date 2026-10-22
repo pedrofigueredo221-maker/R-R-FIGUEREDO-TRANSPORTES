@@ -65,9 +65,10 @@ function Dashboard({ data, onRefresh, loading }) {
     const selected = freights.filter((f) => String(f.date || "").slice(0, 7) === month);
     // Mantém as mesmas definições financeiras usadas no painel HTML existente.
     const receivable = freights.reduce((sum, f) => sum + Math.max(0, Number(f.value || 0) - Number(f.received || 0)), 0);
-    const payable = expenses.reduce((sum, exp) => sum + (Array.isArray(exp.installments)
-      ? exp.installments.reduce((subtotal, item) => subtotal + Math.max(0, Number(item.value || 0) - Number(item.paid || 0)), 0)
-      : Math.max(0, Number(exp.value || 0) - Number(exp.paid || 0))), 0);
+    const payable = expenses.reduce((sum, exp) => sum + Math.max(0,
+      Number(exp.value || 0) - (Array.isArray(exp.installments)
+        ? exp.installments.reduce((subtotal, item) => subtotal + Number(item.paid || 0), 0)
+        : Number(exp.paid || 0))), 0);
     const expenseTotal = expenses.filter((exp) => String(exp.created || "").slice(0, 7) === month)
       .reduce((sum, exp) => sum + Number(exp.value || 0), 0);
     return {
@@ -119,7 +120,7 @@ function ReadOnlyPage({ page, data }) {
   }))).filter((item) => !query || [item.description, item.category, item.truck].some((value) => String(value || "").toLocaleLowerCase("pt-BR").includes(query)))
     .sort((a, b) => String(a.due || "").localeCompare(String(b.due || "")));
   const expensesPaid = (expense) => (expense.installments || []).reduce((sum, item) => sum + Number(item.paid || 0), 0);
-  const expensesOpen = (expense) => (expense.installments || []).reduce((sum, item) => sum + Math.max(0, Number(item.value || 0) - Number(item.paid || 0)), 0);
+  const expensesOpen = (expense) => Math.max(0, Number(expense.value || 0) - expensesPaid(expense));
   const monthFreights = (data.freights || []).filter((f) => String(f.date || "").startsWith(month));
   const monthExpenses = (data.expenses || []).filter((e) => String(e.created || "").startsWith(month));
   const expensePaymentsInMonth = (data.expenses || []).flatMap((expense) => (expense.installments || []).flatMap((item) => item.payments || []))
