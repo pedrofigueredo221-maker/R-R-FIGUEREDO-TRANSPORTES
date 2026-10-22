@@ -1,0 +1,10 @@
+const $ = id => document.getElementById(id);
+const DB_KEY = "estrada_gestao_v1";
+const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
+const monthISO = () => todayISO().slice(0,7);
+const money = n => Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const num = id => Number($(id).value || 0);
+const escapeHtml = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const parseDate = s => s ? new Date(s+"T12:00:00") : null;
+const dateBR = s => {const d=parseDate(s);return d?d.toLocaleDateString("pt-BR"):"—";};
+const monthName = s => {const d=parseDate((s||todayISO()).slice(0,7)+"-01");return d.toLocaleDateString("pt-BR",{month:"short"}).replace(".","").toUpperCase();};
