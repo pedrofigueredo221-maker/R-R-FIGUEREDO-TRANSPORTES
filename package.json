@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite --config vite.config.js",
     "build": "vite build --config vite.config.js",
-    "preview": "vite preview --config vite.config.js"
+    "preview": "vite preview --config vite.config.js",
+    "test": "node --test"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

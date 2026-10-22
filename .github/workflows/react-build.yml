@@ -1,0 +1,35 @@
+name: Verificação do projeto
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: validacao-projeto-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  syntax-and-react-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund --prefer-offline
+      - name: Verificar sintaxe do sistema atual
+        run: |
+          node --check app.js
+          node --check sync.js
+          node --check config.js
+      - name: Auditar telas e referências do sistema legado
+        run: node scripts/check-project.mjs
+      - name: Testar regras financeiras
+        run: npm test
+      - name: Construir versão React isolada
+        run: npm run build
