@@ -24,6 +24,7 @@ const dateLabel = (value) => {
   return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString("pt-BR");
 };
 const currentMonth = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; };
+const todayISO = () => new Date().toISOString().slice(0, 10);
 
 function Login({ onLogin, onReset, busy, error }) {
   const [username, setUsername] = useState("");
