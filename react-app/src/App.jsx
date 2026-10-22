@@ -185,7 +185,7 @@ function ReadOnlyPage({ page, data }) {
     <div className="stats-grid"><Stat label="Faturamento" value={money(monthFreights.reduce((s,f)=>s+Number(f.value||0),0))} hint={`${monthFreights.length} frete(s)`} /><Stat label="Recebido de clientes" value={money(monthFreights.reduce((s,f)=>s+Number(f.received||0),0))} hint="Recebimentos dos fretes do período" tone="positive" /><Stat label="Despesas pagas no mês" value={money(expensePaymentsInMonth)} hint="Pagamentos registrados no período" tone="negative" /><Stat label="Contas a pagar em aberto" value={money((data.expenses||[]).reduce((s,e)=>s+expensesOpen(e),0))} hint="Saldo das parcelas pendentes" tone="attention" /></div>
     <section className="panel"><div className="panel-heading"><div><h3>Resultado por motorista</h3><p>Fretes do período selecionado.</p></div></div><DataTable columns={[
       {key:"driver",label:"Motorista"},
-      {key:"count",label="Fretes",numeric:true,render:(r)=>r.freights.length},
+      {key:"count",label:"Fretes",numeric:true,render:(r)=>r.freights.length},
       {key:"revenue",label:"Faturamento",numeric:true,render:(r)=>money(r.freights.reduce((s,f)=>s+Number(f.value||0),0))},
       {key:"commission",label:"Comissão",numeric:true,render:(r)=>money(r.freights.reduce((s,f)=>s+freightCommission(f),0))},
       {key:"profit",label:"Lucro estimado",numeric:true,render:(r)=>money(r.freights.reduce((s,f)=>s+freightProfit(f),0))}
