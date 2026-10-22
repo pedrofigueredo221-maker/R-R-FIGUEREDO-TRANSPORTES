@@ -33,3 +33,8 @@ test("impede recebimento acima do saldo ou sem frete correspondente", () => {
   assert.throws(() => applyFreightReceipt([{ id: "f-1", value: 100, received: 90 }], "f-1", { id: "r-1", amount: 20 }), /ultrapassar o saldo/);
   assert.throws(() => applyFreightReceipt([], "missing", { id: "r-1", amount: 10 }), /Frete não encontrado/);
 });
+
+test("situação acompanha o saldo arredondado exibido", () => {
+  assert.equal(freightReceivableStatus({ value: 1000, received: 999.99 }), "Parcial");
+  assert.equal(freightReceivableStatus({ value: 1000, received: 1000 }), "Pago");
+});
