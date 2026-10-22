@@ -12,6 +12,7 @@ concurrency:
 jobs:
   syntax-and-react-build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Baixar repositório
         uses: actions/checkout@v4
@@ -20,7 +21,7 @@ jobs:
         with:
           node-version: 22
       - name: Instalar dependências
-        run: npm install
+        run: npm install --no-audit --no-fund --prefer-offline
       - name: Verificar sintaxe do sistema atual
         run: |
           node --check app.js
