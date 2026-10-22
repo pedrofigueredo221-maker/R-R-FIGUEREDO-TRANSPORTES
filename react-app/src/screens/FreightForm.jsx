@@ -13,7 +13,7 @@ function FreightField({ label, value, onChange, type = "text", required = false,
   </label>;
 }
 
-export default function FreightForm({ title, value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [] }) {
+export default function FreightForm({ title, value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
   const estimatedFuel = amount(value.liters) * amount(value.dieselPrice);
   const calculationInput = { ...value, value: amount(value.value), discount: amount(value.discount), toll: amount(value.toll), commission: amount(value.commission), bonus: amount(value.bonus), fuelActual: amount(value.fuelActual) };
@@ -39,13 +39,13 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
     { key: "commission", label: "Comissão (% ou R$)", type: "number", min: "0", step: "0.01" },
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01" },
     { key: "km", label: "Quilometragem", type: "number", min: "0", step: "1" },
-    { key: "received", label: "Total já recebido (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "received", label: "Recebido na viagem (R$)", type: "number", min: "0", step: "0.01" },
     { key: "notes", label: "Observações", placeholder: "Informações adicionais" }
   ];
   return <form className="record-editor freight-editor" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
     <div className="editor-heading"><h3>{title}</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
-    <div className="editor-grid freight-fields">{fields.map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
-    <section className="fuel-section" aria-labelledby="fuel-section-title">
+    <div className="editor-grid freight-fields">{fields.filter((field) => field.key !== "received" || !editing).map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
+    {!editing && <p className="receipt-sync-note">Se houve pagamento no momento da viagem, informe o valor recebido aqui. Ele será registrado no histórico e o status do frete será atualizado automaticamente.</p>}\n    <section className="fuel-section" aria-labelledby="fuel-section-title">
       <div className="fuel-section-heading"><h4 id="fuel-section-title">Combustível</h4><p>Estimativa automática a partir dos litros e do preço por litro.</p></div>
       <div className="fuel-grid">
         <FreightField label="Litros estimados" type="number" min="0" step="0.01" value={value.liters} onChange={(next) => patch("liters", next)} />
