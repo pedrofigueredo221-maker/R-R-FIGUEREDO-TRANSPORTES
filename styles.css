@@ -1032,3 +1032,7 @@ textarea:required:focus {
   .sidebar .brand { padding-bottom: 24px; }
   .sidebar .brand-logo { max-width: 170px; }
 }
+
+
+/* Cadastros: formulários em modal e indicação de duplo clique. */
+.registration-dialog{width:min(760px,calc(100% - 28px));max-height:92vh;overflow-y:auto}.registration-dialog .inline-register{display:block;padding:0;margin:0;border:0;border-radius:0;background:transparent}.registration-dialog .inline-register .register-field{margin-bottom:12px}.registration-dialog .modal-header{position:sticky;top:-25px;z-index:2;padding-top:2px;background:#fff}.registration-dialog .import-actions{justify-content:flex-end;margin-top:22px}#employeeRows tr[data-view-employee],#truckRows tr[data-view-truck]{cursor:zoom-in}#employeeRows tr[data-view-employee]:hover,#truckRows tr[data-view-truck]:hover{background:#f4f8fc}@media(max-width:760px){.registration-dialog{width:calc(100% - 14px);max-height:94vh}.registration-dialog form{padding:18px}.registration-dialog .modal-header{top:-18px}}
