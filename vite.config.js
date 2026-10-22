@@ -14,7 +14,7 @@ export default defineConfig({
     configureServer(server) {
       const imageRoot = resolve(projectRoot, "imagens");
       server.middlewares.use("/imagens", (request, response, next) => {
-        const relativePath = decodeURIComponent((request.url || "").split("?")[0].replace(/^\\/+/, ""));
+        const relativePath = decodeURIComponent((request.url || "").split("?")[0].replace(/^\/+/, ""));
         const filePath = resolve(imageRoot, relativePath);
         if (!filePath.startsWith(imageRoot + sep) || !existsSync(filePath)) return next();
         response.setHeader("Content-Type", filePath.endsWith(".svg") ? "image/svg+xml" : "application/octet-stream");
