@@ -5,7 +5,10 @@ import ReceivablesPage from "./screens/ReceivablesPage.jsx";
 import PayablesPage from "./screens/PayablesPage.jsx";
 import CadastrosPage from "./screens/CadastrosPage.jsx";
 
-const today = () => new Date().toISOString().slice(0, 10);
+const today = () => {
+  const date = new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+};
 const uid = () => globalThis.crypto?.randomUUID?.() || `rr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
 const number = (value) => Math.max(0, Number(value) || 0);
 const money = (value) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(number(value));
