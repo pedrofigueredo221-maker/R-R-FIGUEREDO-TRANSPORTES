@@ -111,14 +111,17 @@ function ReadOnlyPage({ page, data }) {
     (!query || [f.customer, f.driver, f.truck, f.origin, f.destination, f.notes].some((value) => String(value || "").toLocaleLowerCase("pt-BR").includes(query)))
   ).sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
   const expenses = (data.expenses || []).filter((e) =>
-    !query || [e.description, e.category, e.truck, e.supplier, e.notes].some((value) => String(value || "").toLocaleLowerCase("pt-BR").includes(query))
+    (!month || (e.installments || []).some((item) => String(item.due || "").startsWith(month) || (item.payments || []).some((payment) => String(payment.date || "").startsWith(month)))) &&
+    (!query || [e.description, e.category, e.truck, e.supplier, e.notes].some((value) => String(value || "").toLocaleLowerCase("pt-BR").includes(query)))
   );
-  const payments = expenses.flatMap((expense) => (expense.installments || []).map((item, index) => ({
-    key: `${expense.id ?? expense.description}-${index}`, due: item.due, description: expense.description,
+  const payments = (data.expenses || []).flatMap((expense) => (expense.installments || []).map((item, index) => ({
+    key: `${expense.id ?? expense.description}-${index}`, due: item.due, payments: item.payments || [], description: expense.description,
     category: expense.category, truck: expense.truck, index: index + 1, count: expense.installments.length,
     value: Number(item.value || 0), paid: Number(item.paid || 0), open: Math.max(0, Number(item.value || 0) - Number(item.paid || 0))
-  }))).filter((item) => !query || [item.description, item.category, item.truck].some((value) => String(value || "").toLocaleLowerCase("pt-BR").includes(query)))
-    .sort((a, b) => String(a.due || "").localeCompare(String(b.due || "")));
+  }))).filter((item) =>
+    (!month || String(item.due || "").startsWith(month) || item.payments.some((payment) => String(payment.date || "").startsWith(month))) &&
+    (!query || [item.description, item.category, item.truck].some((value) => String(value || "").toLocaleLowerCase("pt-BR").includes(query)))
+  ).sort((a, b) => String(a.due || "").localeCompare(String(b.due || "")));
   const expensesPaid = (expense) => (expense.installments || []).reduce((sum, item) => sum + Number(item.paid || 0), 0);
   const expensesOpen = (expense) => Math.max(0, Number(expense.value || 0) - expensesPaid(expense));
   const monthFreights = (data.freights || []).filter((f) => String(f.date || "").startsWith(month));
@@ -141,7 +144,7 @@ function ReadOnlyPage({ page, data }) {
       {key:"commission",label:"Comissão",numeric:true,render:(f)=>money(freightCommission(f))},
       {key:"profit",label:"Lucro estimado",numeric:true,render:(f)=>money(freightProfit(f))}
     ]} rows={freights} emptyLabel="Nenhum frete encontrado para os filtros selecionados." /></section>;
-  if (page === "expenses") return <section className="panel"><div className="panel-heading"><div><h3>Despesas e manutenção</h3><p>Resumo das despesas, pagamentos e saldos em aberto.</p></div><span className="result-count">{expenses.length} registro(s)</span></div><div className="page-filters"><input aria-label="Buscar despesas" placeholder="Descrição, categoria, caminhão ou fornecedor..." value={search} onChange={(e)=>setSearch(e.target.value)} /></div>
+  if (page === "expenses") return <section className="panel"><div className="panel-heading"><div><h3>Despesas e manutenção</h3><p>Resumo das despesas, pagamentos e saldos em aberto.</p></div><span className="result-count">{expenses.length} registro(s)</span></div><div className="page-filters"><input aria-label="Buscar despesas" placeholder="Descrição, categoria, caminhão ou fornecedor..." value={search} onChange={(e)=>setSearch(e.target.value)} /><label>Período<input aria-label="Filtrar despesas por mês" type="month" value={month} onChange={(e)=>setMonth(e.target.value)} /></label><button className="secondary-button" onClick={()=>{setSearch("");setMonth("");}}>Limpar filtros</button></div>
     <DataTable columns={[
       {key:"description",label:"Descrição",render:(e)=>e.description||"—"},
       {key:"category",label:"Categoria"},
@@ -166,7 +169,7 @@ function ReadOnlyPage({ page, data }) {
         {key:"status",label:"Situação",render:(f)=>Number(f.received||0)>=Number(f.value||0)?"Recebido":Number(f.received||0)>0?"Parcial":"Pendente"}
       ]} rows={receivables} emptyLabel="Nenhum valor a receber encontrado." /></section>;
   }
-  if (page === "payments") return <section className="panel"><div className="panel-heading"><div><h3>Contas a pagar</h3><p>Parcelas, pagamentos já realizados e valores em aberto.</p></div></div><div className="page-filters"><input aria-label="Buscar contas a pagar" placeholder="Buscar descrição, categoria ou caminhão..." value={search} onChange={(e)=>setSearch(e.target.value)} /></div>
+  if (page === "payments") return <section className="panel"><div className="panel-heading"><div><h3>Contas a pagar</h3><p>Parcelas, pagamentos já realizados e valores em aberto.</p></div></div><div className="page-filters"><input aria-label="Buscar contas a pagar" placeholder="Buscar descrição, categoria ou caminhão..." value={search} onChange={(e)=>setSearch(e.target.value)} /><label>Período<input aria-label="Filtrar contas por mês" type="month" value={month} onChange={(e)=>setMonth(e.target.value)} /></label><button className="secondary-button" onClick={()=>{setSearch("");setMonth("");}}>Limpar filtros</button></div>
     <DataTable columns={[
       {key:"due",label:"Vencimento",render:(i)=>dateLabel(i.due)},
       {key:"description",label:"Descrição"},
