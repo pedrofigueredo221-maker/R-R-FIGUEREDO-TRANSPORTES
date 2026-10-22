@@ -71,6 +71,10 @@ export default function App() {
   const [activePage, setActivePage] = useState("dashboard");
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const email = session?.user?.email?.trim().toLowerCase() || "";
+  const visitor = String(config.USER_EMAILS?.VISITANTES || config.USER_EMAILS?.VISITANTE || "").trim().toLowerCase();
+  const readOnly = Boolean(visitor && email === visitor);
+
   useEffect(() => {
     if (demoMode) { setSession({ user: { email: "demo@local.test" } }); setAuthReady(true); return undefined; }
     if (!supabase) { setAuthReady(true); return undefined; }
@@ -127,6 +131,7 @@ export default function App() {
   // Escrita otimista por versão: se outro computador salvar primeiro, recusamos
   // a gravação local e recarregamos os dados em vez de sobrescrever silenciosamente.
   const saveData = useCallback(async (nextData, formVersion = version) => {
+    if (readOnly) throw new Error("Perfil visitante: alterações não são permitidas.");
     if (!session) throw new Error("Sua sessão expirou. Entre novamente antes de salvar.");
     const next = {
       ...data,
@@ -164,7 +169,7 @@ export default function App() {
     setData(next);
     setVersion(Number(updated[0].version) || expectedVersion + 1);
     setDataError("");
-  }, [session, version, loadData, data, demoMode]);
+  }, [session, version, loadData, data, demoMode, readOnly]);
 
   const resetPassword = async (username) => {
     if (!supabase) throw new Error("Configuração do Supabase não encontrada.");
@@ -197,9 +202,6 @@ export default function App() {
     else setActivePage("dashboard");
   };
 
-  const email = session?.user?.email?.trim().toLowerCase() || "";
-  const visitor = String(config.USER_EMAILS?.VISITANTES || config.USER_EMAILS?.VISITANTE || "").trim().toLowerCase();
-  const readOnly = Boolean(visitor && email === visitor);
 
   if (!authReady) return <main className="loading-page"><span className="spinner" /><p>Verificando sessão segura…</p></main>;
   if (!session) return <Login onLogin={login} onReset={resetPassword} busy={busy} error={authError} />;
