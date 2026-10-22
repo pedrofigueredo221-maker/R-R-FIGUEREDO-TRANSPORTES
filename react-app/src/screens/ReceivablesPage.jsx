@@ -4,6 +4,8 @@ import { freightReceivableBalance, freightReceivableStatus } from "../domain/fre
 export default function ReceivablesPage({ controller }) {
   const { data, readOnly, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, setForm, setEditingId, allFreights, number, commit } = controller;
   const openReceipt = (freight) => {
+    setForm(null);
+    setEditingId(null);
     setPayment({ kind: "receive", record: freight });
   };
   return <section className="panel">
