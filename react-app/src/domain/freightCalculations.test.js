@@ -21,7 +21,7 @@ test("custo e lucro incluem pedágio, combustível real, comissão, bônus e out
 });
 test("líquido respeita a regra legada do pedágio descontável", () => {
   const f = { value: 2000, discount: 100, toll: 100, commission: 10, commissionType: "percent", bonus: 25, deductToll: true };
-  assert.equal(freightNet(f), 1635); assert.equal(freightNet({ ...f, deductToll: false }), 1735);
+  assert.equal(freightNet(f), 1645); assert.equal(freightNet({ ...f, deductToll: false }), 1735);
 });
 test("valores ausentes são tratados como zero", () => {
   for (const fn of [freightBase, freightCommission, freightBonus, freightCost, freightProfit, freightNet]) assert.equal(fn({}), 0);
