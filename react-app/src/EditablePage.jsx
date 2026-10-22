@@ -82,8 +82,8 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   const filteredFreights = filter(allFreights, ["customer", "driver", "truck", "origin", "destination", "notes"]);
   const filteredExpenses = allExpenses.filter((row) => (!normalizedQuery || ["description", "category", "truck", "supplier", "notes"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(normalizedQuery))) && (!month || String(row.created || "").startsWith(month) || (row.installments || []).some((i) => String(i.due || "").startsWith(month))));
   const categories = data.categories?.length ? data.categories : defaultCategories;
-  const employees = (data.employees || []).filter((row) => !query || ["name", "role", "phone"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(query)));
-  const trucks = (data.trucks || []).filter((row) => !query || ["name", "plate"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(query)));
+  const employees = (data.employees || []).filter((row) => !normalizedQuery || ["name", "role", "phone"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(normalizedQuery)));
+  const trucks = (data.trucks || []).filter((row) => !normalizedQuery || ["name", "plate"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(normalizedQuery)));
 
   const saveFreight = () => {
     const original = editingId ? allFreights.find((freight) => freight.id === editingId) : null;
