@@ -50,14 +50,17 @@ function Dashboard({ data, onRefresh, loading }) {
     const freights = Array.isArray(data.freights) ? data.freights : [];
     const expenses = Array.isArray(data.expenses) ? data.expenses : [];
     const selected = freights.filter((f) => String(f.date || "").slice(0, 7) === month);
-    const receivable = freights.reduce((sum, f) => sum + Math.max(0, Number(f.value || 0) - Number(f.received || 0) - Number(f.discount || 0)), 0);
+    // Mantém as mesmas definições financeiras usadas no painel HTML existente.
+    const receivable = freights.reduce((sum, f) => sum + Math.max(0, Number(f.value || 0) - Number(f.received || 0)), 0);
     const payable = expenses.reduce((sum, exp) => sum + (Array.isArray(exp.installments)
       ? exp.installments.reduce((subtotal, item) => subtotal + Math.max(0, Number(item.value || 0) - Number(item.paid || 0)), 0)
       : Math.max(0, Number(exp.value || 0) - Number(exp.paid || 0))), 0);
+    const expenseTotal = expenses.filter((exp) => String(exp.created || "").slice(0, 7) === month)
+      .reduce((sum, exp) => sum + Number(exp.value || 0), 0);
     return {
       selected, revenue: selected.reduce((sum, f) => sum + Number(f.value || 0), 0),
-      profit: selected.reduce((sum, f) => sum + freightProfit(f), 0), receivable, payable,
-      recent: [...freights].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6)
+      profit: selected.reduce((sum, f) => sum + freightProfit(f), 0) - expenseTotal, receivable, payable,
+      recent: [...selected].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6)
     };
   }, [data, month]);
   return <>
