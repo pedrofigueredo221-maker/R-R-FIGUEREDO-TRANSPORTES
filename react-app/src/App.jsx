@@ -138,7 +138,7 @@ export default function App() {
     }
     const expectedVersion = version;
     const { data: updated, error } = await supabase.from("app_state")
-      .update({ data: next, version: expectedVersion + 1, updated_at: new Date().toISOString() })
+      .update({ data: next, version: expectedVersion + 1 })
       .eq("id", 1)
       .eq("version", expectedVersion)
       .select("version");
