@@ -55,3 +55,38 @@
   .editor-actions { justify-content: stretch; }
   .editor-actions button { width: 100%; }
 }
+
+
+/* Formulário especializado de fretes */
+.freight-editor .freight-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fuel-section { margin-top: 20px; padding: 16px; border: 1px solid var(--rr-border); border-radius: 12px; background: #fff; }
+.fuel-section-heading { margin-bottom: 14px; }
+.fuel-section-heading h4, .freight-summary-heading h4 { margin: 0; color: #23382f; font-size: 15px; }
+.fuel-section-heading p { margin: 5px 0 0; color: var(--rr-muted); font-size: 12px; line-height: 1.5; }
+.fuel-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.fuel-grid .editor-field input[readonly] { background: #edf4f0; color: #1c5543; font-weight: 800; }
+.toll-checkbox-row { display: grid; grid-template-columns: minmax(230px, .9fr) minmax(0, 1.1fr); gap: 16px; align-items: center; margin: 16px 0; padding: 14px 16px; border: 1px solid #e2e8e5; border-radius: 12px; background: #f7faf8; }
+.toll-checkbox-row .editor-field { display: flex; flex-direction: row; align-items: center; gap: 10px; color: #263b34; font-size: 13px; }
+.toll-checkbox-row .editor-field input[type=checkbox] { flex: 0 0 18px; width: 18px; height: 18px; min-height: 18px; margin: 0; }
+.toll-checkbox-row p { margin: 0; color: #697587; font-size: 12px; line-height: 1.5; }
+.freight-summary { margin-top: 18px; padding: 20px; border-radius: 14px; background: #163a32; color: #fff; }
+.freight-summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.freight-summary-heading h4 { color: #fff; font-size: 17px; font-weight: 800; }
+.freight-summary-heading span { color: #c7d9d1; font-size: 12px; }
+.freight-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+.freight-summary-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; padding: 12px 0; border-bottom: 1px solid #ffffff24; }
+.freight-summary-item span { color: #e1ece6; font-size: 13px; }
+.freight-summary-item strong { color: #fff; font-size: 19px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.freight-summary-item:last-child strong { font-size: 23px; }
+.freight-editor .editor-actions { margin-top: 18px; }
+@media (max-width: 1100px) {
+  .freight-editor .freight-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fuel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .freight-editor .freight-fields, .fuel-grid, .freight-summary-grid { grid-template-columns: minmax(0, 1fr); }
+  .toll-checkbox-row { grid-template-columns: minmax(0, 1fr); }
+  .freight-summary { padding: 14px; }
+  .freight-summary-heading { align-items: flex-start; flex-direction: column; }
+  .freight-summary-item strong { font-size: 18px; }
+}
