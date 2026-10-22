@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { freightCommission, freightProfit } from "../domain/freightCalculations.js";
 import { money, currentMonth } from "../lib/formatters.js";
 import { DataTable } from "../components/DataTable.jsx";
-import { Stat } from "./OverviewPage.jsx";
+import StatCard from "../components/StatCard.jsx";
 
 export default function ReportsPage({ data }) {
   const [month, setMonth] = useState(currentMonth());
@@ -12,7 +12,7 @@ export default function ReportsPage({ data }) {
   const expensePaymentsInMonth = (data.expenses || []).flatMap((expense) => (expense.installments || []).flatMap((item) => item.payments || []))
     .filter((payment) => String(payment.date || "").startsWith(month)).reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
   return <><div className="welcome-panel"><div><p className="eyebrow">RELATÓRIOS GERENCIAIS</p><h2>Resumo de {month || "todos os períodos"}</h2><p>Indicadores calculados a partir dos dados já registrados.</p></div><label className="month-picker">Período<input type="month" value={month} onChange={(e)=>setMonth(e.target.value)} /></label></div>
-    <div className="stats-grid"><Stat label="Faturamento" value={money(monthFreights.reduce((s,f)=>s+Number(f.value||0),0))} hint={`${monthFreights.length} frete(s)`} /><Stat label="Recebido de clientes" value={money(monthFreights.reduce((s,f)=>s+Number(f.received||0),0))} hint="Recebimentos dos fretes do período" tone="positive" /><Stat label="Despesas pagas no mês" value={money(expensePaymentsInMonth)} hint="Pagamentos registrados no período" tone="negative" /><Stat label="Contas a pagar em aberto" value={money((data.expenses||[]).reduce((s,e)=>s+expensesOpen(e),0))} hint="Saldo das parcelas pendentes" tone="attention" /></div>
+    <div className="stats-grid"><StatCard label="Faturamento" value={money(monthFreights.reduce((s,f)=>s+Number(f.value||0),0))} hint={`${monthFreights.length} frete(s)`} /><StatCard label="Recebido de clientes" value={money(monthFreights.reduce((s,f)=>s+Number(f.received||0),0))} hint="Recebimentos dos fretes do período" tone="positive" /><StatCard label="Despesas pagas no mês" value={money(expensePaymentsInMonth)} hint="Pagamentos registrados no período" tone="negative" /><StatCard label="Contas a pagar em aberto" value={money((data.expenses||[]).reduce((s,e)=>s+expensesOpen(e),0))} hint="Saldo das parcelas pendentes" tone="attention" /></div>
     <section className="panel"><div className="panel-heading"><div><h3>Resultado por motorista</h3><p>Fretes do período selecionado.</p></div></div><DataTable columns={[
       {key:"driver",label:"Motorista"},
       {key:"count",label:"Fretes",numeric:true,render:(r)=>r.freights.length},
