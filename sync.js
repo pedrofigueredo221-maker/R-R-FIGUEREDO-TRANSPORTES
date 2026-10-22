@@ -5,7 +5,7 @@
  *
  * Dependências:
  * - app.js define db, renderAll() e, opcionalmente, ensureDefaults().
- * - config.js define SUPABASE_URL, SUPABASE_ANON_KEY e USER_EMAILS.
+ * - banco-de-dados/supabase/config.js define SUPABASE_URL, SUPABASE_ANON_KEY e USER_EMAILS.
  * - index.html contém os elementos de login indicados abaixo.
  *
  * Os dados são compartilhados por todos os usuários autenticados
