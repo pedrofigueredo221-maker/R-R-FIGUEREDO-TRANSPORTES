@@ -987,3 +987,22 @@ textarea:required:focus {
   #page-cadastros .registration-tab-panel>.panel-heading{align-items:stretch;flex-direction:column}
   #page-cadastros .registration-tab-panel>.panel-heading .btn{width:100%}
 }
+
+
+/* Menus compactos para ações secundárias */
+.action-menu{position:relative;display:inline-block;z-index:5}
+.action-menu>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.action-menu>summary::-webkit-details-marker{display:none}
+.action-menu[open]>summary{border-color:#b8c8be;background:#f2f6f3}
+.action-menu-content{position:absolute;right:0;top:calc(100% + 7px);min-width:220px;display:flex;flex-direction:column;gap:7px;padding:10px;background:#fff;border:1px solid #dfe7e1;border-radius:10px;box-shadow:0 12px 32px #14291d20;z-index:30}
+.action-menu-content .btn,.action-menu-content .file-button{width:100%;justify-content:flex-start;text-align:left;white-space:normal}
+.refresh-btn{font-size:0!important;min-width:40px;min-height:40px;padding:9px!important;display:inline-flex;align-items:center;justify-content:center}
+.refresh-btn span{font-size:22px;line-height:1}
+#page-cadastros .registration-list-tools,#page-cadastros .bulk-registration-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#page-cadastros .registration-list-tools{margin:10px 0 4px}
+#page-cadastros .inactive-filter{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;white-space:nowrap}
+#page-cadastros .inactive-filter input{margin:0;accent-color:#1769b2}
+#page-cadastros .bulk-registration-tools{margin:4px 0 12px;padding:9px 11px}
+#page-cadastros .btn-danger{background:#f6a3a8!important;border-color:#f6a3a8!important;color:#76262c!important}
+#page-cadastros .btn-danger:hover{background:#f28b92!important;border-color:#f28b92!important}
+@media(max-width:650px){.action-menu{width:100%}.action-menu>summary{width:100%;justify-content:center}.action-menu-content{left:0;right:0;min-width:0}.refresh-btn{min-width:38px}.bulk-registration-tools{align-items:flex-start!important}}
