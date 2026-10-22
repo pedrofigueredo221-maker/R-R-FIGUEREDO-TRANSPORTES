@@ -4,7 +4,7 @@ export default function CadastrosPage({ controller }) {
   const {
     data, readOnly, saving, form, setForm, editingId, setEditingId, startCreate,
     startEdit, showError, toolbar, Actions, RecordForm, remove, number, commit,
-    setError, categories, employees, trucks, tab, setTab, query, uid
+    setError, categories, employees, trucks, tab, setTab, query, uid, money
   } = controller;
 
   const normalizedQuery = query.trim().toLocaleLowerCase("pt-BR");
