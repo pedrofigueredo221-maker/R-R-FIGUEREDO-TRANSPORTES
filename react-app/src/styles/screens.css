@@ -118,3 +118,49 @@
   .receipt-editor .editor-heading { flex-direction: column; }
   .receipt-editor .editor-heading > button { width: 100%; }
 }
+
+
+/* Cadastro de funcionário em uma tela modal centralizada, no padrão visual do frete. */
+.employee-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(15 28 24 / 58%);
+  backdrop-filter: blur(3px);
+}
+.employee-modal {
+  width: min(920px, 100%);
+  max-height: min(88vh, 900px);
+  overflow: auto;
+  padding: 26px;
+  border: 1px solid #dfe7e4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgb(10 25 19 / 28%);
+}
+.employee-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--rr-border);
+}
+.employee-modal-header h2 { margin: 0 0 8px; color: #203b32; font-size: 23px; }
+.employee-modal-header p:not(.eyebrow) { margin: 0; color: var(--rr-muted); font-size: 13px; line-height: 1.5; }
+.employee-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.employee-checkbox-field { flex-direction: row; align-items: center; align-self: end; min-height: 42px; gap: 10px; }
+.employee-checkbox-field input[type="checkbox"] { width: 18px; min-height: 18px; accent-color: #25483e; }
+.employee-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--rr-border); }
+@media (max-width: 600px) {
+  .employee-modal-backdrop { align-items: end; padding: 0; }
+  .employee-modal { width: 100%; max-height: 92vh; padding: 20px 16px max(18px, env(safe-area-inset-bottom)); border-radius: 18px 18px 0 0; }
+  .employee-modal-header h2 { font-size: 20px; }
+  .employee-form-grid { grid-template-columns: minmax(0, 1fr); }
+  .employee-modal-actions { flex-direction: column-reverse; }
+  .employee-modal-actions button { width: 100%; }
+}
