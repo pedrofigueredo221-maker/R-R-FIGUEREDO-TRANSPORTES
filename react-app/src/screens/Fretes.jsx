@@ -3,7 +3,7 @@ import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
 import { freightReceivableBalance, freightReceivableStatus } from "../domain/freightReceivables.js";
 import { freightDriverPayment, freightOperatingCosts } from "../domain/freightCalculations.js";
 
-export default function FreightsPage({ controller }) {
+export default function Fretes({ controller }) {
   const { data, readOnly, loading, saving, form, setForm, editingId, setEditingId, startCreate, startEdit, saveFreight, showError, toolbar, filteredFreights, dateLabel, money, Actions, remove, payment, setPayment, allFreights, number, commit, employees, trucks } = controller;
   const openReceipt = (freight) => {
     setForm(null);
