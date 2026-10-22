@@ -1,4 +1,4 @@
-import ExpensesPage from "./ExpensesPage.jsx";
+import ExpensesPage from "./Despesas.jsx";
 
 // A estrutura visual e os formulários de parcelas são compartilhados,
 // mas o controlador envia page="payments" para aplicar os rótulos e filtros corretos.
