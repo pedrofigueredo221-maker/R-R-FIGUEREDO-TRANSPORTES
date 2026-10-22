@@ -3,9 +3,11 @@ name: Verificação do projeto
 on:
   pull_request:
     branches: [main]
-  push:
-    branches:
-      - migration/react-auth-dashboard-2026-10-22
+  workflow_dispatch:
+
+concurrency:
+  group: validacao-projeto-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   syntax-and-react-build:
