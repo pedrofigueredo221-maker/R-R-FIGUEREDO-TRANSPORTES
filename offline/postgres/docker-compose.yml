@@ -1,0 +1,22 @@
+services:
+  rr-postgres:
+    image: postgres:17-alpine
+    container_name: rr-figueredo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-rr_figueredo}
+      POSTGRES_USER: ${POSTGRES_USER:-rr_local}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo offline/postgres/.env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - rr_postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rr_local} -d ${POSTGRES_DB:-rr_figueredo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  rr_postgres_data:
