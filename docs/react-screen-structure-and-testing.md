@@ -1,6 +1,6 @@
 # Migração React: telas, layout e roteiro de validação
 
-Esta branch é uma etapa empilhada sobre a PR #18. A PR #18 precisa ser aceita antes de esta branch poder ser integrada à `main`; não mesclar esta branch diretamente na `main`.
+Esta branch é uma etapa empilhada sobre a PR #18. O CI do projeto deve compilar a versão React e executar os testes automatizados nesta PR. A PR #18 precisa ser aceita antes de esta branch poder ser integrada à `main`; não mesclar esta branch diretamente na `main`.
 
 ## Organização
 
