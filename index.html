@@ -47,13 +47,6 @@
     <button class="nav-item" data-page="reports"><span>▥</span> Relatórios</button>
     <button class="nav-item" data-page="cadastros"><span aria-hidden="true">▦</span> Cadastros</button>
 
-    <div class="sidebar-bottom">
-      <div class="avatar">GF</div>
-      <div>
-        <strong>Gestão familiar</strong>
-        <small>Controle da transportadora</small>
-      </div>
-    </div>
   </aside>
 
   <main class="main">
@@ -90,8 +83,7 @@
             <label for="dashMonth">Período do painel</label>
             <input type="month" id="dashMonth">
           </div>
-          <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span> Atualizar</button>
-          <button class="btn btn-secondary" id="seedDemo">Carregar exemplos</button>
+          <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
         </div>
 
         <div class="stats-grid">
@@ -171,7 +163,7 @@
             <p>Registre viagens, calcule comissão e acompanhe recebimentos.</p>
           </div>
           <div class="import-actions">
-            <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span> Atualizar</button>
+            <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
             <button class="btn btn-primary" id="addFreight">＋ Cadastrar frete</button>
           </div>
         </div>
@@ -180,17 +172,19 @@
           <div class="panel-heading">
             <div>
               <h3>Importação de fretes em lote</h3>
-              <p>Importe o Excel ou fotografe uma página do caderno. Sempre confira antes de salvar.</p>
+              <p>As ferramentas ficam reunidas em Diversos para liberar espaço na tela.</p>
             </div>
+            <details class="action-menu">
+              <summary class="btn btn-secondary">Diversos <span aria-hidden="true">▾</span></summary>
+              <div class="action-menu-content">
+                <button class="btn btn-secondary" type="button" id="downloadFreightTemplate">Baixar modelo Excel</button>
+                <label class="btn btn-secondary file-button" for="freightExcelFile">Importar planilha</label>
+                <label class="btn btn-secondary file-button" for="freightPhotoFile">Escolher foto</label>
+              </div>
+            </details>
           </div>
-
-          <div class="import-actions">
-            <button class="btn btn-secondary" id="downloadFreightTemplate">Baixar modelo Excel</button>
-            <label class="btn btn-secondary file-button" for="freightExcelFile">Importar planilha</label>
-            <input id="freightExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden>
-            <label class="btn btn-secondary file-button" for="freightPhotoFile">Escolher foto</label>
-            <input id="freightPhotoFile" type="file" accept="image/*" capture="environment" hidden>
-          </div>
+          <input id="freightExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden>
+          <input id="freightPhotoFile" type="file" accept="image/*" capture="environment" hidden>
 
           <p class="form-hint">Use uma linha por frete. Para fotos, letra cursiva pode ser reconhecida incorretamente; revise datas e valores.</p>
           <div id="ocrStatus" class="import-status" hidden></div>
@@ -252,7 +246,7 @@
             <p>Boletos, oficinas, óleo, pneus e demais custos da operação.</p>
           </div>
           <div class="import-actions">
-            <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span> Atualizar</button>
+            <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
             <button class="btn btn-primary" id="addExpense">＋ Nova despesa</button>
           </div>
         </div>
@@ -297,7 +291,7 @@
             <h2>Contas a receber</h2>
             <p>Recebíveis gerados automaticamente pelos fretes, com saldos parciais e pendentes.</p>
           </div>
-          <button class="refresh-btn" data-refresh id="refreshReceivables" title="Atualizar dados"><span aria-hidden="true">↻</span> Atualizar</button>
+          <button class="refresh-btn" data-refresh id="refreshReceivables" title="Atualizar dados"><span aria-hidden="true">↻</span></button>
         </div>
 
         <div class="filters">
@@ -335,7 +329,7 @@
             <p>Acompanhe vencimentos, parcelas e pagamentos pendentes.</p>
           </div>
           <div class="import-actions">
-            <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span> Atualizar</button>
+            <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
             <button class="btn btn-primary" id="addPaymentExpense">＋ Registrar conta</button>
           </div>
         </div>
@@ -380,7 +374,7 @@
             <h2>Cadastros da empresa</h2>
             <p>Mantenha nomes de motoristas e caminhões atualizados em um só lugar. Alterações de nome também atualizam os lançamentos antigos.</p>
           </div>
-          <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span> Atualizar</button>
+          <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
         </div>
 
         <div class="registration-tabs" role="tablist" aria-label="Tipo de cadastro">
@@ -446,17 +440,16 @@
 
               <div class="import-actions">
                 <button class="btn btn-primary" type="submit" id="employeeSave">＋ Adicionar funcionário</button>
-                <button class="btn btn-secondary" type="button" id="employeeCancel" hidden>Cancelar edição</button>
+                <button class="btn btn-secondary" type="button" id="employeeCancel">Fechar sem salvar</button>
               </div>
             </form>
 
             <div class="registration-list-tools">
-              <label class="inactive-filter"><input type="checkbox" id="showInactiveEmployees"> INATIVOS</label>
-              <span>Por padrão, são exibidos somente funcionários ativos.</span>
+              <label class="inactive-filter"><input type="checkbox" id="showInactiveEmployees"> Inativos</label>
             </div>
             <div class="bulk-registration-tools">
-              <label class="inactive-filter"><input type="checkbox" id="selectAllEmployees"> Selecionar todos visíveis</label>
-              <button class="btn btn-danger" type="button" id="deleteSelectedEmployees">Excluir selecionados</button>
+              <label class="inactive-filter"><input type="checkbox" id="selectAllEmployees"> Selecionar todos</label>
+              <button class="btn btn-danger" type="button" id="deleteSelectedEmployees">Excluir todos</button>
               <span id="selectedEmployeesCount">0 selecionados</span>
             </div>
             <div class="table-wrap">
@@ -494,17 +487,16 @@
 
               <div class="import-actions">
                 <button class="btn btn-primary" type="submit" id="truckSave">＋ Adicionar caminhão</button>
-                <button class="btn btn-secondary" type="button" id="truckCancel" hidden>Cancelar edição</button>
+                <button class="btn btn-secondary" type="button" id="truckCancel">Fechar sem salvar</button>
               </div>
             </form>
 
             <div class="registration-list-tools">
-              <label class="inactive-filter"><input type="checkbox" id="showInactiveTrucks"> INATIVOS</label>
-              <span>Por padrão, são exibidos somente caminhões ativos.</span>
+              <label class="inactive-filter"><input type="checkbox" id="showInactiveTrucks"> Inativos</label>
             </div>
             <div class="bulk-registration-tools">
-              <label class="inactive-filter"><input type="checkbox" id="selectAllTrucks"> Selecionar todos visíveis</label>
-              <button class="btn btn-danger" type="button" id="deleteSelectedTrucks">Excluir selecionados</button>
+              <label class="inactive-filter"><input type="checkbox" id="selectAllTrucks"> Selecionar todos</label>
+              <button class="btn btn-danger" type="button" id="deleteSelectedTrucks">Excluir todos</button>
               <span id="selectedTrucksCount">0 selecionados</span>
             </div>
             <div class="table-wrap">
@@ -531,7 +523,7 @@
 
               <div class="import-actions">
                 <button class="btn btn-primary" type="submit" id="categorySave">＋ Adicionar categoria</button>
-                <button class="btn btn-secondary" type="button" id="categoryCancel" hidden>Cancelar</button>
+                <button class="btn btn-secondary" type="button" id="categoryCancel">Limpar / cancelar</button>
               </div>
             </form>
 
@@ -554,7 +546,7 @@
             <h2>Relatórios</h2>
             <p>Consulte os dados cadastrados e exporte para planilhas.</p>
           </div>
-          <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span> Atualizar</button>
+          <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
         </div>
 
         <div class="report-controls panel">
@@ -566,9 +558,14 @@
             <label for="reportDriver">Motorista</label>
             <select id="reportDriver"><option value="">Todos</option></select>
           </div>
-          <button class="btn btn-primary" id="refreshReport">Gerar relatório</button>
-          <button class="btn btn-secondary" id="exportFreights">Exportar fretes CSV</button>
-          <button class="btn btn-secondary" id="exportExpenses">Exportar despesas CSV</button>
+          <details class="action-menu">
+            <summary class="btn btn-secondary">Exportar <span aria-hidden="true">▾</span></summary>
+            <div class="action-menu-content">
+              <button class="btn btn-primary" id="refreshReport" type="button">Gerar relatório</button>
+              <button class="btn btn-secondary" id="exportFreights" type="button">Exportar fretes CSV</button>
+              <button class="btn btn-secondary" id="exportExpenses" type="button">Exportar despesas CSV</button>
+            </div>
+          </details>
         </div>
 
         <div class="stats-grid report-stats">
