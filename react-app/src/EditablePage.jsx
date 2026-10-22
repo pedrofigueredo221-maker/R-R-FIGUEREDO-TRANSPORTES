@@ -51,18 +51,22 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   const [paymentMethod, setPaymentMethod] = useState("PIX");
 
   const startCreate = (kind) => {
+    if (readOnly) return;
     setError(""); setEditingId(null); setFormVersion(version); setForm(kind === "freight" ? blankFreight() : kind === "expense" ? blankExpense() : kind === "employee" ? blankEmployee() : kind === "truck" ? blankTruck() : { name: "" });
   };
   const startEdit = (kind, record) => {
+    if (readOnly) return;
     setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0) } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
   };
   const commit = async (next, expectedVersion = (form ? formVersion : version)) => {
+    if (readOnly) { setError("Perfil visitante: alterações não são permitidas."); return; }
     setSaving(true); setError("");
     try { await onSave(next, expectedVersion); setForm(null); setEditingId(null); setPayment(null); }
     catch (e) { const message = e?.message || "Não foi possível salvar. Os dados locais foram preservados."; setError(message); if (message.includes("mudaram") || message.includes("alterou os dados")) { setForm(null); setEditingId(null); setPayment(null); } }
     finally { setSaving(false); }
   };
   const remove = async (key, record) => {
+    if (readOnly) { setError("Perfil visitante: exclusões não são permitidas."); return; }
     if (key === "freights" && (number(record.received) > 0 || (record.receipts || []).length > 0)) {
       setError("Este frete já possui recebimentos registrados. Preserve o histórico financeiro; não é possível excluí-lo por esta tela.");
       return;
@@ -115,12 +119,11 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     return commit({ ...data, expenses: editingId ? allExpenses.map((e) => e.id === editingId ? expense : e) : [expense, ...allExpenses] });
   };
 
-  if (readOnly) return <section className="panel"><div className="panel-heading"><div><h3>Perfil somente leitura</h3><p>O perfil visitante pode consultar os dados, mas não pode cadastrar, editar, excluir ou registrar pagamentos.</p></div></div></section>;
   const toolbar = <div className="page-filters"><input aria-label="Buscar registros" placeholder="Buscar registros..." value={query} onChange={(e) => setQuery(e.target.value)} /><label>Período<input aria-label="Filtrar por mês" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></label><button className="secondary-button" onClick={() => { setQuery(""); setMonth(""); }} type="button">Limpar filtros</button></div>;
   const showError = error && <div className="error-banner" role="alert">{error}</div>;
 
   const controller = {
-    page, data, loading, saving, form, setForm, editingId, setEditingId,
+    page, data, readOnly, loading, saving, form, setForm, editingId, setEditingId,
     startCreate, startEdit, saveFreight, saveExpense, showError, toolbar,
     filteredFreights, filteredExpenses, dateLabel, money, Actions, RecordForm, Field,
     remove, payment, setPayment, setPaymentAmount, setPaymentDate, paymentAmount,
