@@ -31,9 +31,10 @@ function Actions({ onEdit, onDelete }) {
   return <div className="record-actions"><button className="secondary-button" type="button" onClick={onEdit}>Editar</button><button className="danger-button" type="button" onClick={onDelete}>Excluir</button></div>;
 }
 
-export default function EditablePage({ page, data, onSave, readOnly, loading }) {
+export default function EditablePage({ page, data, onSave, readOnly, loading, version }) {
   const [form, setForm] = useState(null);
   const [editingId, setEditingId] = useState(null);
+  const [formVersion, setFormVersion] = useState(version);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [query, setQuery] = useState("");
@@ -45,15 +46,15 @@ export default function EditablePage({ page, data, onSave, readOnly, loading }) 
   const [paymentMethod, setPaymentMethod] = useState("PIX");
 
   const startCreate = (kind) => {
-    setError(""); setEditingId(null); setForm(kind === "freight" ? blankFreight() : kind === "expense" ? blankExpense() : kind === "employee" ? blankEmployee() : kind === "truck" ? blankTruck() : { name: "" });
+    setError(""); setEditingId(null); setFormVersion(version); setForm(kind === "freight" ? blankFreight() : kind === "expense" ? blankExpense() : kind === "employee" ? blankEmployee() : kind === "truck" ? blankTruck() : { name: "" });
   };
   const startEdit = (kind, record) => {
-    setError(""); setEditingId(record.id); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0) } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
+    setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0) } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
   };
   const commit = async (next) => {
     setSaving(true); setError("");
-    try { await onSave(next); setForm(null); setEditingId(null); setPayment(null); }
-    catch (e) { setError(e?.message || "Não foi possível salvar. Os dados locais foram preservados."); }
+    try { await onSave(next, formVersion); setForm(null); setEditingId(null); setPayment(null); }
+    catch (e) { const message = e?.message || "Não foi possível salvar. Os dados locais foram preservados."; setError(message); if (message.includes("mudaram") || message.includes("alterou os dados")) { setForm(null); setEditingId(null); setPayment(null); } }
     finally { setSaving(false); }
   };
   const remove = async (key, record) => {
