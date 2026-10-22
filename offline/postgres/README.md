@@ -50,8 +50,7 @@ docker compose --env-file offline/postgres/.env -f offline/postgres/docker-compo
 docker compose --env-file offline/postgres/.env -f offline/postgres/docker-compose.yml ps
 
 # Só depois de criar e conferir o backup geral:
-$env:SUPABASE_DB_URL = Read-Host "Connection string PostgreSQL do Supabase"
-.scriptsimport-supabase-app-state-to-local.ps1
+.\scripts\import-supabase-app-state-to-local.ps1
 ```
 
 O script solicita a connection string quando necessário, verifica que a origem contém exatamente o registro esperado, recusa importar por cima de uma tabela local que já tenha dados e compara uma assinatura do registro após a importação. Ao terminar, remove as variáveis sensíveis da sessão. O dump intermediário fica em pasta temporária e é removido ao final.
