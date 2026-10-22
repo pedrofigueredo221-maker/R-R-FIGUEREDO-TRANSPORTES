@@ -1,4 +1,4 @@
-export default function ExpensesPage({ controller }) {
+export default function Despesas({ controller }) {
   const { page, data, readOnly, loading, saving, form, setForm, editingId, startCreate, startEdit, saveExpense, showError, toolbar, filteredExpenses, dateLabel, money, Actions, RecordForm, Field, remove, payment, setPayment, setPaymentAmount, setPaymentDate, paymentAmount, paymentDate, paymentMethod, allExpenses, number, commit, setError, categories, trucks, today } = controller;
   return <section className="panel">
     <div className="panel-heading"><div><h3>{page==="payments"?"Contas a pagar":"Despesas e manutenção"}</h3><p>Cadastre despesas e registre pagamentos por parcela.</p></div>{!readOnly && <button className="primary-button" disabled={saving||loading} onClick={()=>startCreate("expense")}>+ Nova despesa</button>}</div>

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import OverviewPage from "./screens/OverviewPage.jsx";
+import VisaoGeral from "./screens/VisaoGeral.jsx";
 import EditablePage from "./EditablePage.jsx";
-import ReportsPage from "./screens/ReportsPage.jsx";
+import Relatorios from "./screens/Relatorios.jsx";
 import { DEMO_DATA, DEMO_STORAGE_KEY } from "./demo/demoData.js";
 
 const config = window.APP_CONFIG || {};
@@ -21,12 +21,12 @@ const pages = [
 ];
 const titles = Object.fromEntries(pages.map((page) => [page.id, page.label]));
 const screenComponents = {
-  dashboard: OverviewPage,
+  dashboard: VisaoGeral,
   freights: EditablePage,
   expenses: EditablePage,
   receivables: EditablePage,
   payments: EditablePage,
-  reports: ReportsPage,
+  reports: Relatorios,
   cadastros: EditablePage
 };
 
@@ -36,7 +36,7 @@ function Login({ onLogin, onReset, busy, error }) {
   const [resetBusy, setResetBusy] = useState(false);
   const [resetMessage, setResetMessage] = useState("");
   return <main className="login-page"><form className="login-card" onSubmit={(e) => { e.preventDefault(); onLogin(username, password); }}>
-    <img className="login-logo" src="./logo.svg" alt="R&R Figueredo Transportes" />
+    <img className="login-logo" src="./imagens/logo.svg" alt="R&R Figueredo Transportes" />
     <p className="eyebrow">SISTEMA DE GESTÃO</p><h1>Acesse sua conta</h1>
     <p className="muted">Entre para consultar os dados da transportadora.</p>
     <label htmlFor="login-username">Usuário</label><input id="login-username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" placeholder="Digite seu usuário" required />
@@ -207,7 +207,7 @@ export default function App() {
   if (!session) return <Login onLogin={login} onReset={resetPassword} busy={busy} error={authError} />;
 
   return <div className={`app-shell ${readOnly ? "read-only" : ""}`}>
-    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./logo.svg" alt="R&R Figueredo Transportes" /></div>
+    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo.svg" alt="R&R Figueredo Transportes" /></div>
       <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><span aria-hidden="true">{p.symbol}</span>{p.label}</button>)}</nav>
       <div className="sidebar-bottom"><span className="session-dot" /> Sessão autenticada</div>
     </aside>
@@ -221,7 +221,7 @@ export default function App() {
     <div className="content-area">
       {dataError && <div className="error-banner" role="alert"><strong>Não foi possível carregar os dados.</strong><p>{dataError}</p><button className="secondary-button" onClick={loadData} disabled={loadingData}>Tentar novamente</button></div>}
       {loadingData && !dataError && <div className="inline-loading"><span className="spinner" />Carregando dados compartilhados…</div>}
-      {(() => { const Screen = screenComponents[activePage] || OverviewPage; return <Screen page={activePage} data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} />; })()}
+      {(() => { const Screen = screenComponents[activePage] || VisaoGeral; return <Screen page={activePage} data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} />; })()}
       <footer className="app-footer">Versão React em migração gradual · Dados compartilhados com controle de gravação.</footer>
     </div></main>
   </div>;

@@ -3,7 +3,7 @@ import { freightProfit } from "../domain/freightCalculations.js";
 import { money, dateLabel, currentMonth } from "../lib/formatters.js";
 import StatCard from "../components/StatCard.jsx";
 
-export default function OverviewPage({ data, onRefresh, loading }) {
+export default function VisaoGeral({ data, onRefresh, loading }) {
   const [month, setMonth] = useState(currentMonth());
   const summary = useMemo(() => {
     const freights = Array.isArray(data.freights) ? data.freights : [];

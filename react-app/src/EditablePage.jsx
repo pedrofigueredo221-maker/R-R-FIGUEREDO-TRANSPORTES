@@ -1,9 +1,9 @@
 import { useState } from "react";
-import FreightsPage from "./screens/FreightsPage.jsx";
-import ExpensesPage from "./screens/ExpensesPage.jsx";
-import ReceivablesPage from "./screens/ReceivablesPage.jsx";
-import PayablesPage from "./screens/PayablesPage.jsx";
-import CadastrosPage from "./screens/CadastrosPage.jsx";
+import Fretes from "./screens/Fretes.jsx";
+import Despesas from "./screens/Despesas.jsx";
+import ContasAReceber from "./screens/ContasAReceber.jsx";
+import ContasAPagar from "./screens/ContasAPagar.jsx";
+import Cadastros from "./screens/Cadastros.jsx";
 
 const today = () => {
   const date = new Date();
@@ -140,10 +140,10 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     remove, payment, setPayment, allFreights, allExpenses, number, commit, setError,
     categories, employees, trucks, tab, setTab, query, uid, today
   };
-  if (page === "freights") return <FreightsPage controller={controller} />;
-  if (page === "expenses") return <ExpensesPage controller={controller} />;
-  if (page === "payments") return <PayablesPage controller={controller} />;
-  if (page === "receivables") return <ReceivablesPage controller={controller} />;
-  if (page === "cadastros") return <CadastrosPage controller={controller} />;
+  if (page === "freights") return <Fretes controller={controller} />;
+  if (page === "expenses") return <Despesas controller={controller} />;
+  if (page === "payments") return <ContasAPagar controller={controller} />;
+  if (page === "receivables") return <ContasAReceber controller={controller} />;
+  if (page === "cadastros") return <Cadastros controller={controller} />;
   return <section className="panel"><h3>Área não editável</h3><p>Esta área é apenas para consulta nesta etapa.</p></section>;
 }
