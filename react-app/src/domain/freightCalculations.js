@@ -16,3 +16,10 @@ export function freightProfit(f = {}) {
 export function freightNet(f = {}) {
   return Number(f.value || 0) - Number(f.discount || 0) - freightCommission(f) - (f.deductToll ? Number(f.toll || 0) : 0) + freightBonus(f);
 }
+
+export function freightDriverPayment(f = {}) {
+  return freightCommission(f) + freightBonus(f);
+}
+export function freightOperatingCosts(f = {}) {
+  return Number(f.toll || 0) + Number(f.fuelActual || 0) + Number(f.otherCosts || 0);
+}
