@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import OverviewPage from "./screens/VisaoGeral.jsx";
+import VisaoGeral from "./screens/VisaoGeral.jsx";
 import EditablePage from "./EditablePage.jsx";
-import ReportsPage from "./screens/Relatorios.jsx";
+import Relatorios from "./screens/Relatorios.jsx";
 import { DEMO_DATA, DEMO_STORAGE_KEY } from "./demo/demoData.js";
 
 const config = window.APP_CONFIG || {};
@@ -21,12 +21,12 @@ const pages = [
 ];
 const titles = Object.fromEntries(pages.map((page) => [page.id, page.label]));
 const screenComponents = {
-  dashboard: OverviewPage,
+  dashboard: VisaoGeral,
   freights: EditablePage,
   expenses: EditablePage,
   receivables: EditablePage,
   payments: EditablePage,
-  reports: ReportsPage,
+  reports: Relatorios,
   cadastros: EditablePage
 };
 
@@ -221,7 +221,7 @@ export default function App() {
     <div className="content-area">
       {dataError && <div className="error-banner" role="alert"><strong>Não foi possível carregar os dados.</strong><p>{dataError}</p><button className="secondary-button" onClick={loadData} disabled={loadingData}>Tentar novamente</button></div>}
       {loadingData && !dataError && <div className="inline-loading"><span className="spinner" />Carregando dados compartilhados…</div>}
-      {(() => { const Screen = screenComponents[activePage] || OverviewPage; return <Screen page={activePage} data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} />; })()}
+      {(() => { const Screen = screenComponents[activePage] || VisaoGeral; return <Screen page={activePage} data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} />; })()}
       <footer className="app-footer">Versão React em migração gradual · Dados compartilhados com controle de gravação.</footer>
     </div></main>
   </div>;
