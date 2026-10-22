@@ -264,6 +264,7 @@ export default function App() {
       if (!row || !row.data || typeof row.data !== "object") throw new Error("O registro public.app_state (id=1) não foi encontrado ou não está visível pelas políticas RLS. Nenhum dado foi criado ou sobrescrito.");
       setVersion(Number(row.version) || 0);
       setData({
+        ...row.data,
         freights: Array.isArray(row.data.freights) ? row.data.freights : [],
         expenses: Array.isArray(row.data.expenses) ? row.data.expenses : [],
         receivables: Array.isArray(row.data.receivables) ? row.data.receivables : [],
@@ -282,6 +283,8 @@ export default function App() {
   const saveData = useCallback(async (nextData) => {
     if (!supabase || !session) throw new Error("Sua sessão expirou. Entre novamente antes de salvar.");
     const next = {
+      ...data,
+      ...nextData,
       freights: Array.isArray(nextData.freights) ? nextData.freights : [],
       expenses: Array.isArray(nextData.expenses) ? nextData.expenses : [],
       receivables: Array.isArray(nextData.receivables) ? nextData.receivables : [],
@@ -303,7 +306,7 @@ export default function App() {
     setData(next);
     setVersion(Number(updated[0].version) || expectedVersion + 1);
     setDataError("");
-  }, [session, version, loadData]);
+  }, [session, version, loadData, data]);
 
   const resetPassword = async (username) => {
     if (!supabase) throw new Error("Configuração do Supabase não encontrada.");
