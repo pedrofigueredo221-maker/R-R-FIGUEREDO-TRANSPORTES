@@ -47,7 +47,8 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
   return <form className="record-editor freight-editor" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
     <div className="editor-heading"><h3>{title}</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
     <div className="editor-grid freight-fields">{fields.filter((field) => field.key !== "received" || !editing).map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
-    {!editing && <p className="receipt-sync-note">Se houve pagamento no momento da viagem, informe o valor recebido aqui. Ele será registrado no histórico e o status do frete será atualizado automaticamente.</p>}\n    <section className="fuel-section" aria-labelledby="fuel-section-title">
+    {!editing && <p className="receipt-sync-note">Se houve pagamento no momento da viagem, informe o valor recebido aqui. Ele será registrado no histórico e o status do frete será atualizado automaticamente.</p>}
+    <section className="fuel-section" aria-labelledby="fuel-section-title">
       <div className="fuel-section-heading"><h4 id="fuel-section-title">Combustível</h4><p>Estimativa automática a partir dos litros e do preço por litro.</p></div>
       <div className="fuel-grid">
         <FreightField label="Litros estimados" type="number" min="0" step="0.01" value={value.liters} onChange={(next) => patch("liters", next)} />
