@@ -204,7 +204,7 @@ export default function App() {
   if (!authReady) return <main className="loading-page"><span className="spinner" /><p>Verificando sessão segura…</p></main>;
   if (!session) return <Login onLogin={login} onReset={resetPassword} busy={busy} error={authError} />;
 
-  return <div className="app-shell">
+  return <div className={`app-shell ${readOnly ? "read-only" : ""}`}>
     <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./logo.svg" alt="R&R Figueredo Transportes" /></div>
       <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><span aria-hidden="true">{p.symbol}</span>{p.label}</button>)}</nav>
       <div className="sidebar-bottom"><span className="session-dot" /> Sessão autenticada</div>
