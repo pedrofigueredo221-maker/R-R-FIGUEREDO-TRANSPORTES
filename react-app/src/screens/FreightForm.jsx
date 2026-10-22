@@ -40,6 +40,7 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
     { key: "commissionType", label: "Tipo de comissão", options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] },
     { key: "commission", label: "Comissão (% ou R$)", type: "number", min: "0", step: "0.01" },
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "otherCosts", label: "Outros custos da viagem (R$)", type: "number", min: "0", step: "0.01" },
     { key: "km", label: "Quilometragem", type: "number", min: "0", step: "1" },
     { key: "received", label: "Recebido na viagem (R$)", type: "number", min: "0", step: "0.01" },
     { key: "notes", label: "Observações", placeholder: "Informações adicionais" }
@@ -65,6 +66,7 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
       <div className="freight-summary-heading"><h4>Resumo financeiro</h4><span>Valores calculados automaticamente</span></div>
       <div className="freight-summary-grid">{summary.map(([label, total]) => <div className="freight-summary-item" key={label}><span>{label}</span><strong>{total}</strong></div>)}</div>
     </section>
+    <p className="receipt-sync-note">Os custos informados neste frete já entram no lucro estimado. Não lance o mesmo gasto novamente em Despesas para evitar contá-lo duas vezes.</p>
     <div className="editor-actions"><button className="primary-button" type="submit" disabled={saving}>{saving ? "Salvando…" : "Salvar frete"}</button></div>
   </form>;
 }
