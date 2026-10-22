@@ -24,6 +24,8 @@ jobs:
           node --check app.js
           node --check sync.js
           node --check config.js
+      - name: Auditar telas e referências do sistema legado
+        run: node scripts/check-project.mjs
       - name: Testar regras financeiras
         run: npm test
       - name: Construir versão React isolada
