@@ -10,7 +10,7 @@
   <link rel="shortcut icon" type="image/svg+xml" href="imagens/favicon.svg?v=2">
   <link rel="apple-touch-icon" href="imagens/logo-rr-simbolo.png?v=1">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=41">
+  <link rel="stylesheet" href="styles.css?v=42">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -391,59 +391,7 @@
               <button class="btn btn-primary" type="button" id="addEmployeeBtn">＋ Adicionar funcionário</button>
             </div>
 
-            <form id="employeeForm" class="inline-register" hidden>
-              <input type="hidden" id="employeeId">
-              <div class="register-field">
-                <label for="employeeName">Nome do funcionário</label>
-                <input id="employeeName" required maxlength="80" placeholder="Nome completo">
-              </div>
-
-              <div class="form-grid">
-                <div>
-                  <label for="employeeRole">Função</label>
-                  <select id="employeeRole">
-                    <option>Motorista</option><option>Auxiliar</option><option>Administrativo</option>
-                    <option>Diretoria</option><option>Gerência</option>
-                    <option>Mecânico</option><option>Outro</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label for="employeeTruckId">Caminhão vinculado (opcional)</label>
-                  <select id="employeeTruckId"><option value="">Sem caminhão vinculado</option></select>
-                </div>
-
-                <div>
-                  <label for="employeePhone">Telefone (opcional)</label>
-                  <input id="employeePhone" placeholder="(00) 00000-0000">
-                </div>
-
-                <div>
-                  <label for="employeeCommissionType">Comissão padrão do motorista</label>
-                  <select id="employeeCommissionType">
-                    <option value="percent">Porcentagem</option>
-                    <option value="fixed">Valor fixo por viagem</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label for="employeeCommissionValue">Percentual (%) ou valor (R$)</label>
-                  <input id="employeeCommissionValue" type="number" min="0" step="0.01" value="10">
-                </div>
-
-                <div class="check-field driver-toll-default-field">
-                  <input type="checkbox" id="employeeDeductToll">
-                  <label for="employeeDeductToll">Descontar pedágio da base da comissão por padrão</label>
-                  <small>Esta preferência será aplicada aos novos fretes e poderá ser alterada em cada viagem.</small>
-                </div>
-              </div>
-
-              <div class="import-actions">
-                <button class="btn btn-primary" type="submit" id="employeeSave">＋ Adicionar funcionário</button>
-                <button class="btn btn-secondary" type="button" id="employeeCancel">Fechar sem salvar</button>
-              </div>
-            </form>
-
+            
             <div class="bulk-registration-tools">
               <label class="inactive-filter"><input type="checkbox" id="showInactiveEmployees"> Inativos</label>
               <label class="inactive-filter"><input type="checkbox" id="selectAllEmployees"> Selecionar todos</label>
@@ -468,27 +416,7 @@
               <button class="btn btn-primary" type="button" id="addTruckBtn">＋ Adicionar caminhão</button>
             </div>
 
-            <form id="truckForm" class="inline-register" hidden>
-              <input type="hidden" id="truckId">
-              <div class="register-field">
-                <label for="truckName">Nome / identificação</label>
-                <input id="truckName" required maxlength="80" placeholder="Ex.: Scania R450 — placa ABC1D23">
-              </div>
-              <div class="register-field">
-                <label for="truckPlate">Placa (opcional)</label>
-                <input id="truckPlate" maxlength="10" placeholder="ABC1D23">
-              </div>
-              <div class="register-field">
-                <label for="truckDriverId">Motorista vinculado (opcional)</label>
-                <select id="truckDriverId"><option value="">Sem motorista vinculado</option></select>
-              </div>
-
-              <div class="import-actions">
-                <button class="btn btn-primary" type="submit" id="truckSave">＋ Adicionar caminhão</button>
-                <button class="btn btn-secondary" type="button" id="truckCancel">Fechar sem salvar</button>
-              </div>
-            </form>
-
+            
             <div class="bulk-registration-tools">
               <label class="inactive-filter"><input type="checkbox" id="showInactiveTrucks"> Inativos</label>
               <label class="inactive-filter"><input type="checkbox" id="selectAllTrucks"> Selecionar todos</label>
@@ -724,6 +652,85 @@
     </form>
   </dialog>
 
+<dialog id="employeeDialog" class="modal registration-dialog" aria-labelledby="employeeDialogTitle">
+<form id="employeeForm" class="inline-register"><div class="modal-header"><div><h2 id="employeeDialogTitle">Adicionar funcionário</h2><p>Preencha os dados do funcionário ou motorista.</p></div><button class="icon-btn" type="button" data-close="employeeDialog" aria-label="Fechar">×</button></div>
+              <input type="hidden" id="employeeId">
+              <div class="register-field">
+                <label for="employeeName">Nome do funcionário</label>
+                <input id="employeeName" required maxlength="80" placeholder="Nome completo">
+              </div>
+
+              <div class="form-grid">
+                <div>
+                  <label for="employeeRole">Função</label>
+                  <select id="employeeRole">
+                    <option>Motorista</option><option>Auxiliar</option><option>Administrativo</option>
+                    <option>Diretoria</option><option>Gerência</option>
+                    <option>Mecânico</option><option>Outro</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="employeeTruckId">Caminhão vinculado (opcional)</label>
+                  <select id="employeeTruckId"><option value="">Sem caminhão vinculado</option></select>
+                </div>
+
+                <div>
+                  <label for="employeePhone">Telefone (opcional)</label>
+                  <input id="employeePhone" placeholder="(00) 00000-0000">
+                </div>
+
+                <div>
+                  <label for="employeeCommissionType">Comissão padrão do motorista</label>
+                  <select id="employeeCommissionType">
+                    <option value="percent">Porcentagem</option>
+                    <option value="fixed">Valor fixo por viagem</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="employeeCommissionValue">Percentual (%) ou valor (R$)</label>
+                  <input id="employeeCommissionValue" type="number" min="0" step="0.01" value="10">
+                </div>
+
+                <div class="check-field driver-toll-default-field">
+                  <input type="checkbox" id="employeeDeductToll">
+                  <label for="employeeDeductToll">Descontar pedágio da base da comissão por padrão</label>
+                  <small>Esta preferência será aplicada aos novos fretes e poderá ser alterada em cada viagem.</small>
+                </div>
+              </div>
+
+              <div class="import-actions">
+                <button class="btn btn-primary" type="submit" id="employeeSave">＋ Adicionar funcionário</button>
+                <button class="btn btn-secondary" type="button" id="employeeCancel">Fechar sem salvar</button>
+              </div>
+            </form>
+</dialog>
+
+<dialog id="truckDialog" class="modal registration-dialog" aria-labelledby="truckDialogTitle">
+<form id="truckForm" class="inline-register"><div class="modal-header"><div><h2 id="truckDialogTitle">Adicionar caminhão</h2><p>Preencha a identificação do caminhão e, se desejar, vincule um motorista.</p></div><button class="icon-btn" type="button" data-close="truckDialog" aria-label="Fechar">×</button></div>
+              <input type="hidden" id="truckId">
+              <div class="register-field">
+                <label for="truckName">Nome / identificação</label>
+                <input id="truckName" required maxlength="80" placeholder="Ex.: Scania R450 — placa ABC1D23">
+              </div>
+              <div class="register-field">
+                <label for="truckPlate">Placa (opcional)</label>
+                <input id="truckPlate" maxlength="10" placeholder="ABC1D23">
+              </div>
+              <div class="register-field">
+                <label for="truckDriverId">Motorista vinculado (opcional)</label>
+                <select id="truckDriverId"><option value="">Sem motorista vinculado</option></select>
+              </div>
+
+              <div class="import-actions">
+                <button class="btn btn-primary" type="submit" id="truckSave">＋ Adicionar caminhão</button>
+                <button class="btn btn-secondary" type="button" id="truckCancel">Fechar sem salvar</button>
+              </div>
+            </form>
+</dialog>
+
+
   <div id="toast" class="toast" role="status"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -731,7 +738,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="banco-de-dados/supabase/config.js?v=13"></script>
   <script src="js/core/utils.js?v=1"></script>
-  <script src="app.js?v=20"></script>
+  <script src="app.js?v=23"></script>
   <script src="sync.js?v=18"></script>
   <script src="js/core/startup.js?v=1"></script>
 </body>
