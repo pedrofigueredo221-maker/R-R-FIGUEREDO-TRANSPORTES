@@ -1,0 +1,101 @@
+/* Ajustes de apresentação das telas React; regras globais legadas permanecem em styles.css. */
+:root {
+  color-scheme: light;
+  --rr-green: #163a32;
+  --rr-border: #e1e7e5;
+  --rr-surface: #ffffff;
+  --rr-muted: #667085;
+}
+.content-area { min-width: 0; }
+.panel, .welcome-panel, .stats-grid, .record-editor { min-width: 0; }
+.panel { overflow: hidden; }
+.table-scroll { width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
+.table-scroll table { width: 100%; border-collapse: collapse; }
+.table-scroll th, .table-scroll td { vertical-align: middle; }
+.table-scroll th { white-space: nowrap; }
+.table-scroll td { overflow-wrap: anywhere; }
+.numeric { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.page-filters { display: flex; align-items: end; gap: 12px; flex-wrap: wrap; }
+.page-filters > input { flex: 1 1 240px; min-width: min(100%, 220px); }
+.page-filters label { display: flex; flex-direction: column; gap: 6px; color: #536174; font-size: 12px; font-weight: 700; }
+.page-filters input, .page-filters select { min-height: 40px; max-width: 100%; }
+.editor-field { overflow-wrap: anywhere; }
+.editor-field input:focus-visible, .editor-field select:focus-visible,
+.page-filters input:focus-visible, button:focus-visible {
+  outline: 3px solid #9dc8ba;
+  outline-offset: 2px;
+}
+.stat-card { min-width: 0; }
+.stat-card strong { overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.panel-heading > div { min-width: 0; }
+.panel-heading h3, .panel-heading p { overflow-wrap: anywhere; }
+.read-only-notice { overflow-wrap: anywhere; }
+.app-footer { padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+@media (max-width: 1100px) {
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .editor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .topbar { align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+  .top-actions { margin-left: auto; max-width: 100%; }
+  .user-label { max-width: 42vw; overflow: hidden; text-overflow: ellipsis; }
+  .content-area { padding-inline: 12px; }
+  .welcome-panel { align-items: flex-start; flex-direction: column; gap: 14px; }
+  .month-picker { width: 100%; }
+  .month-picker input { width: 100%; }
+  .panel { padding: 14px; }
+  .table-scroll table { min-width: 680px; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: minmax(0, 1fr); }
+  .editor-grid { grid-template-columns: minmax(0, 1fr); }
+  .top-actions { width: 100%; justify-content: flex-end; }
+  .topbar h1 { font-size: 22px; }
+  .record-editor { padding: 12px; }
+  .editor-actions { justify-content: stretch; }
+  .editor-actions button { width: 100%; }
+}
+
+
+/* Formulário especializado de fretes */
+.freight-editor .freight-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fuel-section { margin-top: 20px; padding: 16px; border: 1px solid var(--rr-border); border-radius: 12px; background: #fff; }
+.fuel-section-heading { margin-bottom: 14px; }
+.fuel-section-heading h4, .freight-summary-heading h4 { margin: 0; color: #23382f; font-size: 15px; }
+.fuel-section-heading p { margin: 5px 0 0; color: var(--rr-muted); font-size: 12px; line-height: 1.5; }
+.fuel-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.fuel-grid .editor-field input[readonly] { background: #edf4f0; color: #1c5543; font-weight: 800; }
+.toll-checkbox-row { display: grid; grid-template-columns: minmax(230px, .9fr) minmax(0, 1.1fr); gap: 16px; align-items: center; margin: 16px 0; padding: 14px 16px; border: 1px solid #e2e8e5; border-radius: 12px; background: #f7faf8; }
+.toll-checkbox-row .editor-field { display: flex; flex-direction: row; align-items: center; gap: 10px; color: #263b34; font-size: 13px; }
+.toll-checkbox-row .editor-field input[type=checkbox] { flex: 0 0 18px; width: 18px; height: 18px; min-height: 18px; margin: 0; }
+.toll-checkbox-row p { margin: 0; color: #697587; font-size: 12px; line-height: 1.5; }
+.freight-summary { margin-top: 18px; padding: 20px; border-radius: 14px; background: #163a32; color: #fff; }
+.freight-summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.freight-summary-heading h4 { color: #fff; font-size: 17px; font-weight: 800; }
+.freight-summary-heading span { color: #c7d9d1; font-size: 12px; }
+.freight-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+.freight-summary-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; padding: 12px 0; border-bottom: 1px solid #ffffff24; }
+.freight-summary-item span { color: #e1ece6; font-size: 13px; }
+.freight-summary-item strong { color: #fff; font-size: 19px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.freight-summary-item:last-child strong { font-size: 23px; }
+.freight-editor .editor-actions { margin-top: 18px; }
+@media (max-width: 1100px) {
+  .freight-editor .freight-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fuel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .freight-editor .freight-fields, .fuel-grid, .freight-summary-grid { grid-template-columns: minmax(0, 1fr); }
+  .toll-checkbox-row { grid-template-columns: minmax(0, 1fr); }
+  .freight-summary { padding: 14px; }
+  .freight-summary-heading { align-items: flex-start; flex-direction: column; }
+  .freight-summary-item strong { font-size: 18px; }
+}
+
+.balance-positive { color: #20764b; font-weight: 800; }
+.balance-negative { color: #b93838; font-weight: 800; }
+.nav-label { font-size: 13px; letter-spacing: 1.35px; }
+.nav-item { min-height: 47px; font-size: 14px; }
+
+.demo-notice { margin: 18px 30px 0; padding: 13px 16px; border: 1px solid #b9d7c9; border-radius: 10px; background: #eaf6ef; color: #1d5d40; font-size: 13px; line-height: 1.5; }
+.demo-notice strong { font-weight: 800; }
+@media (max-width: 720px) { .demo-notice { margin: 12px 12px 0; } }
