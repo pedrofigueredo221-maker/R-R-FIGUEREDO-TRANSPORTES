@@ -2,11 +2,9 @@ import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
 import { freightReceivableBalance, freightReceivableStatus } from "../domain/freightReceivables.js";
 
 export default function ReceivablesPage({ controller }) {
-  const { data, readOnly, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, setPaymentAmount, setPaymentDate, allFreights, number, commit, today } = controller;
+  const { data, readOnly, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, allFreights, number, commit } = controller;
   const openReceipt = (freight) => {
     setPayment({ kind: "receive", record: freight });
-    setPaymentAmount(freightReceivableBalance(freight, number).toFixed(2));
-    setPaymentDate(today());
   };
   return <section className="panel">
     <div className="panel-heading"><div><h3>Contas a receber</h3><p>Cada frete gera um recebível vinculado ao mesmo registro. O status é atualizado conforme os pagamentos.</p></div></div>
