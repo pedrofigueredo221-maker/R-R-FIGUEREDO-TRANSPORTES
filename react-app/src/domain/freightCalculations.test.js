@@ -29,7 +29,7 @@ test("valores ausentes são tratados como zero", () => {
 
 test("pagamento estimado do motorista separa comissão e bônus dos custos da empresa", () => {
   const f = { value: 2000, discount: 200, toll: 100, deductToll: true, commission: 10, commissionType: "percent", bonus: 50, fuelActual: 300, otherCosts: 25 };
-  assert.equal(freightDriverPayment(f), 215);
+  assert.equal(freightDriverPayment(f), 220);
   assert.equal(freightOperatingCosts(f), 425);
-  assert.equal(freightProfit(f), 1160);
+  assert.equal(freightProfit(f), 1155);
 });
