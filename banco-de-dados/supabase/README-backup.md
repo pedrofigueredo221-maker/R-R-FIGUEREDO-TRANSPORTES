@@ -8,7 +8,7 @@ Na raiz do projeto, abra o PowerShell e execute:
 
 ```powershell
 $env:SUPABASE_DB_URL = Read-Host "Cole a connection string PostgreSQL do Supabase"
-.\scripts\backup-supabase.ps1
+.\banco-de-dados\supabase\backup-supabase.ps1
 ```
 
 O arquivo ZIP será salvo em `backups/local/`. Apague a variável da sessão ao terminar:
