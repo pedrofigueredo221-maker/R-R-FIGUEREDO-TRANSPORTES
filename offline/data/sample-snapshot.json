@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": "sample-only-no-production-data",
+  "serverVersion": null,
+  "savedAt": null,
+  "data": {
+    "freights": [],
+    "expenses": [],
+    "receivables": [],
+    "employees": [],
+    "trucks": [],
+    "categories": []
+  },
+  "pendingOperations": []
+}
