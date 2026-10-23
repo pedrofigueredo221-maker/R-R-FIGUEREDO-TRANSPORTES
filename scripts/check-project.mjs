@@ -44,6 +44,8 @@ if (!app.includes("redefinir-senha.html")) failures.push("O fluxo de recuperaç�
 
 // Guardas contra o retorno das duplicidades visuais encontradas na auditoria.
 if (globalStyles.includes("freight-summary")) failures.push("O resumo financeiro do frete deve ter estilos apenas em styles/screens.css.");
+if (/\.freight-editor \.freight-fields\s*\{[^}]*grid-template-columns:\s*repeat\(3/.test(screenStyles)) failures.push("A grade base de campos do frete deve ter uma única definição em styles.css.");
+if (screenStyles.includes(".freight-editor .freight-fields, .fuel-grid")) failures.push("A regra mobile de combustível deve usar o seletor completo .freight-editor .fuel-grid.");
 if ((screenStyles.match(/\.freight-editor \.freight-summary \{/g) || []).length !== 1) failures.push("O resumo financeiro deve possuir exatamente um bloco CSS base.");
 if (globalStyles.includes("!important") || screenStyles.includes("!important")) failures.push("Evite !important nos estilos React; corrija a cascata na regra responsável.");
 if (freightForm.includes("Intl.NumberFormat")) failures.push("FreightForm deve reutilizar o formatador de moeda compartilhado.");
