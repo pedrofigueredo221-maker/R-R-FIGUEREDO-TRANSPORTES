@@ -35,3 +35,11 @@
 /* Indicação discreta de linhas navegáveis nos relatórios e últimas viagens. */
 .content-area .balance-data-row, .balance-dialog .balance-data-row { cursor: pointer; }
 .content-area .balance-data-row:hover td, .balance-dialog .balance-data-row:hover td { background: #f1f4f7; }
+
+/* Cards compactos: mantém a hierarquia de cores, sem espaços vazios. */
+.content-area .stats-grid .balance-stat-action { position: relative; min-height: 104px; }
+.content-area .stats-grid .balance-stat-action .stat-card { box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 10px; min-height: 104px; height: 104px; padding: 18px 44px 18px 20px; }
+.content-area .stats-grid .balance-stat-action .stat-card span { line-height: 1.3; }
+.content-area .stats-grid .balance-stat-action .stat-card strong { line-height: 1.2; }
+.content-area .stats-grid .balance-stat-action::after { content: "↗"; position: absolute; right: 17px; bottom: 14px; color: #8a8f96; font-size: 17px; font-weight: 600; pointer-events: none; }
+@media (max-width: 720px) { .content-area .stats-grid .balance-stat-action .stat-card { min-height: 98px; height: 98px; padding: 14px 32px 14px 14px; gap: 8px; } .content-area .stats-grid .balance-stat-action::after { right: 11px; bottom: 10px; } }
