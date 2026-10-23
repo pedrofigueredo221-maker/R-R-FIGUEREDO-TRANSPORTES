@@ -876,11 +876,11 @@
    Escopo limitado à tela de autenticação; não altera outros formulários. */
 .login-page {
   background: #fff;
-  padding: 28px 16px;
+  padding: 25px 14px;
 }
 .login-page .login-card {
   width: min(100%, 470px);
-  padding: 44px 38px;
+  padding: 40px 34px;
   border: 1px solid #34383d;
   border-radius: 20px;
   background: #202123;
@@ -892,26 +892,26 @@
   width: min(205px, 100%);
   height: 205px;
   object-fit: contain;
-  margin: 0 auto 54px;
+  margin: 0 auto 49px;
   padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
 }
 .login-page .login-card h1 {
-  margin: 0 0 54px;
+  margin: 0 0 49px;
   color: #fff;
   font-size: 28px;
   text-align: center;
 }
 .login-page .login-card label {
-  margin: 0 0 12px;
+  margin: 0 0 11px;
   color: #fff;
   font-size: 14px;
 }
 .login-page .login-card input {
   min-height: 52px;
-  margin: 0 0 36px;
+  margin: 0 0 32px;
   padding: 12px 14px;
   border: 1px solid #77818d;
   border-radius: 9px;
@@ -925,7 +925,7 @@
 }
 .login-page .login-card .login-submit {
   min-height: 50px;
-  margin: 0 0 22px;
+  margin: 0 0 20px;
   font-size: 15px;
 }
 .login-page .login-card .login-submit.primary-button {
@@ -940,16 +940,16 @@
 }
 .login-page .login-card .login-submit.secondary-button:hover { background: #34383d; }
 .login-page .login-card .login-note {
-  margin-top: 20px;
+  margin-top: 18px;
   color: #b4bdc9;
 }
 .login-page .login-card .reset-message { color: #d5e6e0; }
 @media (max-width: 520px) {
-  .login-page .login-card { padding: 32px 22px; }
+  .login-page .login-card { padding: 29px 20px; }
   .login-page .login-card .login-logo {
     width: min(185px, 100%);
     height: 185px;
-    margin-bottom: 42px;
+    margin-bottom: 38px;
   }
-  .login-page .login-card h1 { margin-bottom: 42px; }
+  .login-page .login-card h1 { margin-bottom: 38px; }
 }
