@@ -11,7 +11,7 @@ const supabase = !demoMode && config.SUPABASE_URL && config.SUPABASE_ANON_KEY
   ? createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
   : null;
 const pages = [
-  { id: "dashboard", label: "Visão geral", symbol: "grid" },
+  { id: "dashboard", label: "Balanço Geral", symbol: "grid" },
   { id: "freights", label: "Fretes", symbol: "truck" },
   { id: "expenses", label: "Despesas e manutenção", symbol: "tool" },
   { id: "receivables", label: "Contas a receber", symbol: "arrow-down" },
