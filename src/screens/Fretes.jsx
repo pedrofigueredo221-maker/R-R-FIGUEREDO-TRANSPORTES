@@ -1,6 +1,7 @@
 import "./../styles/freight-payment-status.css";
 import FreightForm from "./FreightForm.jsx";
 import RouteDisplay from "../components/RouteDisplay.jsx";
+import "../styles/freight-table-standard.css";
 import FormDialog from "../components/FormDialog.jsx";
 import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
 import { freightReceivableBalance } from "../domain/freightReceivables.js";
