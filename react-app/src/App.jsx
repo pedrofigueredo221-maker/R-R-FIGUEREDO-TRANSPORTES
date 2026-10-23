@@ -222,7 +222,7 @@ export default function App() {
       {dataError && <div className="error-banner" role="alert"><strong>Não foi possível carregar os dados.</strong><p>{dataError}</p><button className="secondary-button" onClick={loadData} disabled={loadingData}>Tentar novamente</button></div>}
       {loadingData && !dataError && <div className="inline-loading"><span className="spinner" />Carregando dados compartilhados…</div>}
       {(() => { const Screen = screenComponents[activePage] || VisaoGeral; return <Screen page={activePage} data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} />; })()}
-      <footer className="app-footer">Versão React em migração gradual · Dados compartilhados com controle de gravação.</footer>
+      <footer className="app-footer">Sistema de gestão · Dados compartilhados com controle de gravação.</footer>
     </div></main>
   </div>;
 }
