@@ -80,6 +80,12 @@ export default function App() {
   const [dataError, setDataError] = useState("");
   const [loadingData, setLoadingData] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
+  const [recordNavigation, setRecordNavigation] = useState(null);
+  const openRecord = (page, recordId) => {
+    if (!recordId || !["freights", "expenses"].includes(page)) return;
+    setRecordNavigation({ page, recordId, requestId: Date.now() });
+    setActivePage(page);
+  };
   const [menuOpen, setMenuOpen] = useState(false);
 
   const email = session?.user?.email?.trim().toLowerCase() || "";
@@ -219,7 +225,7 @@ export default function App() {
 
   return <div className={`app-shell ${readOnly ? "read-only" : ""}`}>
     <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo-menu-rr.svg" alt="R&R Figueredo Transportes" /></div>
-      <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><MenuIcon name={p.symbol} />{p.label}</button>)}</nav>
+      <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setRecordNavigation(null); setActivePage(p.id); setMenuOpen(false); }}><MenuIcon name={p.symbol} />{p.label}</button>)}</nav>
       <div className="sidebar-bottom"><span className="sidebar-user-email" title={session.user?.email}>{session.user?.email}</span><button type="button" className="sidebar-logout" onClick={logout}>Sair</button></div>
     </aside>
     {menuOpen && <button className="mobile-overlay" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}
@@ -232,7 +238,7 @@ export default function App() {
     <div className="content-area">
       {dataError && <div className="error-banner" role="alert"><strong>Não foi possível carregar os dados.</strong><p>{dataError}</p><button className="secondary-button" onClick={loadData} disabled={loadingData}>Tentar novamente</button></div>}
       {loadingData && !dataError && <div className="inline-loading"><span className="spinner" />Carregando dados compartilhados…</div>}
-      {(() => { const Screen = screenComponents[activePage] || PainelInicial; return <Screen page={activePage} data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} />; })()}
+      {(() => { const Screen = screenComponents[activePage] || PainelInicial; return <Screen page={activePage} data={data} onRefresh={loadData} loading={loadingData} onSave={saveData} readOnly={readOnly} version={version} onOpenRecord={openRecord} recordNavigation={recordNavigation} />; })()}
       <footer className="app-footer">Sistema de gestão · Dados compartilhados com controle de gravação.</footer>
     </div></main>
   </div>;
