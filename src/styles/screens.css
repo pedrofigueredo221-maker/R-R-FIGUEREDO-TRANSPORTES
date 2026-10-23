@@ -785,8 +785,8 @@
 
 /* Identidade oficial: marca branca e laranja sobre o menu escuro. */
 .sidebar-brand img {
-  max-width: 195px;
-  max-height: 83px;
+  max-width: 214.5px;
+  max-height: 91.3px;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -871,6 +871,38 @@
 .table-scroll .record-actions .danger-button:hover { background: #fff0f0; }
 .table-scroll table tbody tr[hidden] { display: none; }
 
+
+/* Rodapé do menu: usuário e saída compacta, sem indicador de sessão. */
+.sidebar .sidebar-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px 3px 4px;
+}
+.sidebar .sidebar-user-email {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  color: #d1d5db;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar .sidebar-logout {
+  flex: 0 0 auto;
+  min-height: 28px;
+  padding: 4px 10px;
+  border: 1px solid #666;
+  border-radius: 6px;
+  background: #343434;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+}
+.sidebar .sidebar-logout:hover { background: #484848; }
+.sidebar .sidebar-logout:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 /* Login: fundo cinza claro, cartão escuro e espaçamento ampliado.
    Escopo limitado à tela de autenticação; não altera outros formulários. */
