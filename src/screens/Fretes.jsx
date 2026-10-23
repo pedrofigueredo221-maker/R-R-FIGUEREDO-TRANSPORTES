@@ -1,3 +1,4 @@
+import "./../styles/freight-payment-status.css";
 import FreightForm from "./FreightForm.jsx";
 import FormDialog from "../components/FormDialog.jsx";
 import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
