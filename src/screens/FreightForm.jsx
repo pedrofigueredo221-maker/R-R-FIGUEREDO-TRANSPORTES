@@ -1,3 +1,4 @@
+import "../styles/freight-required-fields.css";
 import { freightProfit, freightDriverPayment, freightCost } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
 
