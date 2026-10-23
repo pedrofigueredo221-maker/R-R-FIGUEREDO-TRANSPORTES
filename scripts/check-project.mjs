@@ -7,16 +7,16 @@ const failures = [];
 const requiredFiles = [
   "package.json",
   "vite.config.js",
-  "react-app/index.html",
-  "react-app/redefinir-senha.html",
-  "react-app/src/main.jsx",
-  "react-app/reset-main.jsx",
-  "react-app/src/App.jsx",
-  "react-app/src/PasswordReset.jsx",
-  "react-app/src/styles.css",
-  "react-app/src/styles/screens.css",
-  "react-app/src/domain/freightCalculations.js",
-  "react-app/src/domain/freightCalculations.test.js",
+  "index.html",
+  "redefinir-senha.html",
+  "src/main.jsx",
+  "reset-main.jsx",
+  "src/App.jsx",
+  "src/PasswordReset.jsx",
+  "src/styles.css",
+  "src/styles/screens.css",
+  "src/domain/freightCalculations.js",
+  "src/domain/freightCalculations.test.js",
   "banco-de-dados/supabase/app-config.js"
 ];
 
@@ -24,16 +24,16 @@ for (const path of requiredFiles) {
   if (!existsSync(new URL(path, root))) failures.push(`Arquivo React necessário ausente: ${path}`);
 }
 
-const mainHtml = read("react-app/index.html");
-const resetHtml = read("react-app/redefinir-senha.html");
+const mainHtml = read("index.html");
+const resetHtml = read("redefinir-senha.html");
 const vite = read("vite.config.js");
-const app = read("react-app/src/App.jsx");
-const main = read("react-app/src/main.jsx");
-const resetMain = read("react-app/reset-main.jsx");
-const globalStyles = read("react-app/src/styles.css");
-const screenStyles = read("react-app/src/styles/screens.css");
-const freightForm = read("react-app/src/screens/FreightForm.jsx");
-const editablePage = read("react-app/src/EditablePage.jsx");
+const app = read("src/App.jsx");
+const main = read("src/main.jsx");
+const resetMain = read("reset-main.jsx");
+const globalStyles = read("src/styles.css");
+const screenStyles = read("src/styles/screens.css");
+const freightForm = read("src/screens/FreightForm.jsx");
+const editablePage = read("src/EditablePage.jsx");
 
 if (!mainHtml.includes('src="/src/main.jsx"')) failures.push("A entrada principal não carrega src/main.jsx.");
 if (!resetHtml.includes("./reset-main.jsx")) failures.push("A página de recuperação não carrega reset-main.jsx.");
@@ -53,12 +53,11 @@ if (editablePage.includes("Intl.NumberFormat") || editablePage.includes("const d
 if (!freightForm.includes("freightCost(calculationInput)")) failures.push("O resumo de frete deve usar a função de domínio freightCost.");
 
 const legacyPaths = [
-  "index.html",
+  "react-app",
   "app.js",
   "sync.js",
   "styles.css",
   "config.js",
-  "redefinir-senha.html",
   "js/core/startup.js",
   "js/core/utils.js",
   "banco-de-dados/supabase/config.js"

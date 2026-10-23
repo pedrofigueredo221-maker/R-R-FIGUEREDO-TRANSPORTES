@@ -18,7 +18,7 @@ function EmployeeField({ field, value, onChange }) {
   );
 }
 
-export default function EmployeeForm({ title, fields, value, setValue, onSubmit, onCancel, saving }) {
+export default function FormularioFuncionario({ title, fields, value, setValue, onSubmit, onCancel, saving }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
 
   return (

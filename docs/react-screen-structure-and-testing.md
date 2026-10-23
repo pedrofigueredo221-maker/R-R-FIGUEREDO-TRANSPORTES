@@ -4,16 +4,16 @@ A aplicação tem uma única interface de gestão em React. A página de recuper
 
 ## Organização do código
 
-- `react-app/src/App.jsx`: autenticação, sessão, navegação e coordenação geral.
-- `react-app/src/EditablePage.jsx`: fluxo de edição compartilhado entre telas.
-- `react-app/src/screens/`: fretes, despesas, contas, cadastros, relatórios e visão geral.
-- `react-app/src/components/`: componentes reutilizáveis, como cartões e tabelas.
-- `react-app/src/domain/`: cálculos financeiros e regras de recebíveis, com testes.
-- `react-app/src/lib/formatters.js`: formatação de moeda e datas.
-- `react-app/src/styles.css`: estilos globais, layout comum, botões, campos e formulários.
-- `react-app/src/styles/screens.css`: regras específicas das telas e layouts responsivos.
-- `react-app/src/PasswordReset.jsx`: validação do link de recuperação e alteração de senha.
-- `react-app/reset-main.jsx`: ponto de entrada da página de recuperação.
+- `src/App.jsx`: autenticação, sessão, navegação e coordenação geral.
+- `src/EditablePage.jsx`: fluxo de edição compartilhado entre telas.
+- `src/screens/`: fretes, despesas, contas, cadastros, relatórios e visão geral.
+- `src/components/`: componentes reutilizáveis, como cartões e tabelas.
+- `src/domain/`: cálculos financeiros e regras de recebíveis, com testes.
+- `src/lib/formatters.js`: formatação de moeda e datas.
+- `src/styles.css`: estilos globais, layout comum, botões, campos e formulários.
+- `src/styles/screens.css`: regras específicas das telas e layouts responsivos.
+- `src/PasswordReset.jsx`: validação do link de recuperação e alteração de senha.
+- `reset-main.jsx`: ponto de entrada da página de recuperação.
 - `vite.config.js`: build das duas páginas React e cópia dos recursos compartilhados.
 
 ## Convenções de apresentação
