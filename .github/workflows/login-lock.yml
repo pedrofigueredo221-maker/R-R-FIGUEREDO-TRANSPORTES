@@ -1,0 +1,22 @@
+name: Proteção da tela de login
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+jobs:
+  login-integrity:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar integridade do login
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/check-login-lock.mjs
