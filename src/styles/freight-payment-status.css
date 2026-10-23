@@ -1,0 +1,21 @@
+/* Destaque discreto aplicado à célula inteira da coluna Pagamento em Fretes. */
+td.freight-payment-cell {
+  text-align: center;
+  vertical-align: middle;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  border-left: 1px solid #d6dce0;
+  border-right: 1px solid #d6dce0;
+}
+td.freight-payment-cell.is-paid,
+tbody tr:hover td.freight-payment-cell.is-paid {
+  background: #e8f5ec;
+  color: #24653c;
+}
+td.freight-payment-cell.is-pending,
+tbody tr:hover td.freight-payment-cell.is-pending {
+  background: #fff0ef;
+  color: #963b35;
+}
