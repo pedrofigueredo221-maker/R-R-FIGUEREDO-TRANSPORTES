@@ -890,9 +890,9 @@
 .login-page .login-card .login-logo {
   box-sizing: border-box;
   width: min(205px, 100%);
-  height: 205px;
-  object-fit: contain;
-  margin: 0 auto 25.5px;
+  height: 155px;
+  object-fit: cover;
+  margin: 0 auto 19px;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -948,8 +948,8 @@
   .login-page .login-card { padding: 18.75px 17px 25px; }
   .login-page .login-card .login-logo {
     width: min(185px, 100%);
-    height: 185px;
-    margin-bottom: 20.25px;
+    height: 140px;
+    margin-bottom: 16px;
   }
   .login-page .login-card h1 { margin-bottom: 38px; }
 }
