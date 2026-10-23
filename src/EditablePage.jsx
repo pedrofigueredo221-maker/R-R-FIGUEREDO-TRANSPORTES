@@ -12,7 +12,7 @@ const uid = () => globalThis.crypto?.randomUUID?.() || `rr-${Date.now().toString
 const number = (value) => Math.max(0, Number(value) || 0);
 const money = (value) => formatMoney(number(value));
 const defaultCategories = ["Combustível", "Pedágio", "Óleo e lubrificantes", "Mecânico", "Oficina", "Pneus", "Elétrica", "Peças", "Documentação", "Seguro", "Lavagem", "Manutenção", "Despesas gerais", "Outros"];
-const blankFreight = () => ({ date: today(), customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "0", toll: "0", deductToll: false, commissionType: "percent", commission: "13", bonus: "0", km: "", liters: "", dieselPrice: "", fuelActual: "0", otherCosts: "0", notes: "", received: "0" });
+const blankFreight = () => ({ date: today(), customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "0", toll: "0", deductToll: false, commissionType: "percent", commission: "13", bonus: "0", km: "", liters: "", dieselPrice: "", fuelActual: "0", otherCosts: "0", notes: "", received: "0", advance: "", currentBalance: "" });
 const blankExpense = () => ({ created: today(), description: "", category: "Despesas gerais", truck: "", supplier: "", value: "", due: today(), installmentsCount: "1", notes: "" });
 const blankEmployee = () => ({ name: "", role: "Motorista", phone: "", commissionType: "percent", commissionValue: "13", active: true });
 const blankTruck = () => ({ name: "", plate: "", driverId: "", active: true });
@@ -62,7 +62,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   };
   const startEdit = (kind, record) => {
     if (readOnly) return;
-    setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0) } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
+    setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0), advance: String(record.advance ?? ""), currentBalance: String(record.currentBalance ?? "") } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
   };
   // Ao chegar por duplo clique em outra tela, localiza o registro original
   // e abre o mesmo formulário de edição já utilizado pela listagem.
@@ -117,7 +117,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
       setError("O valor do frete não pode ficar abaixo do total já recebido.");
       return;
     }
-    const value = { ...form, id: editingId || uid(), value: freightValue, discount: number(form.discount), toll: number(form.toll), bonus: number(form.bonus), commission: number(form.commission), received: receivedAtTrip, km: number(form.km), liters: number(form.liters), dieselPrice: number(form.dieselPrice), fuelActual: number(form.fuelActual), otherCosts: number(form.otherCosts) };
+    const value = { ...form, id: editingId || uid(), value: freightValue, discount: number(form.discount), toll: number(form.toll), bonus: number(form.bonus), commission: number(form.commission), received: receivedAtTrip, km: number(form.km), liters: number(form.liters), dieselPrice: number(form.dieselPrice), fuelActual: number(form.fuelActual), otherCosts: number(form.otherCosts), advance: form.advance === "" || form.advance == null ? null : number(form.advance), currentBalance: form.currentBalance === "" || form.currentBalance == null ? null : number(form.currentBalance) };
     value.fuelEstimated = number(value.liters) * number(value.dieselPrice);
     if (original) {
       value.receipts = Array.isArray(original.receipts) ? original.receipts : [];

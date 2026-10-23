@@ -17,7 +17,7 @@ export default function Fretes({ controller }) {
   return <section className="panel">
     <div className="panel-heading"><div><h3>Fretes</h3><p>Cadastre viagens e acompanhe custos, comissão e recebimentos.</p></div>{!readOnly && <button className="primary-button" disabled={loading || saving} onClick={() => startCreate("freight")}>+ Novo frete</button>}</div>
     {showError}
-    {!readOnly && form && <FormDialog label={editingId ? "Editar frete" : "Novo frete"} onClose={() => setForm(null)}><FreightForm title={editingId ? "Editar frete" : "Novo frete"} value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}
+    {!readOnly && form && <FormDialog label="FRETE" onClose={() => setForm(null)}><FreightForm value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}
     {toolbar}
     <div className="table-scroll"><table className="rr-freight-table"><thead><tr><th>Data</th><th>Motorista</th><th>Trajeto</th><th>Valor</th><th>Custo total</th><th>Comissão</th><th>Lucro</th><th>Total motorista</th><th>Pagamento</th>{!readOnly && <th>Ações</th>}</tr></thead><tbody>
       {filteredFreights.map((freight) => {
