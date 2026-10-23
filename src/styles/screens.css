@@ -608,3 +608,81 @@
     font-size: 17px;
   }
 }
+
+
+/* Padrão único para filtros e cabeçalhos de todas as grades. */
+.page-filters {
+  align-items: end;
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 14px;
+  border: 1px solid #3b3b3b;
+  border-radius: 9px;
+  background: #262626;
+}
+.page-filters label {
+  color: #f0f0f0;
+}
+.page-filters > input,
+.page-filters label input,
+.page-filters label select,
+.page-filters input,
+.page-filters select {
+  border: 1px solid #cfd3d6;
+  border-radius: 6px;
+  background: #fff;
+  color: #202428;
+}
+.page-filters .secondary-button {
+  border-color: #666;
+  background: #3b3b3b;
+  color: #fff;
+}
+.page-filters .secondary-button:hover {
+  background: #4a4a4a;
+}
+.table-scroll thead th {
+  padding: 13px 12px;
+  border-right: 1px solid #484848;
+  border-bottom: 1px solid #484848;
+  background: #262626;
+  color: #f7f7f7;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .45px;
+  text-transform: uppercase;
+}
+.table-scroll thead th:last-child {
+  border-right: 0;
+}
+.table-scroll tbody td {
+  border-right: 1px solid #e5e8ea;
+  border-bottom: 1px solid #e1e5e8;
+}
+.table-scroll tbody td:last-child {
+  border-right: 0;
+}
+.table-scroll tbody tr.editable-row {
+  cursor: pointer;
+}
+.table-scroll tbody tr.editable-row:hover {
+  background: #edf4f0;
+}
+.record-actions .secondary-button {
+  min-height: 32px;
+  padding: 7px 10px;
+  border-color: #d7dfe5;
+  border-radius: 7px;
+  font-size: 12px;
+}
+.record-actions .danger-button {
+  min-height: 32px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+}
+@media (max-width: 560px) {
+  .page-filters {
+    padding: 11px;
+  }
+}
