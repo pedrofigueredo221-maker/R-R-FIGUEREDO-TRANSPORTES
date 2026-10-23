@@ -1,3 +1,4 @@
+import { matchesRecordSearch } from "./lib/recordSearch.js";
 import RefreshButton from "./components/RefreshButton.jsx";
 import "./styles/corporate-table-headings.css";
 import { useEffect, useState } from "react";
@@ -103,7 +104,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   const filter = (rows, fields) => rows.filter((row) => (!normalizedQuery || fields.some((key) => String(row[key] ?? "").toLocaleLowerCase("pt-BR").includes(normalizedQuery))) && (!month || !row.date || String(row.date).startsWith(month)));
   const allFreights = data.freights || [];
   const allExpenses = data.expenses || [];
-  const filteredFreights = filter(allFreights, ["customer", "driver", "truck", "origin", "destination", "notes"]);
+  const filteredFreights = allFreights.filter((row) => matchesRecordSearch(row, query, ["customer", "driver", "truck", "origin", "destination", "notes", "id"], [dateLabel(row.date), row.date, money(row.value)]) && (!month || String(row.date ?? "").startsWith(month)));
   const filteredExpenses = allExpenses.filter((row) => (!normalizedQuery || ["description", "category", "truck", "supplier", "notes"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(normalizedQuery))) && (!month || String(row.created || "").startsWith(month) || (row.installments || []).some((i) => String(i.due || "").startsWith(month))));
   const categories = data.categories?.length ? data.categories : defaultCategories;
   const employees = (data.employees || []).filter((row) => !normalizedQuery || ["name", "role", "phone"].some((key) => String(row[key] || "").toLocaleLowerCase("pt-BR").includes(normalizedQuery)));
@@ -151,7 +152,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     return commit({ ...data, expenses: editingId ? allExpenses.map((e) => e.id === editingId ? expense : e) : [expense, ...allExpenses] });
   };
 
-  const toolbar = <div className="page-filters"><input aria-label="Buscar registros" placeholder="Buscar registros..." value={query} onChange={(e) => setQuery(e.target.value)} /><label>Período<input aria-label="Filtrar por mês" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></label><button className="secondary-button" onClick={() => { setQuery(""); setMonth(""); }} type="button">Limpar filtros</button><RefreshButton onRefresh={onRefresh} loading={loading} /></div>;
+  const toolbar = <div className="page-filters"><input aria-label="Buscar registros" placeholder={page === "freights" ? "Buscar motorista, caminhão, trajeto, cliente, data ou valor..." : "Buscar registros..."} value={query} onChange={(e) => setQuery(e.target.value)} /><label>Período<input aria-label="Filtrar por mês" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></label><button className="secondary-button" onClick={() => { setQuery(""); setMonth(""); }} type="button">Limpar filtros</button><RefreshButton onRefresh={onRefresh} loading={loading} /></div>;
   const showError = error && <div className="error-banner" role="alert">{error}</div>;
 
   const controller = {
