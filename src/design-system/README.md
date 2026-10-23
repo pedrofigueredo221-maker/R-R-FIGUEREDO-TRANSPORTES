@@ -14,3 +14,12 @@ Uma melhoria visual ou de interação aprovada que faça sentido em várias tela
 
 ## Proteções
 Tela de Login e Menu Lateral congelados: qualquer alteração direta ou indireta exige autorização explícita no ChatGPT. Preservar cálculos, dados e permissões. Trabalhar sempre em branch com PR detalhada, sem merge automático.
+
+
+## Separação obrigatória entre interface e dados
+- Mudanças de layout, CSS, tipografia, cores, filtros visuais e componentes compartilhados **não podem modificar** fórmulas financeiras, registros, autenticação, permissões ou persistência no Supabase.
+- Evitar alterações em `src/domain/`, serviços de banco, migrations e regras de acesso em PRs exclusivamente visuais.
+- Não confundir a aparência do filtro com sua regra de consulta: alterações de intervalo, seleção ou agregação de dados precisam de solicitação específica e testes.
+- Antes de aprovar uma PR visual, revisar o diff e confirmar que não há alterações de cálculos, gravação, exclusão, estados financeiros ou dados.
+- Preferir componentes reutilizáveis para qualquer padrão visual aprovado; migrar telas existentes gradualmente e sem regressões.
+- Login e Menu Lateral permanecem congelados; qualquer impacto direto ou indireto exige autorização explícita.
