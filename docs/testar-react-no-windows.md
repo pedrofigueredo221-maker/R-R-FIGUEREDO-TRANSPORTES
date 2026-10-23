@@ -4,8 +4,8 @@ Este roteiro permite testar a interface usando dados fictícios, sem enviar alte
 
 ## 1. Baixe o código
 
-Abra o ZIP da branch de auditoria:
-https://github.com/pedrofigueredo221-maker/RR-FIGUEREDO-TRANSPORTES/archive/refs/heads/audit/duplicidade-layout-css-2026-10-23.zip
+Baixe o ZIP da versão atual da branch principal:
+https://github.com/pedrofigueredo221-maker/RR-FIGUEREDO-TRANSPORTES/archive/refs/heads/main.zip
 
 Extraia o ZIP para uma pasta fácil de encontrar.
 
@@ -38,4 +38,4 @@ Nesse modo, os registros são fictícios, não é criado cliente Supabase e os c
 
 O endereço sem `?demo=1` usa a configuração Supabase do projeto e pode ler ou gravar dados conforme as permissões da conta. Para a primeira avaliação visual, use sempre o modo demonstração.
 
-O modo demonstração ajuda a validar navegação e formulários, mas não valida autenticação real, permissões RLS nem sincronização entre computadores. Faça esses testes separadamente antes de publicar.
+O modo demonstração ajuda a validar navegação e formulários, mas não valida autenticação real nem permissões RLS. Faça esses testes separadamente antes de publicar.
