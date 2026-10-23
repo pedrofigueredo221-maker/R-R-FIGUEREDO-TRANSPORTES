@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       confirm_publish:
-        description: "Marque true somente após backup restaurável, SQL de permissões aplicado e testes reais aprovados"
+        description: "Confirme somente após backup restaurável, permissões/RLS revisadas e testes reais aprovados"
         required: true
         type: boolean
         default: false
@@ -29,17 +29,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - name: Instalar dependências
         run: npm install --no-audit --no-fund
-      - name: Validar sintaxe, auditoria e testes financeiros
+      - name: Auditar estrutura React, testes e build
         run: |
-          node --check app.js
-          node --check sync.js
-          node --check config.js
+          node --check vite.config.js
+          node --check scripts/check-project.mjs
           node scripts/check-project.mjs
           npm test
-      - name: Construir React
-        run: npm run build
+          npm run build
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
       - name: Preparar artefato do site
