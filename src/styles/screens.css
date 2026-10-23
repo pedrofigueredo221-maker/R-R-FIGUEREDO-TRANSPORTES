@@ -875,7 +875,7 @@
 /* Login: fundo cinza claro, cartão escuro e espaçamento ampliado.
    Escopo limitado à tela de autenticação; não altera outros formulários. */
 .login-page {
-  background: #f2f2f2;
+  background: #e5e5e5;
   padding: 21px 12px;
 }
 .login-page .login-card {
