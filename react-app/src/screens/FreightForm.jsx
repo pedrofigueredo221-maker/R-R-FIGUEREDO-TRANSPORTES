@@ -1,7 +1,7 @@
 import { freightProfit, freightDriverPayment, freightCost } from "../domain/freightCalculations.js";
+import { money } from "../lib/formatters.js";
 
 const amount = (value) => Math.max(0, Number(value) || 0);
-const money = (value) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(value) || 0);
 
 function FreightField({ label, value, onChange, type = "text", required = false, min, step, options, placeholder, readOnly = false }) {
   return <label className={`editor-field ${type === "checkbox" ? "checkbox-field" : ""}`}>
