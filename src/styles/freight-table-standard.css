@@ -32,3 +32,6 @@
   padding: 0;
   line-height: 1;
 }
+
+/* Feedback discreto da pesquisa de viagens. */
+.content-area .freight-search-count { margin: 8px 0 12px; color: #59616b; font-size: 12px; font-weight: 600; }
