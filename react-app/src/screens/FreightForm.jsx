@@ -18,13 +18,11 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
   const estimatedFuel = amount(value.liters) * amount(value.dieselPrice);
   const calculationInput = { ...value, value: amount(value.value), discount: amount(value.discount), toll: amount(value.toll), commission: amount(value.commission), bonus: amount(value.bonus), fuelActual: amount(value.fuelActual) };
   const summary = [
-    ["Base da comissão", money(freightBase(calculationInput))],
-    ["Comissão estimada", money(freightCommission(calculationInput))],
-    ["Bônus", money(value.bonus)],
+    ["Valor do frete", money(value.value)],
     ["Pagamento estimado ao motorista", money(freightDriverPayment(calculationInput))],
-    ["Pedágio", money(value.toll)],
-    ["Combustível estimado", money(estimatedFuel)],
-    ["Custos da empresa (pedágio + combustível real + outros)", money(freightOperatingCosts(calculationInput))],
+    ["Adiantamento recebido", money(value.received)],
+    ["Saldo a receber", money(Math.max(0, amount(value.value) - amount(value.received) - amount(value.discount)))],
+    ["Custos totais da viagem", money(freightOperatingCosts(calculationInput) + amount(value.bonus))],
     ["Lucro estimado", money(freightProfit(calculationInput))]
   ];
   const fields = [
