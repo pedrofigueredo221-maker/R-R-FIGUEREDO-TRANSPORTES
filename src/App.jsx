@@ -17,7 +17,7 @@ const pages = [
   { id: "receivables", label: "Contas a receber", symbol: "arrow-down" },
   { id: "payments", label: "Contas a pagar", symbol: "arrow-up" },
   { id: "reports", label: "Relatórios", symbol: "chart" },
-  { id: "cadastros", label: "Cadastros", symbol: "▦" }
+  { id: "cadastros", label: "Cadastros", symbol: "users" }
 ];
 const iconPaths = {
   grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
