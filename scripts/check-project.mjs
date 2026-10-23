@@ -35,11 +35,11 @@ const screenStyles = read("react-app/src/styles/screens.css");
 const freightForm = read("react-app/src/screens/FreightForm.jsx");
 const editablePage = read("react-app/src/EditablePage.jsx");
 
-if (!mainHtml.includes("./src/main.jsx")) failures.push("A entrada principal não carrega src/main.jsx.");
+if (!mainHtml.includes('src="/src/main.jsx"')) failures.push("A entrada principal não carrega src/main.jsx.");
 if (!resetHtml.includes("./reset-main.jsx")) failures.push("A página de recuperação não carrega reset-main.jsx.");
 if (!main.includes("./styles.css") || !main.includes("./styles/screens.css")) failures.push("A entrada React principal não importa os dois arquivos CSS esperados.");
 if (!resetMain.includes("./src/styles.css") || !resetMain.includes("./src/styles/screens.css")) failures.push("A página de recuperação não compartilha os estilos React.");
-if (!vite.includes("react-app/redefinir-senha.html")) failures.push("O build Vite não inclui a página React de recuperação.");
+if (!vite.includes('"redefinir-senha.html"')) failures.push("O build Vite não inclui a página React de recuperação.");
 if (!app.includes("redefinir-senha.html")) failures.push("O fluxo de recuperação de senha não aponta para a página React publicada.");
 
 // Guardas contra o retorno das duplicidades visuais encontradas na auditoria.
