@@ -10,7 +10,7 @@
   <link rel="shortcut icon" type="image/svg+xml" href="imagens/favicon.svg?v=2">
   <link rel="apple-touch-icon" href="imagens/logo-rr-simbolo.png?v=1">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=44">
+  <link rel="stylesheet" href="styles.css?v=47">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
@@ -179,7 +179,7 @@
           <input id="freightExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden>
           <input id="freightPhotoFile" type="file" accept="image/*" capture="environment" hidden>
           <input id="ocrRawText" type="hidden">
-          <p class="form-hint">Use uma linha por frete. Para fotos, letra cursiva pode ser reconhecida incorretamente; revise datas e valores.</p>
+          <p class="form-hint">Para fotos, a leitura automática pode conter erros. Revise datas e valores antes de importar.</p>
           <div id="ocrStatus" class="import-status" hidden></div>
           <div id="importReview" class="import-review" hidden>
             <div class="panel-heading"><div><h3>Conferir antes de importar</h3><p>Corrija os dados na prévia. Não serão salvos automaticamente.</p></div></div>
@@ -722,7 +722,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="banco-de-dados/supabase/config.js?v=13"></script>
   <script src="js/core/utils.js?v=1"></script>
-  <script src="app.js?v=25"></script>
+  <script src="app.js?v=26"></script>
   <script src="sync.js?v=18"></script>
   <script src="js/core/startup.js?v=1"></script>
 </body>

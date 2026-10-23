@@ -1103,3 +1103,77 @@ select::-ms-expand{display:none}
 
 /* Revisão final: resumo de frete sem cartões grandes e controles alinhados também no celular. */
 @media(max-width:760px){#freightDialog .freight-calculations-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 10px}#freightDialog .freight-calculation-item{align-items:flex-start;flex-direction:column;gap:3px}#freightDialog .freight-calculation-item strong{text-align:left}}
+
+
+/* Correções consolidadas da auditoria de interface — versão 47. */
+/* Menu lateral: contraste estável e logo em base branca, sem depender de hover. */
+.sidebar{background:#262626!important;color:#f7f7f7!important}
+.sidebar .brand{align-items:center;justify-content:center;padding:12px 10px 24px;margin-bottom:14px}
+.sidebar .brand-logo{display:block;width:116px;max-width:116px;height:auto;max-height:68px;object-fit:contain;padding:6px;background:#fff;border:1px solid #e5e5e5;border-radius:7px;filter:none!important}
+.sidebar .nav-label{display:block!important;visibility:visible!important;opacity:1!important;color:#c9c9c9!important;font-size:11px!important;line-height:1.4;letter-spacing:1.15px}
+.sidebar .nav-item{display:flex!important;align-items:center;gap:11px;width:100%;min-height:43px;padding:11px 12px;color:#e6e6e6!important;font-size:14px!important;font-weight:600;line-height:1.35;text-align:left;opacity:1!important;visibility:visible!important;white-space:normal}
+.sidebar .nav-item:hover,.sidebar .nav-item.active{background:#3b3b3b!important;color:#fff!important}
+.sidebar .nav-item .nav-icon{display:inline-flex!important;flex:0 0 19px;opacity:1!important;visibility:visible!important}
+.sidebar .nav-item .nav-icon svg{width:18px;height:18px;stroke:currentColor}
+.sidebar .nav-item:focus-visible{outline:2px solid #fff;outline-offset:2px}
+/* Ação Sair mais compacta que a ação principal Novo lançamento. */
+.top-actions #logoutButton{height:28px;min-height:28px;padding:0 9px;font-size:11px;line-height:1}
+.top-actions #quickAdd{height:32px;min-height:32px;padding:0 11px;font-size:11px;line-height:1}
+.top-actions #logoutButton[hidden],.top-actions #quickAdd[hidden]{display:none!important}
+/* Cadastro/edição de frete: campos legíveis, agrupamento consistente e resumo claro. */
+#freightDialog.modal{width:min(1080px,calc(100% - 32px));max-height:92vh;overflow-y:auto}
+#freightDialog form{padding:24px 26px}
+#freightDialog .modal-header{margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #e3e3e3}
+#freightDialog .modal-header h2{font-size:23px;line-height:1.25;font-weight:700}
+#freightDialog .modal-header p{font-size:13px;line-height:1.5;color:#666;margin-top:6px}
+#freightDialog .freight-form-sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+#freightDialog .freight-form-section{min-width:0;padding:17px 18px;border:1px solid #e2e2e2;border-radius:8px;background:#fafafa}
+#freightDialog .form-section-heading{display:flex;align-items:flex-start;gap:10px;padding:0 0 12px;margin:0 0 14px;border-bottom:1px solid #e1e1e1}
+#freightDialog .form-section-heading .section-step{display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;border-radius:5px;background:#e7e7e7;color:#222;font-size:11px;font-weight:800}
+#freightDialog .form-section-heading strong{display:block;color:#202020;font-size:15px;line-height:1.35}
+#freightDialog .form-section-heading small{display:block;margin-top:3px;color:#666;font-size:12px;line-height:1.4}
+#freightDialog .freight-section-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:13px 14px}
+#freightDialog .freight-section-fields>div{min-width:0}
+#freightDialog .freight-section-fields label{display:block;margin:0 0 6px;color:#353535;font-size:13px;font-weight:700;line-height:1.35}
+#freightDialog .freight-section-fields input:not([type=checkbox]),#freightDialog .freight-section-fields select,#freightDialog .freight-section-fields textarea{display:block;width:100%;min-width:0;min-height:42px;height:auto;padding:9px 11px;border:1px solid #c9c9c9;border-radius:6px;background:#fff;color:#191919;font-size:14px;line-height:1.35}
+#freightDialog .freight-section-fields textarea{min-height:76px;resize:vertical}
+#freightDialog .freight-section-fields .full-width,#freightDialog .freight-section-fields .freight-notes-field{grid-column:1/-1}
+#freightDialog .freight-check-field{display:flex;align-items:flex-start;gap:10px;padding:10px 0 0}
+#freightDialog .freight-check-field input[type=checkbox]{width:18px;height:18px;flex:0 0 18px;margin:2px 0 0;accent-color:#222}
+#freightDialog .freight-check-field label{margin:0}
+#freightDialog .freight-check-field small{display:block;margin-top:5px;color:#666;font-size:12px;line-height:1.45}
+#freightDialog #fuelEstimateBox{align-self:stretch;padding:10px 11px;border:1px solid #ddd;border-radius:6px;background:#f0f0f0}
+#freightDialog #fuelEstimateBox label{margin-bottom:7px}
+#freightDialog .fuel-estimate-value{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+#freightDialog .calc-preview{margin-top:18px;padding:17px 18px;border:1px solid #d8d8d8;border-radius:8px;background:#f4f4f4;color:#222;font-size:13px;line-height:1.5}
+#freightDialog .freight-calculations-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 22px}
+#freightDialog .freight-calculation-item{display:flex;align-items:baseline;justify-content:space-between;gap:16px;min-width:0;padding:11px 2px;border:0;border-bottom:1px solid #dedede;border-radius:0;background:transparent}
+#freightDialog .freight-calculation-item span{font-size:13px;line-height:1.4;color:#454545}
+#freightDialog .freight-calculation-item strong{font-size:15px;line-height:1.4;color:#171717;font-weight:800;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#freightDialog .freight-calculation-item.cost-total,#freightDialog .freight-calculation-item.profit-total{background:transparent;border-bottom-color:#bcbcbc}
+#freightDialog .freight-calculation-item.profit-total strong{font-size:19px}
+#freightDialog .balance-validation{margin-top:10px;padding:10px 12px;border:1px solid #d9b6b6;border-radius:6px;background:#fff4f4;color:#8a2424;font-size:13px;line-height:1.45}
+#freightDialog .modal-actions{position:sticky;bottom:-1px;display:flex;justify-content:flex-end;gap:10px;margin:20px -26px -24px;padding:14px 26px;background:#fff;border-top:1px solid #e2e2e2}
+#freightDialog .modal-actions .btn{min-height:40px;padding:9px 16px;font-size:14px}
+@media(max-width:760px){
+ .sidebar .brand-logo{width:100px;max-width:100px;max-height:68px;padding:5px}
+ .top-actions{flex-wrap:wrap}
+ #freightDialog.modal{width:calc(100% - 16px);max-height:94vh}
+ #freightDialog form{padding:17px 15px}
+ #freightDialog .modal-header h2{font-size:20px}
+ #freightDialog .freight-form-sections{grid-template-columns:minmax(0,1fr);gap:10px}
+ #freightDialog .freight-form-section{padding:14px 13px}
+ #freightDialog .freight-section-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px}
+ #freightDialog .freight-section-fields label{font-size:12px}
+ #freightDialog .freight-section-fields input:not([type=checkbox]),#freightDialog .freight-section-fields select,#freightDialog .freight-section-fields textarea{font-size:14px}
+ #freightDialog .freight-calculations-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+ #freightDialog .freight-calculation-item{align-items:flex-start;flex-direction:column;gap:4px}
+ #freightDialog .freight-calculation-item strong{text-align:left}
+ #freightDialog .modal-actions{margin:18px -15px -17px;padding:12px 15px}
+}
+@media(max-width:460px){
+ #freightDialog .freight-section-fields{grid-template-columns:minmax(0,1fr)}
+ #freightDialog .freight-calculations-grid{grid-template-columns:minmax(0,1fr)}
+ #freightDialog .freight-calculation-item{flex-direction:row;align-items:baseline}
+ #freightDialog .freight-calculation-item strong{text-align:right}
+}

@@ -164,3 +164,15 @@
   .employee-modal-actions { flex-direction: column-reverse; }
   .employee-modal-actions button { width: 100%; }
 }
+
+
+/* Campos e resumo de frete com hierarquia visual consistente. */
+.freight-editor .freight-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+.freight-editor .editor-field{font-size:13px;line-height:1.4}
+.freight-editor .editor-field input:not([type=checkbox]),.freight-editor .editor-field select{min-height:43px}
+.freight-editor .freight-summary{background:#f1f1f1;color:#222;border:1px solid #dcdcdc;border-radius:8px}
+.freight-editor .freight-summary-heading h4{color:#222}
+.freight-editor .freight-summary-heading span,.freight-editor .freight-summary-item span{color:#555}
+.freight-editor .freight-summary-item{border-bottom-color:#d8d8d8}
+.freight-editor .freight-summary-item strong{color:#171717}
+@media(max-width:560px){.freight-editor .freight-fields{grid-template-columns:minmax(0,1fr)}}
