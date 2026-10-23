@@ -4,23 +4,24 @@ import { money } from "../lib/formatters.js";
 const amount = (value) => Math.max(0, Number(value) || 0);
 
 function FreightField({ label, value, onChange, type = "text", required = false, min, step, options, placeholder, readOnly = false }) {
-  return <label className={`editor-field ${type === "checkbox" ? "checkbox-field" : ""}`}>
+  return <label className={`editor-field ${type === "checkbox" ? "checkbox-field" : ""} ${required && String(value ?? "").trim() === "" ? "freight-required-empty" : ""}`}>
     <span>{label}</span>
     {options ? <select value={value ?? ""} onChange={(event) => onChange(event.target.value)} required={required} disabled={readOnly}>
       {options.map((item) => typeof item === "string" ? <option key={item} value={item}>{item}</option> : <option key={item.value} value={item.value}>{item.label}</option>)}
     </select> : type === "checkbox" ? <input type="checkbox" checked={Boolean(value)} onChange={(event) => onChange(event.target.checked)} disabled={readOnly} /> :
-    <input type={type} value={value ?? ""} onChange={(event) => onChange(event.target.value)} required={required} min={min} step={step} placeholder={placeholder} readOnly={readOnly} />}
+    <input type={type} value={value ?? ""} onChange={(event) => onChange(event.target.value)} required={required} min={min} step={step} placeholder={placeholder} readOnly={readOnly} onWheel={type === "number" ? (event) => event.currentTarget.blur() : undefined} />}
   </label>;
 }
 
-export default function FreightForm({ title, value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
+export default function FreightForm({ value, setValue, onSubmit, onCancel, saving, employees = [], trucks = [], editing = false }) {
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
   const estimatedFuel = amount(value.liters) * amount(value.dieselPrice);
   const calculationInput = { ...value, value: amount(value.value), discount: amount(value.discount), toll: amount(value.toll), commission: amount(value.commission), bonus: amount(value.bonus), fuelActual: amount(value.fuelActual) };
   const summary = [
     ["Valor do frete", money(value.value)],
     ["Pagamento estimado ao motorista", money(freightDriverPayment(calculationInput))],
-    ["Adiantamento recebido", money(value.received)],
+    ["Recebido do cliente", money(value.received)],
+    ["Adiantamento ao motorista", money(value.advance)],
     ["Saldo a receber", money(Math.max(0, amount(value.value) - amount(value.received) - amount(value.discount)))],
     ["Custos totais da viagem", money(freightCost(calculationInput))],
     ["Lucro estimado", money(freightProfit(calculationInput))]
@@ -28,10 +29,10 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
   const fields = [
     { key: "date", label: "Data do frete", type: "date", required: true },
     { key: "customer", label: "Cliente", placeholder: "Nome do cliente" },
-    { key: "driver", label: "Motorista", options: [{ value: "", label: "Selecione o motorista" }, ...employees.filter((employee) => employee.role === "Motorista" && employee.active !== false).map((employee) => ({ value: employee.name, label: employee.name }))] },
-    { key: "truck", label: "Caminhão", options: [{ value: "", label: "Selecione o caminhão" }, ...trucks.filter((truck) => truck.active !== false).map((truck) => ({ value: truck.name, label: truck.name }))] },
-    { key: "origin", label: "Origem", placeholder: "Cidade de origem" },
-    { key: "destination", label: "Destino", placeholder: "Cidade de destino" },
+    { key: "driver", label: "Motorista", required: true, options: [{ value: "", label: "Selecione o motorista" }, ...employees.filter((employee) => employee.role === "Motorista" && employee.active !== false).map((employee) => ({ value: employee.name, label: employee.name }))] },
+    { key: "truck", label: "Caminhão", required: true, options: [{ value: "", label: "Selecione o caminhão" }, ...trucks.filter((truck) => truck.active !== false).map((truck) => ({ value: truck.name, label: truck.name }))] },
+    { key: "origin", label: "Origem", required: true, placeholder: "Cidade de origem" },
+    { key: "destination", label: "Destino", required: true, placeholder: "Cidade de destino" },
     { key: "value", label: "Valor do frete (R$)", type: "number", min: "0", step: "0.01", required: true },
     { key: "discount", label: "Descontos gerais (R$)", type: "number", min: "0", step: "0.01" },
     { key: "toll", label: "Pedágio (R$)", type: "number", min: "0", step: "0.01" },
@@ -40,13 +41,15 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01" },
     { key: "otherCosts", label: "Outros custos da viagem (R$)", type: "number", min: "0", step: "0.01" },
     { key: "km", label: "Quilometragem", type: "number", min: "0", step: "1" },
-    { key: "received", label: "Recebido na viagem (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "advance", label: "Adiantamento ao motorista (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "currentBalance", label: "Saldo atual informado (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "received", label: "Recebido do cliente na viagem (R$)", type: "number", min: "0", step: "0.01", readOnly: editing },
     { key: "notes", label: "Observações", placeholder: "Informações adicionais" }
   ];
   return <form className="record-editor freight-editor" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
-    <div className="editor-heading"><h3>{title}</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
-    <div className="editor-grid freight-fields">{fields.filter((field) => field.key !== "received" || !editing).map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
-    {!editing && <p className="receipt-sync-note">Se houve pagamento no momento da viagem, informe o valor recebido aqui. Ele será registrado no histórico e o status do frete será atualizado automaticamente.</p>}
+    <div className="editor-heading"><h3>FRETE</h3><button className="secondary-button" type="button" onClick={onCancel}>Cancelar</button></div>
+    <div className="editor-grid freight-fields">{fields.map((field) => <FreightField key={field.key} {...field} value={value[field.key]} onChange={(next) => patch(field.key, next)} />)}</div>
+    <p className="receipt-sync-note">{editing ? "Recebimentos do cliente são exibidos para consulta e alterados apenas pelo histórico de recebimentos, preservando registros anteriores." : "O recebimento do cliente informado na criação será registrado no histórico. Adiantamento ao motorista é um campo separado e não altera automaticamente os recebimentos."}</p>
     <section className="fuel-section" aria-labelledby="fuel-section-title">
       <div className="fuel-section-heading"><h4 id="fuel-section-title">Combustível</h4><p>Estimativa automática a partir dos litros e do preço por litro.</p></div>
       <div className="fuel-grid">
