@@ -41,6 +41,12 @@ export default defineConfig({
   }],
   build: {
     outDir: resolve(projectRoot, "dist-react"),
-    emptyOutDir: true
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: resolve(projectRoot, "react-app", "index.html"),
+        reset: resolve(projectRoot, "react-app", "redefinir-senha.html")
+      }
+    }
   }
 });
