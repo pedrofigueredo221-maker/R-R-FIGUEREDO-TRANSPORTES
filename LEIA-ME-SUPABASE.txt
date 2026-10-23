@@ -1,24 +1,28 @@
-R&R FIGUEREDO TRANSPORTES — versão com login e sincronização Supabase
+R&R FIGUEREDO TRANSPORTES — aplicação React e Supabase
 
 Arquivos principais:
-- index.html: interface principal e formulário de login.
-- app.js: telas, lançamentos, relatórios e cálculos.
-- config.js: URL e chave publicável do Supabase e mapeamento do usuário RAFAEL para o e-mail da conta.
-- sync.js: login, recuperação de senha e sincronização.
-- redefinir-senha.html: tela de redefinição de senha.
-- supabase.sql: cria a tabela e configura políticas RLS restritas ao usuário autenticado autorizado.
-- supabase-login.sql: script alternativo para configurar a tabela e o acesso autenticado.
+- react-app/index.html: entrada do sistema.
+- react-app/src/: componentes, telas, regras de negócio e estilos React.
+- react-app/redefinir-senha.html: recuperação de senha renderizada em React.
+- banco-de-dados/supabase/app-config.js: URL, chave publicável e mapeamento dos usuários.
+- banco-de-dados/supabase/supabase.sql: tabela compartilhada e políticas de acesso autenticado.
+- banco-de-dados/supabase/supabase-visitor-role.sql: regras do perfil visitante.
+- banco-de-dados/supabase/backup-supabase.ps1: ferramenta de backup lógico local.
 
 Configuração:
-1. No Supabase, confirme que o usuário existe em Authentication > Users e que o e-mail corresponde a config.js.
-2. No SQL Editor, execute supabase.sql. O script não substitui os dados se a linha id=1 já existir.
-3. Em Authentication > URL Configuration, configure a URL do site e inclua o endereço publicado de redefinir-senha.html nas Redirect URLs.
-4. Publique todos os arquivos do repositório juntos no mesmo diretório.
-5. Teste o login, a recuperação de senha e a sincronização em dois dispositivos.
+1. No Supabase, confirme que os usuários necessários existem em Authentication > Users.
+2. Confira o mapeamento USER_EMAILS em banco-de-dados/supabase/app-config.js e a correspondência com os e-mails autorizados pelas políticas RLS.
+3. Em Authentication > URL Configuration, inclua a URL publicada terminada em /redefinir-senha.html nas Redirect URLs.
+4. Execute npm install e npm run build na raiz para validar a compilação React.
+5. Teste login, recuperação de senha, perfil visitante e permissões com contas de teste antes da publicação.
+
+Publicação:
+- A aplicação é compilada a partir de react-app/ usando Vite.
+- O workflow .github/workflows/deploy-react.yml publica dist-react/ somente após confirmação manual.
+- Não publique diretamente os arquivos-fonte nem configure GitHub Pages para servir a raiz do repositório como site estático.
 
 Segurança:
-- Não coloque service_role key nem senhas no repositório.
-- A chave publishable/anon é destinada ao cliente; a proteção dos dados depende das políticas RLS.
-- O SQL deste projeto restringe o estado compartilhado ao e-mail pedrofigueredo221@gmail.com. Se a conta autorizada usar outro e-mail, altere a política no SQL e confira USER_EMAILS em config.js.
-- Não execute o antigo SQL com políticas abertas para anon.
-- Faça backup do banco e teste com dados não críticos antes do uso real.
+- A chave publicável/anon é destinada ao navegador; nunca coloque service_role, senhas ou connection strings no código.
+- A proteção dos dados depende das políticas RLS. Não execute SQL de permissões em produção sem revisar o projeto e fazer backup.
+- Faça backups regulares e teste a restauração em um projeto separado.
+- A refatoração de arquivos não altera tabelas nem dados do Supabase.
