@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { freightReceivableBalance, applyFreightReceipt } from "../domain/freightReceivables.js";
-
-const today = () => {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-};
+import { todayISO } from "../lib/formatters.js";
 
 export default function FreightReceiptPanel({ freight, data, number, money, saving, onSave, onCancel }) {
   const balance = freightReceivableBalance(freight, number);
   const [amount, setAmount] = useState(balance.toFixed(2));
-  const [date, setDate] = useState(today());
+  const [date, setDate] = useState(todayISO());
   const [method, setMethod] = useState("PIX");
   const [error, setError] = useState("");
 
