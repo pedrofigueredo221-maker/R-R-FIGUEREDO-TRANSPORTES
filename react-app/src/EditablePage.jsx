@@ -1,18 +1,14 @@
 import { useState } from "react";
+import { money as formatMoney, dateLabel, todayISO as today } from "./lib/formatters.js";
 import Fretes from "./screens/Fretes.jsx";
 import Despesas from "./screens/Despesas.jsx";
 import ContasAReceber from "./screens/ContasAReceber.jsx";
 import ContasAPagar from "./screens/ContasAPagar.jsx";
 import Cadastros from "./screens/Cadastros.jsx";
 
-const today = () => {
-  const date = new Date();
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-};
 const uid = () => globalThis.crypto?.randomUUID?.() || `rr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
 const number = (value) => Math.max(0, Number(value) || 0);
-const money = (value) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(number(value));
-const dateLabel = (value) => value ? new Date(`${value}T12:00:00`).toLocaleDateString("pt-BR") : "—";
+const money = (value) => formatMoney(number(value));
 const defaultCategories = ["Combustível", "Pedágio", "Óleo e lubrificantes", "Mecânico", "Oficina", "Pneus", "Elétrica", "Peças", "Documentação", "Seguro", "Lavagem", "Manutenção", "Despesas gerais", "Outros"];
 const blankFreight = () => ({ date: today(), customer: "", driver: "", truck: "", origin: "", destination: "", value: "", discount: "0", toll: "0", deductToll: false, commissionType: "percent", commission: "13", bonus: "0", km: "", liters: "", dieselPrice: "", fuelActual: "0", otherCosts: "0", notes: "", received: "0" });
 const blankExpense = () => ({ created: today(), description: "", category: "Despesas gerais", truck: "", supplier: "", value: "", due: today(), installmentsCount: "1", notes: "" });
