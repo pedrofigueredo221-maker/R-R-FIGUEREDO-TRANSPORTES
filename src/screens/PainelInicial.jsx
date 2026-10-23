@@ -7,7 +7,7 @@ import StatCard from "../components/StatCard.jsx";
 import BalanceDetailDialog from "../components/BalanceDetailDialog.jsx";
 import "../styles/balanco-geral.css";
 
-export default function PainelInicial({ data, onRefresh, loading }) {
+export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }) {
   const [month, setMonth] = useState(currentMonth());
   const [detail, setDetail] = useState(null);
   const summary = useMemo(() => {
@@ -39,8 +39,8 @@ export default function PainelInicial({ data, onRefresh, loading }) {
     </div>
     <section className="panel"><div className="panel-heading"><div><h3>ÚLTIMAS VIAGENS</h3></div><RefreshButton onRefresh={onRefresh} loading={loading} /></div>
       {summary.recent.length === 0 ? <div className="empty-state"><strong>Nenhum frete encontrado</strong><p>Os fretes cadastrados no Supabase aparecerão aqui.</p></div> :
-      <div className="table-scroll"><table><thead><tr><th>Data</th><th>Motorista</th><th>Origem / destino</th><th>Valor</th><th>Custo da empresa</th><th>Comissão</th><th>Lucro</th></tr></thead><tbody>
-        {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td>{[f.origin, f.destination].filter(Boolean).join(" → ") || "—"}</td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></tr>)}
+      <div className="table-scroll"><table><thead><tr><th>Data</th><th>Motorista</th><th>Trajeto</th><th>Valor</th><th>Custo total</th><th>Comissão</th><th>Lucro</th></tr></thead><tbody>
+        {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`} className="balance-data-row" title="Duplo clique para abrir o frete" onDoubleClick={() => onOpenRecord?.("freights", f.id)}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td>{[f.origin, f.destination].filter(Boolean).join(" → ") || "—"}</td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></tr>)}
       </tbody></table></div>}
     </section>
     {detail && <BalanceDetailDialog type={detail} month={month} data={data} onClose={() => setDetail(null)} />}
