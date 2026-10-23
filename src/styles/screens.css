@@ -951,3 +951,9 @@
   .login-page .login-card input { min-height: 44px; }
   .login-page .login-card .login-submit { min-height: 48px; }
 }
+
+/* Ícone nativo de mostrar senha no Edge: contraste branco no campo escuro. */
+.login-page #login-password::-ms-reveal,
+.login-page #login-password::-ms-clear {
+  filter: invert(1);
+}
