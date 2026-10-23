@@ -1,8 +1,9 @@
 import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
+import FreightForm from "./FreightForm.jsx";
 import { freightReceivableBalance, freightReceivableStatus } from "../domain/freightReceivables.js";
 
 export default function ContasAReceber({ controller }) {
-  const { data, readOnly, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, setForm, setEditingId, allFreights, number, commit } = controller;
+  const { data, readOnly, loading, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, form, setForm, editingId, setEditingId, startEdit, saveFreight, allFreights, number, commit } = controller;
   const openReceipt = (freight) => {
     setForm(null);
     setEditingId(null);
@@ -10,12 +11,12 @@ export default function ContasAReceber({ controller }) {
   };
   return <section className="panel">
     <div className="panel-heading"><div><h3>Contas a receber</h3><p>Cada frete gera um recebível vinculado ao mesmo registro. O status é atualizado conforme os pagamentos.</p></div></div>
-    {showError}{toolbar}
+    {showError}{!readOnly && form && <FreightForm title={editingId ? "Editar frete" : "Novo frete"} value={form} setValue={setForm} saving={saving} onCancel={() => { setForm(null); setEditingId(null); }} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} />}{toolbar}
     <div className="table-scroll"><table><thead><tr><th>Data</th><th>Cliente</th><th>Rota</th><th>Valor do frete</th><th>Recebido</th><th>Saldo em aberto</th><th>Situação</th>{!readOnly && <th>Ação</th>}</tr></thead><tbody>
       {filteredFreights.map((freight) => {
         const balance = freightReceivableBalance(freight, number);
         const status = freightReceivableStatus(freight, number);
-        return <tr key={freight.id}>
+        return <tr key={freight.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Dê duplo clique para editar este frete" : undefined} onDoubleClick={!readOnly ? () => startEdit("freight", freight) : undefined}>
           <td>{dateLabel(freight.date)}</td><td>{freight.customer || "—"}</td><td>{[freight.origin, freight.destination].filter(Boolean).join(" → ") || "—"}</td>
           <td className="numeric">{money(freight.value)}</td><td className="numeric">{money(freight.received)}</td><td className="numeric">{money(balance)}</td>
           <td><span className={`status-pill status-${status.toLocaleLowerCase("pt-BR")}`}>{status}</span></td>
