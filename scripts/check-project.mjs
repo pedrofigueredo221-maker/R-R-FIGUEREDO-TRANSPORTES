@@ -7,6 +7,8 @@ const failures = [];
 const requiredFiles = [
   "package.json",
   "vite.config.js",
+  "index.html",
+  "redefinir-senha.html",
   "src/main.jsx",
   "reset-main.jsx",
   "src/App.jsx",
