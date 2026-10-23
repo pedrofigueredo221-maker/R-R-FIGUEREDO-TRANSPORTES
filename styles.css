@@ -1189,7 +1189,7 @@ select::-ms-expand{display:none}
 .registration-dialog .icon-btn{flex:0 0 36px;width:36px;height:36px;border:1px solid #dfe2e4;border-radius:7px;background:#f7f8f8;color:#34383c;font-size:21px}
 .registration-dialog .register-field{display:flex;flex-direction:column;gap:7px;min-width:0;margin:0 0 16px}
 .registration-dialog .register-field label,.registration-dialog .form-grid>div>label{display:block;margin:0;color:#34393e;font-size:13px;font-weight:700;line-height:1.4}
-.registration-dialog input:not([type=checkbox]),.registration-dialog select{box-sizing:border-box;width:100%;min-width:0;height:44px;padding:10px 12px;border:1px solid #cbd0d4;border-radius:6px;background:#fff;color:#202428;font:14px/1.35 inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+.registration-dialog input:not([type=checkbox]),.registration-dialog select{box-sizing:border-box;width:100%;min-width:0;height:44px;padding:10px 12px;border:1px solid #cbd0d4;border-radius:6px;background:#fff;color:#202428;font-family:inherit;font-size:14px;line-height:1.35;outline:none;transition:border-color .15s,box-shadow .15s}
 .registration-dialog input:focus,.registration-dialog select:focus{border-color:#727b82;box-shadow:0 0 0 3px rgba(38,44,49,.09)}
 .registration-dialog .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 20px;margin:0;padding:18px;border:1px solid #e2e5e7;border-radius:9px;background:#f8f9f9}
 .registration-dialog .form-grid>div{min-width:0}
@@ -1202,7 +1202,7 @@ select::-ms-expand{display:none}
 .registration-dialog .import-actions .btn{min-height:41px;padding:10px 17px;border-radius:6px;font-size:13px;font-weight:700}
 #truckDialog .inline-register{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
 #truckDialog .modal-header,#truckDialog .import-actions{grid-column:1/-1}
-#truckDialog .register-field:first-of-type{grid-column:1/-1}
+#truckDialog .inline-register>.register-field:nth-of-type(2){grid-column:1/-1}
 #truckDialog .register-field{margin-bottom:18px}
 #truckDialog .import-actions{margin-top:3px}
 @media(max-width:600px){
@@ -1212,7 +1212,7 @@ select::-ms-expand{display:none}
  .registration-dialog .modal-header h2{font-size:20px}
  .registration-dialog .form-grid{grid-template-columns:minmax(0,1fr);gap:14px;padding:13px}
  #truckDialog .inline-register{grid-template-columns:minmax(0,1fr)}
- #truckDialog .modal-header,#truckDialog .import-actions,#truckDialog .register-field:first-of-type{grid-column:auto}
+ #truckDialog .modal-header,#truckDialog .import-actions,#truckDialog .inline-register>.register-field:nth-of-type(2){grid-column:auto}
  .registration-dialog .import-actions{display:grid;grid-template-columns:1fr;gap:8px}
  .registration-dialog .import-actions .btn{width:100%}
 }
@@ -1229,3 +1229,17 @@ select::-ms-expand{display:none}
 #freightDialog .freight-calculation-item.profit-total span{color:#fff;font-weight:700}
 #freightDialog .freight-calculation-item.profit-total strong{font-size:16px}
 @media(max-width:600px){#freightDialog .freight-calculations-grid{grid-template-columns:minmax(0,1fr)}#freightDialog .freight-calculation-item{padding:10px 0}#freightDialog .freight-calculation-item strong{font-size:13px}}
+
+
+/* Formulário de caminhão da versão React: mesmo padrão dos demais cadastros. */
+.record-editor:not(.freight-editor){padding:24px;border:1px solid #dfe2e4;border-radius:10px;background:#fff;box-shadow:0 3px 12px rgba(20,25,29,.05)}
+.record-editor:not(.freight-editor) .editor-heading{align-items:center;gap:14px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #e2e4e6}
+.record-editor:not(.freight-editor) .editor-heading h3{margin:0;color:#202428;font-size:20px;line-height:1.35}
+.record-editor:not(.freight-editor) .editor-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 20px;padding:18px;border:1px solid #e2e5e7;border-radius:9px;background:#f8f9f9}
+.record-editor:not(.freight-editor) .editor-field{display:flex;flex-direction:column;gap:7px;min-width:0;color:#34393e;font-size:13px;font-weight:700;line-height:1.4}
+.record-editor:not(.freight-editor) .editor-field input:not([type=checkbox]),.record-editor:not(.freight-editor) .editor-field select{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:10px 12px;border:1px solid #cbd0d4;border-radius:6px;background:#fff;color:#202428;font-size:14px}
+.record-editor:not(.freight-editor) .editor-field input:focus,.record-editor:not(.freight-editor) .editor-field select:focus{border-color:#727b82;box-shadow:0 0 0 3px rgba(38,44,49,.09)}
+.record-editor:not(.freight-editor) .editor-field input[type=checkbox]{width:18px;min-height:18px;accent-color:#292d31}
+.record-editor:not(.freight-editor) .editor-actions{display:flex;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid #e2e4e6}
+.record-editor:not(.freight-editor) .editor-actions button{min-height:41px;padding:10px 17px;border-radius:6px}
+@media(max-width:600px){.record-editor:not(.freight-editor){padding:16px}.record-editor:not(.freight-editor) .editor-grid{grid-template-columns:minmax(0,1fr);gap:14px;padding:13px}.record-editor:not(.freight-editor) .editor-heading{align-items:flex-start}.record-editor:not(.freight-editor) .editor-heading h3{font-size:18px}}
