@@ -693,7 +693,7 @@
   background: #303030;
 }
 .login-logo {
-  width: min(130px, 100%);
+  width: min(180px, 100%);
   margin-bottom: 36px;
 }
 .login-card {
@@ -702,6 +702,9 @@
 .login-card h1 {
   text-align: center;
   margin-bottom: 32px;
+  font-family: "Segoe UI", Calibri, Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 .login-card label {
   margin-top: 28px;
