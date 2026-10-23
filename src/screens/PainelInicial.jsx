@@ -43,7 +43,7 @@ export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }
         {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`} className="balance-data-row" title="Duplo clique para abrir o frete" onDoubleClick={() => onOpenRecord?.("freights", f.id)}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td>{[f.origin, f.destination].filter(Boolean).join(" → ") || "—"}</td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></tr>)}
       </tbody></table></div>}
     </section>
-    {detail && <BalanceDetailDialog type={detail} month={month} data={data} onClose={() => setDetail(null)} />}
+    {detail && <BalanceDetailDialog type={detail} month={month} data={data} onOpenRecord={onOpenRecord} onClose={() => setDetail(null)} />}
   </>;
 }
 
