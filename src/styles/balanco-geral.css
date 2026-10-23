@@ -61,8 +61,8 @@
 @media (max-width: 720px) { .content-area .balance-route { column-gap: 8px; } }
 
 /* Período compacto: controle do tamanho do rótulo, sem alterar seleção mensal. */
-.content-area .welcome-panel .month-picker.balance-period-picker { width: 102px; min-width: 0; max-width: 100%; }
-.content-area .welcome-panel .balance-period-picker .balance-period-input { min-height: 26px; height: 26px; gap: 2px; padding: 0 4px; border-radius: 5px; }
+.content-area .welcome-panel .month-picker.balance-period-picker { width: 90px; min-width: 0; max-width: 100%; }
+.content-area .welcome-panel .balance-period-picker .balance-period-input { min-height: 35px; height: 35px; gap: 2px; padding: 0 4px; border-radius: 5px; }
 .content-area .welcome-panel .balance-period-picker .balance-period-input > svg { display: none; }
-.content-area .welcome-panel .balance-period-picker .balance-period-input input[type="month"] { min-height: 24px; height: 24px; width: 100%; font-size: 10px; font-weight: 600; }
-@media (max-width: 720px) { .content-area .welcome-panel .month-picker.balance-period-picker { width: 102px; } }
+.content-area .welcome-panel .balance-period-picker .balance-period-input input[type="month"] { min-height: 33px; height: 33px; width: 100%; font-size: 10px; font-weight: 600; }
+@media (max-width: 720px) { .content-area .welcome-panel .month-picker.balance-period-picker { width: 90px; } }
