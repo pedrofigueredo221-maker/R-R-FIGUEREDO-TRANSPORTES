@@ -43,3 +43,19 @@
 .content-area .stats-grid .balance-stat-action .stat-card strong { line-height: 1.2; }
 .content-area .stats-grid .balance-stat-action::after { content: "↗"; position: absolute; right: 17px; bottom: 14px; color: #8a8f96; font-size: 17px; font-weight: 600; pointer-events: none; }
 @media (max-width: 720px) { .content-area .stats-grid .balance-stat-action .stat-card { min-height: 98px; height: 98px; padding: 14px 32px 14px 14px; gap: 8px; } .content-area .stats-grid .balance-stat-action::after { right: 11px; bottom: 10px; } }
+
+/* Ajuste do cabeçalho do Balanço Geral: título no topo e filtro compacto. */
+.content-area .welcome-panel:has(.balance-heading) { align-items: flex-start; }
+.content-area .welcome-panel .balance-heading { align-self: flex-start; }
+/* Compatibilidade com o filtro mensal efetivamente presente na main. */
+.content-area .welcome-panel .month-picker.balance-period-picker { min-width: 0; width: 190px; max-width: 100%; gap: 5px; }
+.content-area .welcome-panel .balance-period-picker .balance-period-input { min-height: 36px; gap: 6px; padding: 0 8px; }
+.content-area .welcome-panel .balance-period-picker .balance-period-input > svg { flex-basis: 15px; width: 15px; height: 15px; }
+.content-area .welcome-panel .balance-period-picker .balance-period-input input[type="month"] { min-height: 34px; font-size: 13px; }
+@media (max-width: 720px) { .content-area .welcome-panel .month-picker.balance-period-picker { width: 190px; max-width: 100%; } }
+
+/* Trajeto: origem e destino separados por uma seta discreta e com respiro. */
+.content-area .balance-route { display: inline-flex; align-items: center; flex-wrap: wrap; column-gap: 12px; row-gap: 5px; line-height: 1.5; }
+.content-area .balance-route-place { font-weight: 600; color: #262626; }
+.content-area .balance-route-arrow { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; color: #777; font-size: 16px; font-weight: 700; }
+@media (max-width: 720px) { .content-area .balance-route { column-gap: 8px; } }
