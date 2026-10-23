@@ -1,6 +1,9 @@
 name: Publicar versão React no GitHub Pages
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       confirm_publish:
@@ -20,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-    if: ${{ inputs.confirm_publish == true }}
+    if: ${{ github.event_name == 'push' || inputs.confirm_publish == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Baixar repositório
@@ -46,7 +49,7 @@ jobs:
           path: ./dist-react
 
   deploy:
-    if: ${{ inputs.confirm_publish == true }}
+    if: ${{ github.event_name == 'push' || inputs.confirm_publish == true }}
     needs: build
     environment:
       name: github-pages
