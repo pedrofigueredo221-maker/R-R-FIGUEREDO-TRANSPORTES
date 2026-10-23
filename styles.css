@@ -1041,7 +1041,7 @@ textarea:required:focus {
 .eyebrow{display:none!important}.topbar{gap:12px}.top-actions{gap:10px;align-items:center}.top-actions .sync-status,.top-actions .btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center}#logoutButton{background:var(--green);color:#fff;border-color:var(--green)}#quickAdd,.freight-tools-menu>summary{border-radius:7px}.btn,.refresh-btn,.icon-btn{border-radius:7px}.welcome-logo{width:100px;height:70px;object-fit:contain;background:#f1f2f3;border-radius:10px;padding:7px}.sidebar-brand img,.sidebar-logo{max-width:150px;max-height:70px;object-fit:contain;background:#f1f2f3;border-radius:8px;padding:5px}.freight-tools-menu{display:inline-block}.freight-tools-menu .action-menu-content{right:0;left:auto}.import-tools-content{border:0;background:transparent;padding:0;margin:0;box-shadow:none}.freight-form-section{padding:13px!important}.form-section-heading{margin-bottom:10px!important}.freight-section-fields{gap:10px!important}.modal{width:min(620px,calc(100% - 26px));border-radius:11px}.modal form{padding:20px}.category-add-toggle{margin:12px 0}.installment-date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.installment-date-grid input{width:100%}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield;appearance:textfield}@media(max-width:650px){.top-actions{gap:6px}.top-actions .btn{min-height:38px}.installment-date-grid{grid-template-columns:1fr}.section-top .import-actions{flex-direction:row;flex-wrap:wrap}.freight-tools-menu{width:auto}}
 
 /* Mobile: manter a mesma identificação dos botões do desktop */
-@media(max-width:650px){.top-actions .btn{font-size:12px!important;padding:10px 12px!important}.top-actions .btn::first-letter{font-size:inherit}.brand-logo{max-width:145px;max-height:68px;object-fit:contain;background:#f1f2f3;border-radius:8px;padding:5px}.topbar .today{display:none}}
+@media(max-width:650px){.top-actions .btn{font-size:11px!important;padding:0 7px!important;height:30px!important;min-height:30px!important;line-height:1!important}.top-actions .btn::first-letter{font-size:inherit}.brand-logo{max-width:145px;max-height:68px;object-fit:contain;background:#f1f2f3;border-radius:8px;padding:5px}.topbar .today{display:none}}
 
 /* Remover setas visuais dos campos de seleção e número, mantendo sua funcionalidade. */
 select, input[type=number]{appearance:none;-webkit-appearance:none;-moz-appearance:textfield;background-image:none!important}
@@ -1082,11 +1082,11 @@ select::-ms-expand{display:none}
 #freightDialog .freight-check-field{gap:7px;align-items:flex-start}
 #freightDialog .freight-check-field small{display:none}
 #freightDialog .calc-preview{margin-top:10px;padding:9px 10px;background:#fafafa;border:1px solid #e8e8e8;border-radius:6px}
-#freightDialog .freight-calculations-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
-#freightDialog .freight-calculation-item{display:block;padding:7px 8px;border:0;border-radius:4px;background:transparent;min-width:0}
-#freightDialog .freight-calculation-item span{display:block;font-size:9px;line-height:1.25;color:#666}
-#freightDialog .freight-calculation-item strong{display:block;font-size:11px;margin-top:4px;overflow-wrap:anywhere}
-#freightDialog .freight-calculation-item.cost-total,#freightDialog .freight-calculation-item.profit-total{background:#eee}
+#freightDialog .freight-calculations-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 14px}
+#freightDialog .freight-calculation-item{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 2px;border:0;border-bottom:1px solid #ededed;border-radius:0;background:transparent;min-width:0}
+#freightDialog .freight-calculation-item span{display:block;font-size:10px;line-height:1.3;color:#666}
+#freightDialog .freight-calculation-item strong{display:block;font-size:11px;margin-top:0;overflow-wrap:anywhere;text-align:right}
+#freightDialog .freight-calculation-item.cost-total,#freightDialog .freight-calculation-item.profit-total{background:transparent;font-weight:700;border-bottom-color:#d2d2d2}
 #freightDialog .modal-actions{margin-top:12px}
 #freightDialog .modal-actions .btn{min-height:32px;padding:7px 12px;font-size:11px}
 @media(max-width:760px){
@@ -1100,3 +1100,6 @@ select::-ms-expand{display:none}
  #freightDialog .freight-form-section{padding:9px 2px;border-bottom:1px solid #eee}
  #freightDialog .freight-calculations-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* Revisão final: resumo de frete sem cartões grandes e controles alinhados também no celular. */
+@media(max-width:760px){#freightDialog .freight-calculations-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 10px}#freightDialog .freight-calculation-item{align-items:flex-start;flex-direction:column;gap:3px}#freightDialog .freight-calculation-item strong{text-align:left}}
