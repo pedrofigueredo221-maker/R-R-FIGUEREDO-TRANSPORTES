@@ -1,0 +1,11 @@
+/* Padrão compartilhado: Trajeto mais estreito, com espaço reservado às colunas financeiras. */
+.content-area .table-scroll table.rr-freight-table { width: 100%; table-layout: auto; }
+.content-area .table-scroll table.rr-freight-table th:nth-child(3),
+.content-area .table-scroll table.rr-freight-table td:nth-child(3) { width: 22%; max-width: 235px; }
+.content-area .table-scroll table.rr-freight-table td:nth-child(3) .rr-route { column-gap: 8px; row-gap: 3px; }
+.content-area .table-scroll table.rr-freight-table td:nth-child(3) .rr-route-place { overflow-wrap: anywhere; }
+@media (max-width: 720px) {
+  .content-area .table-scroll table.rr-freight-table { min-width: 850px; }
+  .content-area .table-scroll table.rr-freight-table th:nth-child(3),
+  .content-area .table-scroll table.rr-freight-table td:nth-child(3) { min-width: 155px; max-width: 195px; }
+}
