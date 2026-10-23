@@ -176,17 +176,21 @@
         </div>
 
         <article class="panel import-panel import-tools-content">
+          <input id="freightExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden>
+          <input id="freightPhotoFile" type="file" accept="image/*" capture="environment" hidden>
+          <input id="ocrRawText" type="hidden">
+          <p class="form-hint">Use uma linha por frete. Para fotos, letra cursiva pode ser reconhecida incorretamente; revise datas e valores.</p>
+          <div id="ocrStatus" class="import-status" hidden></div>
+          <div id="importReview" class="import-review" hidden>
+            <div class="panel-heading"><div><h3>Conferir antes de importar</h3><p>Corrija os dados na prévia. Não serão salvos automaticamente.</p></div></div>
             <label for="importText">Prévia (campos separados por ponto e vírgula)</label>
             <textarea id="importText" rows="7" spellcheck="false"></textarea>
-            <div class="import-actions">
-              <button class="btn btn-primary" id="confirmFreightImport">✓ Validar e importar</button>
-              <button class="btn btn-secondary" id="cancelFreightImport">Cancelar</button>
-            </div>
+            <div class="import-actions"><button class="btn btn-primary" id="confirmFreightImport">✓ Validar e importar</button><button class="btn btn-secondary" id="cancelFreightImport">Cancelar</button></div>
             <div id="importValidation" class="import-validation" aria-live="polite"></div>
           </div>
         </article>
-
-        <div class="filters">
+        
+<div class="filters">
           <input id="freightSearch" placeholder="Buscar rota ou motorista..." aria-label="Buscar fretes por rota ou motorista">
           <select id="freightDriverFilter"><option value="">Todos os motoristas</option></select>
           <input type="month" id="freightMonth" aria-label="Filtrar fretes por mês">
