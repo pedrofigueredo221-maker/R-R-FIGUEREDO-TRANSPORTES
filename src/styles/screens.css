@@ -641,27 +641,6 @@
 .page-filters .secondary-button:hover {
   background: #4a4a4a;
 }
-.table-scroll thead th {
-  padding: 13px 12px;
-  border-right: 1px solid #484848;
-  border-bottom: 1px solid #484848;
-  background: #262626;
-  color: #f7f7f7;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .45px;
-  text-transform: uppercase;
-}
-.table-scroll thead th:last-child {
-  border-right: 0;
-}
-.table-scroll tbody td {
-  border-right: 1px solid #e5e8ea;
-  border-bottom: 1px solid #e1e5e8;
-}
-.table-scroll tbody td:last-child {
-  border-right: 0;
-}
 .table-scroll tbody tr.editable-row {
   cursor: pointer;
 }
@@ -739,23 +718,6 @@
   font-size: 14px;
 }
 
-/* Padrões globais para todas as grades atuais e futuras. */
-.table-scroll table thead th {
-  font-size: 15px;
-  font-weight: 800;
-  text-align: center;
-  vertical-align: middle;
-}
-.table-scroll table tbody td,
-.table-scroll table tbody td.numeric,
-.table-scroll table tbody td.balance-negative,
-.table-scroll table tbody td.balance-positive {
-  text-align: left;
-}
-.table-scroll table tbody td .record-actions {
-  justify-content: flex-start;
-}
-
 /* Menu lateral: identidade e navegação consistentes. */
 .sidebar-brand {
   min-height: 108px;
@@ -776,11 +738,7 @@
   transition: background-color .15s ease, border-color .15s ease;
 }
 .nav-item:hover { background: #383838; border-color: #505050; }
-.nav-item.active {
-  background: #414141;
-  border-color: #555;
-  box-shadow: inset 3px 0 #a8ddc4;
-}
+
 .nav-item .nav-icon {
   display: inline-flex;
   flex: 0 0 22px;
@@ -852,38 +810,48 @@
   background: #262626;
 }
 
-/* Grade corporativa unificada: linhas brancas e divisórias nítidas. */
+
+/* Tabelas corporativas: definição única para cabeçalhos, células e ações. */
 .table-scroll table {
+  width: 100%;
   border-collapse: collapse;
   border: 1px solid #a9b0b8;
 }
 .table-scroll table thead th {
   background: #2d333b;
   color: #fff;
-  text-align: center !important;
+  text-align: center;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 15px;
   padding: 14px 12px;
   border: 1px solid #89929d;
   vertical-align: middle;
+  white-space: nowrap;
 }
 .table-scroll table tbody tr,
 .table-scroll table tbody tr:nth-child(even),
 .table-scroll table tbody tr:nth-child(odd) {
-  background: #fff !important;
+  background: #fff;
 }
 .table-scroll table tbody td,
 .table-scroll table tbody td.numeric,
 .table-scroll table tbody td.balance-positive,
 .table-scroll table tbody td.balance-negative {
-  text-align: left !important;
-  background: #fff !important;
+  text-align: left;
+  background: #fff;
   border: 1px solid #a9b0b8;
   padding: 11px 12px;
   color: #20252b;
+  vertical-align: middle;
 }
-.table-scroll table tbody tr:hover td { background: #f8fafc !important; }
-.table-scroll .record-actions { display: flex; align-items: center; flex-wrap: nowrap; gap: 6px; }
+.table-scroll table tbody tr:hover td { background: #f8fafc; }
+.table-scroll table tbody td .record-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
 .table-scroll .record-actions button {
   min-width: 32px;
   min-height: 32px;
@@ -901,11 +869,4 @@
 }
 .table-scroll .record-actions button:hover { background: #edf0f3; }
 .table-scroll .record-actions .danger-button:hover { background: #fff0f0; }
-.table-scroll table tbody tr[hidden] { display: none !important; }
-.column-filter-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
-.column-filter { position: relative; }
-.column-filter-trigger { border: 1px solid #a9b0b8; border-radius: 4px; background: #fff; padding: 4px 10px; }
-.column-filter-popover { position: absolute; top: 100%; left: 0; z-index: 20; min-width: 230px; max-width: 320px; padding: 12px; border: 1px solid #b5bdc7; border-radius: 6px; background: white; box-shadow: 0 8px 24px #0002; display: grid; gap: 8px; }
-.column-filter-popover button { padding: 7px; text-align: left; }
-.column-filter-options { max-height: 180px; overflow: auto; display: grid; gap: 6px; }
-.column-filter-options label { display: flex; gap: 7px; align-items: center; }
+.table-scroll table tbody tr[hidden] { display: none; }
