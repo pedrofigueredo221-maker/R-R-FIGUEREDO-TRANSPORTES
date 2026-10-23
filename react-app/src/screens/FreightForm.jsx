@@ -1,4 +1,4 @@
-import { freightBase, freightCommission, freightProfit, freightDriverPayment, freightOperatingCosts } from "../domain/freightCalculations.js";
+import { freightProfit, freightDriverPayment, freightOperatingCosts } from "../domain/freightCalculations.js";
 
 const amount = (value) => Math.max(0, Number(value) || 0);
 const money = (value) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(value) || 0);
