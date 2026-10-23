@@ -7,7 +7,7 @@ const supabase = config.SUPABASE_URL && config.SUPABASE_ANON_KEY
       auth: {
         persistSession: false,
         autoRefreshToken: true,
-        detectSessionInUrl: true
+        detectSessionInUrl: false
       }
     })
   : null;
