@@ -62,7 +62,7 @@ function updateFreightCalc(){
  const validation=$("balanceValidation");validation.hidden=!mismatch;validation.textContent=mismatch?"Os valores não conferem: frete deve ser igual a adiantamento + saldo atual + descontos. Corrija os campos em vermelho.":"";
  $("fuelEstimate").textContent=money(estimated);
  const totalCost=discount+t+fuelActual+commission+bonus,tripProfit=v-totalCost;
- const calcItems=[["Base da comissão",money(base)],["Comissão estimada",money(commission)],["Bônus",money(bonus)],["Total motorista (comissão + bônus)",money(commission+bonus)],["Adiantamento recebido",money(received)],["Saldo atual a receber",money(currentBalance)],["Custo total da viagem",money(totalCost)],["Lucro estimado da viagem",money(tripProfit)]];
+ const calcItems=[["Valor do frete",money(v)],["Pagamento ao motorista",money(commission+bonus)],["Adiantamento recebido",money(received)],["Saldo a receber",money(currentBalance)],["Custos totais da viagem",money(totalCost)],["Lucro estimado",money(tripProfit)]];
  $("freightCalc").innerHTML='<div class="freight-calculations-grid">'+calcItems.map(([label,val],i)=>'<div class="freight-calculation-item'+(i===6?' cost-total':'')+(i===7?' profit-total':'')+'"><span>'+label+'</span><strong>'+val+'</strong></div>').join("")+'</div>';
 }
 $("fDriver").addEventListener("change",()=>{const emp=db.employees.find(x=>x.name===$("fDriver").value);$("fTruck").value=emp?.truckId&&activeTrucks().some(t=>t.id===emp.truckId)?emp.truckId:"";if(emp){$("fCommissionType").value=emp.commissionType||"";$("fCommission").value=emp.commissionValue??"";$("fDeductToll").checked=!!emp.deductToll}else{$("fCommissionType").value="";$("fCommission").value="";$("fDeductToll").checked=false}updateFreightCalc()});
