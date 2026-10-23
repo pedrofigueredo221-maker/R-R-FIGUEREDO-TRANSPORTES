@@ -104,7 +104,7 @@ export default function Cadastros({ controller }) {
       {toolbar}
       {tab === "employees" && (
         <div className="table-scroll"><table><thead><tr><th>Nome</th><th>Função</th><th>Telefone</th><th>Comissão</th><th>Status</th>{!readOnly && <th>Ações</th>}</tr></thead>
-          <tbody>{rows.map((employee) => <tr key={employee.id}>
+          <tbody>{rows.map((employee) => <tr key={employee.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Dê duplo clique para editar este cadastro" : undefined} onDoubleClick={!readOnly ? () => startEdit("employee", employee) : undefined}>
             <td>{employee.name}</td><td>{employee.role || "Motorista"}</td><td>{employee.phone || "—"}</td>
             <td>{employee.commissionType === "fixed" ? money(employee.commissionValue) : `${number(employee.commissionValue ?? 13)}%`}</td>
             <td>{employee.active === false ? "Inativo" : "Ativo"}</td>
@@ -114,7 +114,7 @@ export default function Cadastros({ controller }) {
       )}
       {tab === "trucks" && (
         <div className="table-scroll"><table><thead><tr><th>Caminhão</th><th>Placa</th><th>Motorista</th><th>Status</th>{!readOnly && <th>Ações</th>}</tr></thead>
-          <tbody>{rows.map((truck) => <tr key={truck.id}>
+          <tbody>{rows.map((truck) => <tr key={truck.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Dê duplo clique para editar este cadastro" : undefined} onDoubleClick={!readOnly ? () => startEdit("truck", truck) : undefined}>
             <td>{truck.name}</td><td>{truck.plate || "—"}</td><td>{(data.employees || []).find((employee) => employee.id === truck.driverId)?.name || "—"}</td>
             <td>{truck.active === false ? "Inativo" : "Ativo"}</td>
             {!readOnly && <td><Actions onEdit={() => startEdit("truck", truck)} onDelete={() => remove("trucks", truck)} /></td>}
@@ -123,7 +123,7 @@ export default function Cadastros({ controller }) {
       )}
       {tab === "categories" && (
         <div className="table-scroll"><table><thead><tr><th>Categoria</th>{!readOnly && <th>Ações</th>}</tr></thead>
-          <tbody>{rows.map((category) => <tr key={category.id}>
+          <tbody>{rows.map((category) => <tr key={category.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Dê duplo clique para editar este cadastro" : undefined} onDoubleClick={!readOnly ? () => { setEditingId(category.name); setForm({ name: category.name }); } : undefined}>
             <td>{category.name}</td>{!readOnly && <td><Actions onEdit={() => { setEditingId(category.name); setForm({ name: category.name }); }} onDelete={() => deleteCategory(category)} /></td>}
           </tr>)}</tbody>
         </table></div>

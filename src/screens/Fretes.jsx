@@ -18,7 +18,7 @@ export default function Fretes({ controller }) {
     <div className="table-scroll"><table><thead><tr><th>Data</th><th>Cliente</th><th>Motorista</th><th>Rota</th><th>Valor</th><th>Motorista (estimado)</th><th>Custos da empresa</th><th>Recebido</th><th>Saldo</th><th>Situação</th>{!readOnly && <th>Ações</th>}</tr></thead><tbody>
       {filteredFreights.map((freight) => {
         const status = freightReceivableStatus(freight, number);
-        return <tr key={freight.id}>
+        return <tr key={freight.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Dê duplo clique para editar este frete" : undefined} onDoubleClick={!readOnly ? () => startEdit("freight", freight) : undefined}>
           <td>{dateLabel(freight.date)}</td><td>{freight.customer || "—"}</td><td>{freight.driver || "—"}</td><td>{[freight.origin, freight.destination].filter(Boolean).join(" → ") || "—"}</td>
           <td className="numeric">{money(freight.value)}</td><td className="numeric">{money(freightDriverPayment(freight))}</td><td className="numeric">{money(freightOperatingCosts(freight))}</td><td className="numeric">{money(freight.received)}</td><td className="numeric">{money(freightReceivableBalance(freight, number))}</td>
           <td><span className={`status-pill status-${status.toLocaleLowerCase("pt-BR")}`}>{status}</span></td>
