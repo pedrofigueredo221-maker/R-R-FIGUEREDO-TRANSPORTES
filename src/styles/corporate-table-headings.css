@@ -1,0 +1,84 @@
+/* Cabeçalho padronizado para tabelas das telas internas.
+   Não afeta Login nem Menu Lateral, ambos congelados. */
+.content-area .table-scroll table thead th {
+  background: #303741;
+  color: #ffffff;
+  border-top: 1px solid #89939e;
+  border-right: 1px solid #737e89;
+  border-left: 1px solid #737e89;
+  border-bottom: 3px solid #89939e;
+  padding: 16px 12px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 15px;
+  white-space: nowrap;
+}
+.content-area .table-scroll table thead th:first-child { border-left-color: #89939e; }
+.content-area .table-scroll table thead th:last-child { border-right-color: #89939e; }
+
+/* Padrão compartilhado dos filtros de todas as telas internas.
+   Mantém as funções existentes e não interfere nas telas congeladas. */
+.content-area .page-filters,
+.content-area .welcome-panel:has(.month-picker) {
+  border: 1px solid #3b424a;
+  border-radius: 9px;
+  background: #303741;
+  color: #ffffff;
+}
+.content-area .page-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+}
+.content-area .page-filters > input {
+  flex: 1 1 240px;
+}
+.content-area .page-filters label,
+.content-area .welcome-panel .month-picker {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.content-area .page-filters input,
+.content-area .page-filters select,
+.content-area .welcome-panel .month-picker input {
+  min-height: 42px;
+  border: 1px solid #cfd5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #202428;
+}
+.content-area .page-filters .secondary-button {
+  min-height: 42px;
+  border: 1px solid #777f87;
+  border-radius: 6px;
+  background: #454c54;
+  color: #ffffff;
+}
+.content-area .page-filters .secondary-button:hover {
+  background: #535c66;
+}
+.content-area .welcome-panel:has(.month-picker) {
+  gap: 16px;
+  padding: 20px 24px;
+}
+.content-area .welcome-panel:has(.month-picker) h2,
+.content-area .welcome-panel:has(.month-picker) p,
+.content-area .welcome-panel:has(.month-picker) .eyebrow {
+  color: #ffffff;
+}
+@media (max-width: 720px) {
+  .content-area .page-filters,
+  .content-area .welcome-panel:has(.month-picker) {
+    padding: 14px;
+  }
+  .content-area .page-filters > input,
+  .content-area .page-filters label,
+  .content-area .page-filters .secondary-button {
+    width: 100%;
+    min-width: 0;
+  }
+}

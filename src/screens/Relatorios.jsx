@@ -1,3 +1,4 @@
+import "../styles/corporate-table-headings.css";
 import { useMemo, useState } from "react";
 import { freightCommission, freightProfit } from "../domain/freightCalculations.js";
 import { money, currentMonth } from "../lib/formatters.js";

@@ -1,5 +1,6 @@
+import "../styles/corporate-table-headings.css";
 import { useMemo, useState } from "react";
-import { freightProfit } from "../domain/freightCalculations.js";
+import { freightCommission, freightOperatingCosts, freightProfit } from "../domain/freightCalculations.js";
 import { money, dateLabel, currentMonth } from "../lib/formatters.js";
 import StatCard from "../components/StatCard.jsx";
 
@@ -34,8 +35,8 @@ export default function PainelInicial({ data, onRefresh, loading }) {
     </div>
     <section className="panel"><div className="panel-heading"><div><h3>Fretes recentes</h3><p>Últimos lançamentos registrados no banco compartilhado.</p></div><button className="secondary-button" onClick={onRefresh} disabled={loading}>{loading ? "Atualizando…" : "↻ Atualizar"}</button></div>
       {summary.recent.length === 0 ? <div className="empty-state"><strong>Nenhum frete encontrado</strong><p>Os fretes cadastrados no Supabase aparecerão aqui.</p></div> :
-      <div className="table-scroll"><table><thead><tr><th>Data</th><th>Cliente</th><th>Motorista</th><th>Origem / destino</th><th>Valor</th></tr></thead><tbody>
-        {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`}><td>{dateLabel(f.date)}</td><td>{f.customer || "—"}</td><td>{f.driver || "—"}</td><td>{[f.origin, f.destination].filter(Boolean).join(" → ") || "—"}</td><td className="numeric">{money(f.value)}</td></tr>)}
+      <div className="table-scroll"><table><thead><tr><th>Data</th><th>Motorista</th><th>Origem / destino</th><th>Valor</th><th>Custo da empresa</th><th>Comissão</th><th>Lucro</th></tr></thead><tbody>
+        {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td>{[f.origin, f.destination].filter(Boolean).join(" → ") || "—"}</td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></tr>)}
       </tbody></table></div>}
     </section>
   </>;
