@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 142" role="img" aria-label="RR">
-<path fill="#ff7900" d="M18 20H130Q164 20 164 55Q164 79 142 88L168 122H115L84 78H69V122H18Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 162" role="img" aria-label="RR">
+<rect x="0" y="0" width="260" height="162" rx="26" fill="#262626"/><g transform="translate(10 10)"><path fill="#ff7900" d="M18 20H130Q164 20 164 55Q164 79 142 88L168 122H115L84 78H69V122H18Z"/>
 <path fill="#fff" d="M145 20H190Q222 20 222 55Q222 80 202 89L229 122H182L150 79H168Q182 79 182 64Q182 51 169 51H145Z"/>
 <path fill="#202020" d="M69 50H122Q129 50 129 58Q129 66 122 66H69Z"/>
 <path fill="#202020" d="M19 20 99 122H83L19 41Z"/>
 <path fill="#fff" d="M29 21 112 122H98L29 38Z"/>
-</svg>
+</g></svg>
