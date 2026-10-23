@@ -9,7 +9,7 @@ export default function VisaoGeral({ data, onRefresh, loading }) {
     const freights = Array.isArray(data.freights) ? data.freights : [];
     const expenses = Array.isArray(data.expenses) ? data.expenses : [];
     const selected = freights.filter((f) => String(f.date || "").slice(0, 7) === month);
-    // Mantém as mesmas definições financeiras usadas no painel HTML existente.
+    // Usa as funções financeiras do domínio React para manter os indicadores consistentes.
     const receivable = freights.reduce((sum, f) => sum + Math.max(0, Number(f.value || 0) - Number(f.received || 0)), 0);
     const payable = expenses.reduce((sum, exp) => sum + Math.max(0,
       Number(exp.value || 0) - (Array.isArray(exp.installments)
