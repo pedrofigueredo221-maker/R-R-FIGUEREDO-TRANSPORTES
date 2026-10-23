@@ -1,3 +1,4 @@
+import "./styles/corporate-table-headings.css";
 import { useEffect, useState } from "react";
 import { money as formatMoney, dateLabel, todayISO as today } from "./lib/formatters.js";
 import Fretes from "./screens/Fretes.jsx";
