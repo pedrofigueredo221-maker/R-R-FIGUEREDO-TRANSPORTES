@@ -11,14 +11,26 @@ const supabase = !demoMode && config.SUPABASE_URL && config.SUPABASE_ANON_KEY
   ? createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
   : null;
 const pages = [
-  { id: "dashboard", label: "Visão geral", symbol: "▦" },
-  { id: "freights", label: "Fretes", symbol: "⇄" },
-  { id: "expenses", label: "Despesas e manutenção", symbol: "▤" },
-  { id: "receivables", label: "Contas a receber", symbol: "↗" },
-  { id: "payments", label: "Contas a pagar", symbol: "◷" },
-  { id: "reports", label: "Relatórios", symbol: "▥" },
+  { id: "dashboard", label: "Visão geral", symbol: "grid" },
+  { id: "freights", label: "Fretes", symbol: "truck" },
+  { id: "expenses", label: "Despesas e manutenção", symbol: "tool" },
+  { id: "receivables", label: "Contas a receber", symbol: "arrow-down" },
+  { id: "payments", label: "Contas a pagar", symbol: "arrow-up" },
+  { id: "reports", label: "Relatórios", symbol: "chart" },
   { id: "cadastros", label: "Cadastros", symbol: "▦" }
 ];
+const iconPaths = {
+  grid: <><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></>,
+  truck: <><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7" /><circle cx="7" cy="18" r="2" /><circle cx="18" cy="18" r="2" /></>,
+  tool: <><path d="M14 6a5 5 0 0 0-6 6l-5 5a2 2 0 0 0 3 3l5-5a5 5 0 0 0 6-6l-3 3-3-3z" /></>,
+  "arrow-down": <><path d="M4 5h16M4 11h16M4 17h10M17 14v7m-3-3 3 3 3-3" /></>,
+  "arrow-up": <><path d="M4 5h16M4 11h16M4 17h10M17 21v-7m-3 3 3-3 3 3" /></>,
+  chart: <><path d="M4 20V4M4 20h16M8 16v-5M13 16V7M18 16V4" /></>,
+  users: <><circle cx="9" cy="8" r="3" /><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 5" /></>
+};
+function MenuIcon({ name }) {
+  return <span className="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24">{iconPaths[name]}</svg></span>;
+}
 const titles = Object.fromEntries(pages.map((page) => [page.id, page.label]));
 const screenComponents = {
   dashboard: PainelInicial,
@@ -207,7 +219,7 @@ export default function App() {
 
   return <div className={`app-shell ${readOnly ? "read-only" : ""}`}>
     <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo-rr-figueredo-transportes.png" alt="R&R Figueredo Transportes" /></div>
-      <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><span aria-hidden="true">{p.symbol}</span>{p.label}</button>)}</nav>
+      <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><MenuIcon name={p.symbol} />{p.label}</button>)}</nav>
       <div className="sidebar-bottom"><span className="session-dot" /> Sessão autenticada</div>
     </aside>
     {menuOpen && <button className="mobile-overlay" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}

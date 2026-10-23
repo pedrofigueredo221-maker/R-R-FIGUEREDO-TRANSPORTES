@@ -1,4 +1,5 @@
 import FormularioFuncionario from "./FormularioFuncionario.jsx";
+import FormDialog from "../components/FormDialog.jsx";
 
 export default function Cadastros({ controller }) {
   const {
@@ -84,21 +85,21 @@ export default function Cadastros({ controller }) {
       </div>
 
       {!readOnly && form && tab === "employees" && (
-        <FormularioFuncionario
+        <FormDialog label={editingId ? "Editar funcionário" : "Adicionar funcionário"} onClose={() => { setForm(null); setEditingId(null); }}><FormularioFuncionario
           title={editingId ? "Editar funcionário" : "Adicionar funcionário"}
           fields={employeeFields} value={form} setValue={setForm} saving={saving}
           onCancel={() => { setForm(null); setEditingId(null); }}
           onSubmit={saveRecord}
-        />
+        /></FormDialog>
       )}
       {!readOnly && form && tab !== "employees" && (
-        <RecordForm
+        <FormDialog label="Cadastro" onClose={() => { setForm(null); setEditingId(null); }}><RecordForm
           title={editingId ? (tab === "trucks" ? "Editar caminhão" : "Editar categoria") : (tab === "trucks" ? "Adicionar caminhão" : "Adicionar categoria")}
           value={form} setValue={setForm} saving={saving}
           onCancel={() => { setForm(null); setEditingId(null); }}
           onSubmit={saveRecord}
           fields={tab === "trucks" ? truckFields : categoryFields}
-        />
+        /></FormDialog>
       )}
 
       {toolbar}

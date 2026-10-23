@@ -693,7 +693,7 @@
   background: #303030;
 }
 .login-logo {
-  width: min(180px, 100%);
+  width: min(150px, 100%);
   margin-bottom: 36px;
 }
 .login-card {
@@ -737,4 +737,90 @@
   gap: 12px;
   border-radius: 7px;
   font-size: 14px;
+}
+
+/* Padrões globais para todas as grades atuais e futuras. */
+.table-scroll table thead th {
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+  vertical-align: middle;
+}
+.table-scroll table tbody td,
+.table-scroll table tbody td.numeric,
+.table-scroll table tbody td.balance-negative,
+.table-scroll table tbody td.balance-positive {
+  text-align: left;
+}
+.table-scroll table tbody td .record-actions {
+  justify-content: flex-start;
+}
+
+/* Menu lateral: identidade e navegação consistentes. */
+.sidebar-brand {
+  min-height: 108px;
+}
+.sidebar-brand img {
+  max-width: 195px;
+  max-height: 63px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  image-rendering: auto;
+}
+.sidebar nav { gap: 7px; }
+.nav-item {
+  min-height: 48px;
+  padding: 12px 13px;
+  border: 1px solid transparent;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.nav-item:hover { background: #383838; border-color: #505050; }
+.nav-item.active {
+  background: #414141;
+  border-color: #555;
+  box-shadow: inset 3px 0 #a8ddc4;
+}
+.nav-item .nav-icon {
+  display: inline-flex;
+  flex: 0 0 22px;
+  align-items: center;
+  justify-content: center;
+}
+.nav-item .nav-icon svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Formulários abrem somente mediante ação do usuário, em uma janela separada. */
+.form-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgb(15 20 23 / 62%);
+}
+.form-dialog {
+  width: min(1040px, 100%);
+  max-height: min(92vh, 980px);
+  overflow-y: auto;
+  border: 1px solid #d9e1e7;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 22px 70px #0004;
+}
+.form-dialog .record-editor,
+.form-dialog .freight-editor {
+  margin: 0;
+}
+@media (max-width: 720px) {
+  .form-dialog-backdrop { padding: 8px; }
+  .form-dialog { max-height: 96vh; }
 }

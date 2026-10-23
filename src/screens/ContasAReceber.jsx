@@ -1,5 +1,6 @@
 import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
 import FreightForm from "./FreightForm.jsx";
+import FormDialog from "../components/FormDialog.jsx";
 import { freightReceivableBalance, freightReceivableStatus } from "../domain/freightReceivables.js";
 
 export default function ContasAReceber({ controller }) {
@@ -11,7 +12,7 @@ export default function ContasAReceber({ controller }) {
   };
   return <section className="panel">
     <div className="panel-heading"><div><h3>Contas a receber</h3><p>Cada frete gera um recebível vinculado ao mesmo registro. O status é atualizado conforme os pagamentos.</p></div></div>
-    {showError}{!readOnly && form && <FreightForm title={editingId ? "Editar frete" : "Novo frete"} value={form} setValue={setForm} saving={saving} onCancel={() => { setForm(null); setEditingId(null); }} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} />}{toolbar}
+    {showError}{!readOnly && form && <FormDialog label="Editar frete" onClose={() => { setForm(null); setEditingId(null); }}><FreightForm title={editingId ? "Editar frete" : "Novo frete"} value={form} setValue={setForm} saving={saving} onCancel={() => { setForm(null); setEditingId(null); }} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}{toolbar}
     <div className="table-scroll"><table><thead><tr><th>Data</th><th>Cliente</th><th>Rota</th><th>Valor do frete</th><th>Recebido</th><th>Saldo em aberto</th><th>Situação</th>{!readOnly && <th>Ação</th>}</tr></thead><tbody>
       {filteredFreights.map((freight) => {
         const balance = freightReceivableBalance(freight, number);
