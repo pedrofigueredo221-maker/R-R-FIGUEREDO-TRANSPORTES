@@ -1,4 +1,4 @@
-/* Ajustes de apresentação das telas React; regras globais legadas permanecem em styles.css. */
+/* Ajustes específicos das telas React; estilos globais e componentes comuns ficam em styles.css. */
 :root {
   color-scheme: light;
   --rr-green: #163a32;
@@ -155,10 +155,8 @@
     width: 100%;
   }
 }
-/* Formulário especializado de fretes */
-.freight-editor .freight-fields {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
+/* Formulário especializado de fretes.
+   A grade base fica em styles.css; este arquivo mantém somente ajustes específicos. */
 .fuel-section {
   margin-top: 20px;
   padding: 16px;
@@ -232,7 +230,7 @@
   }
 }
 @media (max-width: 560px) {
-  .freight-editor .freight-fields, .fuel-grid {
+  .freight-editor .freight-fields, .freight-editor .fuel-grid {
     grid-template-columns: minmax(0, 1fr);
   }
   .toll-checkbox-row {
