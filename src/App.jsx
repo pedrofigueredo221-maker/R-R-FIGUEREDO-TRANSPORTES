@@ -48,7 +48,7 @@ function Login({ onLogin, onReset, busy, error }) {
   const [resetBusy, setResetBusy] = useState(false);
   const [resetMessage, setResetMessage] = useState("");
   return <main className="login-page"><form className="login-card" onSubmit={(e) => { e.preventDefault(); onLogin(username, password); }}>
-    <img className="login-logo" src="./imagens/logo-rr-figueredo-transportes.png" alt="R&R Figueredo Transportes" />
+    <img className="login-logo" src="./imagens/logo-oficial-rr.svg" alt="R&R Figueredo Transportes" />
     <h1>Tela de login</h1>
     <label htmlFor="login-username">Usuário</label><input id="login-username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" placeholder="Digite seu usuário" required />
     <label htmlFor="login-password">Senha</label><input id="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" placeholder="Digite sua senha" required />
@@ -218,7 +218,7 @@ export default function App() {
   if (!session) return <Login onLogin={login} onReset={resetPassword} busy={busy} error={authError} />;
 
   return <div className={`app-shell ${readOnly ? "read-only" : ""}`}>
-    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo-rr-figueredo-transportes.png" alt="R&R Figueredo Transportes" /></div>
+    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo-oficial-rr.svg" alt="R&R Figueredo Transportes" /></div>
       <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><MenuIcon name={p.symbol} />{p.label}</button>)}</nav>
       <div className="sidebar-bottom"><span className="session-dot" /> Sessão autenticada</div>
     </aside>
