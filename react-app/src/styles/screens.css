@@ -227,9 +227,6 @@
   margin-top: 18px;
 }
 @media (max-width: 1100px) {
-  .freight-editor .freight-fields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .fuel-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -347,7 +344,7 @@
     width: 100%;
   }
 }
-/* Cadastro de funcionário em uma tela modal centralizada, no padrão visual do frete. */
+/* Modal de cadastro: definição única, com comportamento responsivo explícito. */
 .employee-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -355,9 +352,10 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgb(15 28 24 / 58%);
+  background: rgb(20 25 29 / 60%);
   backdrop-filter: blur(3px);
 }
+
 .employee-modal {
   width: min(920px, 100%);
   max-height: min(88vh, 900px);
@@ -368,30 +366,88 @@
   background: #fff;
   box-shadow: 0 24px 80px rgb(10 25 19 / 28%);
 }
+
+.employee-modal .eyebrow {
+  display: block;
+  margin: 0 0 7px;
+  color: #777;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
 .employee-modal-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 18px;
-  margin-bottom: 24px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--rr-border);
+  margin-bottom: 20px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid #e2e4e6;
 }
+
 .employee-modal-header h2 {
   margin: 0 0 8px;
-  color: #203b32;
+  color: #202428;
   font-size: 23px;
+  font-weight: 750;
 }
+
 .employee-modal-header p:not(.eyebrow) {
   margin: 0;
-  color: var(--rr-muted);
+  color: #656b71;
   font-size: 13px;
   line-height: 1.5;
 }
-.employee-form-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+
+.employee-modal-header .secondary-button {
+  flex: 0 0 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #dfe2e4;
+  border-radius: 7px;
+  background: #f7f8f8;
+  color: #34383c;
 }
+
+.employee-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+  padding: 18px;
+  border: 1px solid #e2e5e7;
+  border-radius: 9px;
+  background: #f8f9f9;
+}
+
+.employee-form-grid .editor-field {
+  gap: 7px;
+  color: #34393e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.employee-form-grid .editor-field input:not([type=checkbox]),
+.employee-form-grid .editor-field select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #cbd0d4;
+  border-radius: 6px;
+  background: #fff;
+  color: #202428;
+  font-size: 14px;
+}
+
+.employee-form-grid .editor-field input:focus,
+.employee-form-grid .editor-field select:focus {
+  border-color: #727b82;
+  box-shadow: 0 0 0 3px rgba(38, 44, 49, .09);
+}
+
 .employee-checkbox-field {
   flex-direction: row;
   align-items: center;
@@ -399,92 +455,73 @@
   min-height: 42px;
   gap: 10px;
 }
+
 .employee-checkbox-field input[type="checkbox"] {
   width: 18px;
   min-height: 18px;
   accent-color: #25483e;
 }
+
+.employee-form-grid .employee-checkbox-field {
+  grid-column: 1 / -1;
+  align-self: auto;
+  min-height: 0;
+  padding: 12px;
+  border: 1px solid #e0e3e5;
+  border-radius: 7px;
+  background: #fff;
+}
+
 .employee-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 26px;
   padding-top: 18px;
-  border-top: 1px solid var(--rr-border);
+  border-top: 1px solid #e2e4e6;
 }
+
 @media (max-width: 600px) {
   .employee-modal-backdrop {
-    align-items: end;
-    padding: 0;
+    padding: 8px;
   }
+
   .employee-modal {
-    width: 100%;
-    max-height: 92vh;
+    max-height: 94vh;
     padding: 20px 16px max(18px, env(safe-area-inset-bottom));
-    border-radius: 18px 18px 0 0;
+    border-radius: 12px;
   }
+
   .employee-modal-header h2 {
     font-size: 20px;
   }
+
   .employee-form-grid {
     grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    padding: 13px;
   }
+
   .employee-modal-actions {
+    position: sticky;
+    bottom: -20px;
     flex-direction: column-reverse;
+    margin: 18px -16px -20px;
+    padding: 14px 16px 18px;
   }
+
   .employee-modal-actions button {
     width: 100%;
   }
 }
-/* Campos e resumo de frete com hierarquia visual consistente. */
-.freight-editor .freight-fields {
-  grid-template-columns:repeat(2,minmax(0,1fr))
-}
-.freight-editor .editor-field {
-  font-size:13px;
-  line-height:1.4
-}
-.freight-editor .editor-field input:not([type=checkbox]),.freight-editor .editor-field select {
-  min-height:43px
-}
-@media(max-width:560px) {
+
+/* Campos do frete: grade base em styles.css e uma única quebra para celular. */
+@media (max-width: 560px) {
   .freight-editor .freight-fields {
-    grid-template-columns:minmax(0,1fr)
+    grid-template-columns: minmax(0, 1fr);
   }
 }
-/* Camada final de consistência para cadastros e resumo financeiro. */
-.employee-modal .eyebrow {
-  display:block;
-  margin:0 0 7px;
-  color:#777;
-  font-size:10px;
-  font-weight:800;
-  letter-spacing:1.3px
-}
-.employee-modal-header .secondary-button {
-  flex:0 0 36px;
-  min-width:36px;
-  height:36px;
-  padding:0;
-  border:1px solid #dfe2e4;
-  border-radius:7px;
-  background:#f7f8f8;
-  color:#34383c
-}
-@media(max-width:600px) {
-  .employee-modal-backdrop {
-    align-items:center;
-    padding:8px
-  }
-  .employee-modal {
-    max-height:94vh;
-    border-radius:12px
-  }
-  .employee-modal-actions {
-    position:sticky;
-    bottom:-20px
-  }
-}
+
 /* Resumo financeiro do frete: fonte única de estilos para desktop e mobile. */
 .freight-editor .freight-summary {
   margin-top: 18px;
