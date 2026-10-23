@@ -153,33 +153,39 @@ button:focus-visible,input:focus-visible {
   width:252px;
   flex-direction:column;
   padding:22px 14px 16px;
-  background:#25483e;
-  color:#fff
+  background:#262626;
+  color:#f7f7f7
 }
 .sidebar-brand {
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:82px;
-  padding:0 8px 20px;
+  min-height:88px;
+  padding:12px 10px 20px;
   border-bottom:1px solid #ffffff25
 }
 .sidebar-brand img {
   display:block;
   width:100%;
-  max-width:220px;
-  filter:brightness(0) invert(1)
+  max-width:190px;
+  max-height:78px;
+  object-fit:contain;
+  padding:9px;
+  border:1px solid #e4e4e4;
+  border-radius:7px;
+  background:#fff;
+  filter:none
 }
 .nav-label {
   margin:25px 12px 12px;
-  color:#b9cec6;
+  color:#c9c9c9;
   font-size:11px;
   font-weight:800;
-  letter-spacing:1.3px
+  letter-spacing:1.1px
 }
 .sidebar nav {
   display:grid;
-  gap:6px
+  gap:5px
 }
 .nav-item {
   display:flex;
@@ -189,11 +195,14 @@ button:focus-visible,input:focus-visible {
   min-height:44px;
   padding:10px 12px;
   border:0;
-  border-radius:9px;
+  border-radius:7px;
   background:transparent;
-  color:#dce8e3;
+  color:#e7e7e7;
   text-align:left;
-  font-weight:600
+  font-size:14px;
+  font-weight:600;
+  line-height:1.35;
+  white-space:normal
 }
 .nav-item span {
   display:grid;
@@ -202,10 +211,11 @@ button:focus-visible,input:focus-visible {
   font-size:18px
 }
 .nav-item:hover {
-  background:#ffffff12
+  background:#3b3b3b;
+  color:#fff
 }
 .nav-item.active {
-  background:#ffffff25;
+  background:#3b3b3b;
   color:#fff;
   box-shadow:inset 3px 0 #a8ddc4
 }
@@ -790,52 +800,6 @@ tbody tr:hover {
   .record-actions {
     min-width:120px
   }
-}
-/* Revisão de legibilidade do menu e do formulário de fretes React. */
-.sidebar {
-  background:#262626;
-  color:#f7f7f7
-}
-.sidebar-brand {
-  min-height:88px;
-  padding:12px 10px 20px
-}
-.sidebar-brand img {
-  width:100%;
-  max-width:190px;
-  max-height:78px;
-  object-fit:contain;
-  padding:9px;
-  border:1px solid #e4e4e4;
-  border-radius:7px;
-  background:#fff;
-  filter:none
-}
-.sidebar .nav-label {
-  display:block;
-  visibility:visible;
-  opacity:1;
-  color:#c9c9c9;
-  font-size:11px;
-  letter-spacing:1.1px
-}
-.sidebar nav {
-  display:grid;
-  gap:5px
-}
-.sidebar .nav-item {
-  display:flex;
-  visibility:visible;
-  opacity:1;
-  min-height:44px;
-  color:#e7e7e7;
-  font-size:14px;
-  line-height:1.35;
-  white-space:normal
-}
-.sidebar .nav-item:hover,.sidebar .nav-item.active {
-  background:#3b3b3b;
-  color:#fff
 }
 .top-actions .secondary-button {
   min-height:30px;
