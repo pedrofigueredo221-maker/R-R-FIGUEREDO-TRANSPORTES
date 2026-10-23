@@ -4,19 +4,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#163a32">
+  <meta name="theme-color" content="#343a40">
   <meta name="description" content="Sistema de gestão da R&amp;R Figueredo Transportes: fretes, faturamento, despesas e acompanhamento financeiro.">
   <link rel="icon" type="image/svg+xml" href="imagens/favicon.svg?v=2">
   <link rel="shortcut icon" type="image/svg+xml" href="imagens/favicon.svg?v=2">
   <link rel="apple-touch-icon" href="imagens/logo-rr-simbolo.png?v=1">
   <title>R&amp;R Figueredo Transportes — Gestão de Fretes</title>
-  <link rel="stylesheet" href="styles.css?v=44">
+  <link rel="stylesheet" href="styles.css?v=46">
 </head>
 <body>
   <div id="loginScreen" class="login-screen">
     <form id="loginForm" class="login-card">
       <img class="login-logo" src="imagens/logo-rr-figueredo-transportes.png?v=1" alt="R&amp;R Figueredo Transportes">
-      <p class="login-screen-label">TELA DE LOGIN</p>
+      <p class="login-screen-label">ACESSO AO SISTEMA</p>
 
       <label for="loginUsername">Usuário</label>
       <input id="loginUsername" name="username" autocomplete="username" placeholder="Digite seu usuário" required>
@@ -72,7 +72,7 @@
       <section class="page active" id="page-dashboard">
         <div class="welcome">
           <div>
-            <h2>Balanço geral da empresa</h2>
+            <h2>Visão geral</h2>
             
           </div>
           <img class="welcome-logo" src="imagens/logo-rr-figueredo-transportes.png?v=1" alt="" aria-hidden="true">
@@ -80,7 +80,7 @@
 
         <div class="toolbar">
           <div>
-            <label for="dashMonth">Período do painel</label>
+            <label for="dashMonth">Período</label>
             <input type="month" id="dashMonth">
           </div>
           <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
@@ -153,7 +153,7 @@
           <div id="categoryBars" class="category-bars"></div>
         </article>
 
-        <p class="notice">Os dados são sincronizados com segurança pelo Supabase após a autenticação.</p>
+        <p class="notice">Dados sincronizados com o Supabase.</p>
       </section>
 
       <section class="page" id="page-freights">
@@ -163,7 +163,7 @@
           </div>
           <div class="import-actions">
             <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
-            <button class="btn btn-primary" id="addFreight">＋ Cadastrar frete</button>
+            <button class="btn btn-primary" id="addFreight">＋ Novo frete</button>
              <details class="action-menu freight-tools-menu">
                <summary class="btn btn-secondary">Diversos <span aria-hidden="true">▾</span></summary>
                <div class="action-menu-content">
@@ -227,7 +227,7 @@
         <div class="section-top">
           <div>
             <h2>Despesas e manutenção</h2>
-            <p>Boletos, oficinas, óleo, pneus e demais custos da operação.</p>
+            <p>Custos operacionais e manutenção da frota.</p>
           </div>
           <div class="import-actions">
             <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
@@ -272,9 +272,9 @@
       <section class="page" id="page-receivables">
         <div class="section-top">
           <div>
-            <h2>Contas a receber</h2><p>Fretes faturados e lançamentos manuais a receber.</p>
+            <h2>Contas a receber</h2><p>Valores previstos e recebimentos registrados.</p>
           </div>
-          <div class="import-actions"><button class="refresh-btn" data-refresh id="refreshReceivables" title="Atualizar dados"><span aria-hidden="true">↻</span></button><button class="btn btn-primary" id="addManualReceivable" type="button">＋ Lançar conta a receber</button></div>
+          <div class="import-actions"><button class="refresh-btn" data-refresh id="refreshReceivables" title="Atualizar dados"><span aria-hidden="true">↻</span></button><button class="btn btn-primary" id="addManualReceivable" type="button">＋ Novo recebimento</button></div>
         </div>
 
         <div class="filters">
@@ -310,11 +310,11 @@
         <div class="section-top">
           <div>
             <h2>Contas a pagar</h2>
-            <p>Acompanhe vencimentos, parcelas e pagamentos pendentes.</p>
+            <p>Vencimentos e pagamentos pendentes.</p>
           </div>
           <div class="import-actions">
             <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
-            <button class="btn btn-primary" id="addPaymentExpense">＋ Registrar conta</button>
+            <button class="btn btn-primary" id="addPaymentExpense">＋ Nova conta</button>
           </div>
         </div>
 
@@ -355,8 +355,8 @@
       <section class="page" id="page-cadastros">
         <div class="section-top">
           <div>
-            <h2>Cadastros da empresa</h2>
-            <p>Mantenha nomes de motoristas e caminhões atualizados em um só lugar. Alterações de nome também atualizam os lançamentos antigos.</p>
+            <h2>Cadastros</h2>
+            <p>Gerencie funcionários, motoristas e caminhões.</p>
           </div>
           <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
         </div>
@@ -370,7 +370,7 @@
             <div class="panel-heading">
               <div>
                 <h3>Funcionários e motoristas</h3>
-                <p>Consulte e edite os funcionários cadastrados.</p>
+                <p>Gerencie funcionários e motoristas.</p>
               </div>
               <button class="btn btn-primary" type="button" id="addEmployeeBtn">＋ Adicionar funcionário</button>
             </div>
@@ -395,7 +395,7 @@
             <div class="panel-heading">
               <div>
                 <h3>Caminhões</h3>
-                <p>Consulte e edite os caminhões cadastrados.</p>
+                <p>Gerencie a frota cadastrada.</p>
               </div>
               <button class="btn btn-primary" type="button" id="addTruckBtn">＋ Adicionar caminhão</button>
             </div>
@@ -420,7 +420,7 @@
             <div class="panel-heading">
               <div>
                 <h3>Categorias de despesas</h3>
-                <p>Cadastre classificações próprias para organizar os custos.</p>
+                <p>Organize os custos por categoria.</p>
               </div>
             </div>
 
@@ -430,8 +430,8 @@
               <input id="categoryName" required maxlength="60" placeholder="Ex.: Pneus, oficina, óleo"><label for="categoryDescription">Descrição (opcional)</label><input id="categoryDescription" maxlength="120" placeholder="Descrição de até 120 caracteres">
 
               <div class="import-actions">
-                <button class="btn btn-primary" type="submit" id="categorySave">＋ Adicionar categoria</button>
-                <button class="btn btn-secondary" type="button" id="categoryCancel">Limpar / cancelar</button>
+                <button class="btn btn-primary" type="submit" id="categorySave">Salvar categoria</button>
+                <button class="btn btn-secondary" type="button" id="categoryCancel">Cancelar</button>
               </div>
             </form>
 
@@ -452,7 +452,7 @@
         <div class="section-top">
           <div>
             <h2>Relatórios</h2>
-            <p>Consulte os dados cadastrados e exporte para planilhas.</p>
+            <p>Indicadores operacionais e financeiros.</p>
           </div>
           <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
         </div>
@@ -470,8 +470,8 @@
             <summary class="btn btn-secondary">Exportar <span aria-hidden="true">▾</span></summary>
             <div class="action-menu-content">
               <button class="btn btn-primary" id="refreshReport" type="button">Gerar relatório</button>
-              <button class="btn btn-secondary" id="exportFreights" type="button">Exportar fretes CSV</button>
-              <button class="btn btn-secondary" id="exportExpenses" type="button">Exportar despesas CSV</button>
+              <button class="btn btn-secondary" id="exportFreights" type="button">Exportar fretes</button>
+              <button class="btn btn-secondary" id="exportExpenses" type="button">Exportar despesas</button>
             </div>
           </details>
         </div>
@@ -515,7 +515,7 @@
   <dialog id="freightDialog" class="modal">
     <form id="freightForm" method="dialog">
       <div class="modal-header">
-        <div><h2 id="freightModalTitle">Cadastrar frete</h2><p>Preencha os dados por etapa e confira o resumo financeiro antes de salvar.</p></div>
+        <div><h2 id="freightModalTitle">Cadastrar frete</h2><p>Informe os dados da viagem e revise os valores.</p></div>
         <button type="button" class="icon-btn" data-close="freightDialog">✕</button>
       </div>
 
@@ -579,7 +579,7 @@
   <dialog id="expenseDialog" class="modal">
     <form id="expenseForm" method="dialog">
       <div class="modal-header">
-        <div><h2 id="expenseModalTitle">Nova despesa</h2><p>Cadastre uma conta à vista ou parcelada.</p></div>
+        <div><h2 id="expenseModalTitle">Nova despesa</h2><p>Informe os dados da despesa e o pagamento.</p></div>
         <button type="button" class="icon-btn" data-close="expenseDialog">✕</button>
       </div>
 
@@ -686,7 +686,7 @@
 
               <div class="import-actions">
                 <button class="btn btn-primary" type="submit" id="employeeSave">＋ Adicionar funcionário</button>
-                <button class="btn btn-secondary" type="button" id="employeeCancel">Fechar sem salvar</button>
+                <button class="btn btn-secondary" type="button" id="employeeCancel">Cancelar</button>
               </div>
             </form>
 </dialog>
@@ -709,7 +709,7 @@
 
               <div class="import-actions">
                 <button class="btn btn-primary" type="submit" id="truckSave">＋ Adicionar caminhão</button>
-                <button class="btn btn-secondary" type="button" id="truckCancel">Fechar sem salvar</button>
+                <button class="btn btn-secondary" type="button" id="truckCancel">Cancelar</button>
               </div>
             </form>
 </dialog>
