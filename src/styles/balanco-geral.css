@@ -1,3 +1,4 @@
+@import "../design-system/tokens.css";
 /* Estilos exclusivos do Balanço Geral, sem interferir no Login ou Menu Lateral. */
 .content-area .balance-heading { font-size: 20px; font-weight: 800; letter-spacing: .5px; line-height: 1.3; margin: 0; color: #fff; }
 .content-area .balance-stat-action { display: block; width: 100%; padding: 0; border: 0; border-radius: 13px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
@@ -43,3 +44,13 @@
 .content-area .stats-grid .balance-stat-action .stat-card strong { line-height: 1.2; }
 .content-area .stats-grid .balance-stat-action::after { content: "↗"; position: absolute; right: 17px; bottom: 14px; color: #8a8f96; font-size: 17px; font-weight: 600; pointer-events: none; }
 @media (max-width: 720px) { .content-area .stats-grid .balance-stat-action .stat-card { min-height: 98px; height: 98px; padding: 14px 32px 14px 14px; gap: 8px; } .content-area .stats-grid .balance-stat-action::after { right: 11px; bottom: 10px; } }
+
+/* Ponte de compatibilidade: filtro padronizado utiliza o layout já aprovado. */
+.content-area .welcome-panel .rr-standard-month-filter { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; min-width: 245px; }
+.content-area .rr-standard-filter-label { font-size: 11px; font-weight: 800; letter-spacing: .8px; color: #dedede; }
+.content-area .rr-standard-month-input { box-sizing: border-box; display: flex; align-items: center; gap: 10px; width: 100%; min-height: 46px; padding: 0 12px; border: 1px solid #c9c9c9; border-radius: var(--rr-radius-control); background: var(--rr-color-surface); color: var(--rr-color-ink); }
+.content-area .rr-standard-month-input:focus-within { border-color: var(--rr-color-action); box-shadow: 0 0 0 3px rgb(23 100 192 / 15%); }
+.content-area .rr-standard-month-input > svg { flex: 0 0 18px; width: 18px; height: 18px; fill: none; stroke: #4b5563; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.content-area .welcome-panel .rr-standard-month-input input[type="month"] { box-sizing: border-box; flex: 1; min-width: 0; width: 100%; min-height: 44px; padding: 0; border: 0; background: transparent; color: var(--rr-color-ink); font-family: var(--rr-font-family); font-size: 15px; font-weight: 700; cursor: pointer; }
+.content-area .welcome-panel .rr-standard-month-input input[type="month"]:focus { outline: none; box-shadow: none; }
+@media (max-width: 720px) { .content-area .welcome-panel .rr-standard-month-filter { width: 100%; min-width: 0; } }
