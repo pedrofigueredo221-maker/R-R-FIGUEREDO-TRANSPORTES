@@ -432,14 +432,6 @@ tbody tr:hover {
   color:#775713;
   font-size:13px
 }
-.error-banner {
-  margin-bottom:18px;
-  padding:16px;
-  border:1px solid #edc4c4;
-  border-radius:10px;
-  background:#fff1f1;
-  color:#932d2d
-}
 .error-banner p {
   overflow-wrap:anywhere;
   line-height:1.5
@@ -946,95 +938,6 @@ tbody tr:hover {
     font-size:19px
   }
 }
-/* Cadastros: campos de funcionário/caminhão em grade. */
-.employee-modal {
-  width:min(860px,100%);
-  padding:28px;
-  border:1px solid #d7dadd;
-  border-radius:12px;
-  box-shadow:0 24px 70px rgba(0,0,0,.25)
-}
-.employee-modal-backdrop {
-  background:rgba(20,25,29,.6);
-  backdrop-filter:blur(2px)
-}
-.employee-modal-header {
-  margin-bottom:20px;
-  padding-bottom:17px;
-  border-color:#e2e4e6
-}
-.employee-modal-header h2 {
-  color:#202428;
-  font-size:23px;
-  font-weight:750
-}
-.employee-modal-header p:not(.eyebrow) {
-  color:#656b71;
-  font-size:13px
-}
-.employee-form-grid {
-  gap:18px 20px;
-  padding:18px;
-  border:1px solid #e2e5e7;
-  border-radius:9px;
-  background:#f8f9f9
-}
-.employee-form-grid .editor-field {
-  gap:7px;
-  color:#34393e;
-  font-size:13px;
-  font-weight:700
-}
-.employee-form-grid .editor-field input:not([type=checkbox]),.employee-form-grid .editor-field select {
-  box-sizing:border-box;
-  width:100%;
-  min-width:0;
-  min-height:44px;
-  padding:10px 12px;
-  border:1px solid #cbd0d4;
-  border-radius:6px;
-  background:#fff;
-  color:#202428;
-  font-size:14px
-}
-.employee-form-grid .editor-field input:focus,.employee-form-grid .editor-field select:focus {
-  border-color:#727b82;
-  box-shadow:0 0 0 3px rgba(38,44,49,.09)
-}
-.employee-form-grid .employee-checkbox-field {
-  grid-column:1/-1;
-  align-self:auto;
-  min-height:0;
-  padding:12px;
-  border:1px solid #e0e3e5;
-  border-radius:7px;
-  background:#fff
-}
-.employee-modal-actions {
-  position:sticky;
-  bottom:-28px;
-  margin:20px -28px -28px;
-  padding:16px 28px 22px;
-  background:#fff;
-  border-top:1px solid #e2e4e6
-}
-@media(max-width:600px) {
-  .employee-modal {
-    padding:20px 16px
-  }
-  .employee-form-grid {
-    grid-template-columns:minmax(0,1fr);
-    gap:14px;
-    padding:13px
-  }
-  .employee-modal-actions {
-    bottom:-20px;
-    margin:18px -16px -20px;
-    padding:14px 16px 18px
-  }
-}
-
-
 /* Recuperação de senha: mantém a ação final alinhada ao formulário React. */
 .reset-back-link {
   display: inline-block;
