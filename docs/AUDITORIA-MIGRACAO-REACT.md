@@ -1,75 +1,44 @@
-# Auditoria de preservação e migração para React
+# Auditoria de arquitetura — aplicação React única
 
-## Estado verificado em 22/10/2026
+## Estado desta refatoração
 
-A migração completa ainda **não está pronta**. O sistema de produção continua sendo o HTML/JavaScript da raiz. A aplicação em `react-app/` era apenas uma página de orientação técnica; ela ainda não substitui as telas ou fluxos antigos.
+O objetivo é manter uma única interface de aplicação: React. A versão HTML/JavaScript antiga foi identificada como uma segunda implementação que aumentava o risco de alterações divergentes e dificultava saber qual CSS controlava a tela publicada.
 
-Esta auditoria é uma referência de preservação. Nenhuma tela de produção, regra financeira, arquivo de sincronização, configuração Supabase ou dado foi alterado nesta etapa.
+## Estrutura mantida
 
-## Inventário do sistema legado
+- `react-app/index.html`: entrada do sistema.
+- `react-app/redefinir-senha.html`: entrada adicional para recuperação de senha, renderizada por React.
+- `react-app/src/App.jsx`: autenticação, sessão e navegação.
+- `react-app/src/EditablePage.jsx`: coordenação dos fluxos de edição.
+- `react-app/src/screens/`: telas por domínio funcional.
+- `react-app/src/components/`: componentes reaproveitáveis.
+- `react-app/src/domain/`: cálculos e regras de negócio testáveis.
+- `react-app/src/styles.css`: estilos globais, botões, campos e estrutura comum.
+- `react-app/src/styles/screens.css`: layout e estilos específicos de tela.
+- `banco-de-dados/supabase/app-config.js`: configuração publicável compartilhada pelo build.
 
-| Arquivo | Tamanho aproximado | Responsabilidade observada |
-|---|---:|---|
-| `index.html` | 40 KB / 739 linhas | Login, navegação e estrutura das telas, formulários e diálogos |
-| `app.js` | 70 KB / 394 linhas | Estado local, cadastros, telas, cálculos financeiros, relatórios e importação/exportação |
-| `styles.css` | 67 KB / 1.009 linhas | Layouts, formulários, tabelas, modais, responsividade e estados visuais |
-| `sync.js` | 24 KB / 979 linhas | Supabase Auth, perfil visitante, cache, sincronização, mesclagem e recuperação |
-| `config.js` | 378 bytes | URL/chave publicável do Supabase e e-mails de papéis |
-| `redefinir-senha.html` | 5 KB / 188 linhas | Fluxo separado de recuperação/definição de senha |
+## Achados de duplicidade visual
 
-A entrada HTML carrega as bibliotecas XLSX, Tesseract e Supabase antes dos arquivos da aplicação. A ordem desses scripts é uma dependência que precisa ser mantida durante a migração.
+1. O resumo financeiro de frete possuía regras em dois arquivos CSS e múltiplos blocos de substituição.
+2. Havia estilos claros antigos e estilos grafite finais para os mesmos seletores.
+3. Regras mobile reescreviam a grade do resumo e uma regra com `!important` anulava os breakpoints anteriores.
+4. O CSS global React estava minificado em grande parte, tornando a leitura e a manutenção difíceis.
+5. A raiz do repositório continha a aplicação legada completa em paralelo com a entrada React.
+6. Os fluxos de verificação e publicação ainda dependiam de arquivos da implementação legada.
 
-## Funcionalidades que precisam ser preservadas
+## Alterações aplicadas nesta branch
 
-- Login com Supabase Auth, mensagens de erro e recuperação de senha.
-- Perfil Visitante somente leitura, sem remover a conta administrativa.
-- Carregamento dos dados da nuvem, cache local, sincronização periódica, tratamento de alterações pendentes e mesclagem de dados legados.
-- Painel com indicadores, fretes recentes, contas próximas do vencimento e visão por categoria.
-- Cadastro, edição, exclusão, filtros e pesquisa de fretes.
-- Cálculo de comissão percentual ou fixa; descontos gerais; pedágio opcionalmente descontado da base; bônus fora da base; combustível estimado e real; custo e lucro estimado.
-- Registro e acompanhamento de recebimentos parciais de clientes.
-- Despesas, categorias, fornecedores, caminhões, descontos/adicionais, parcelamento e pagamentos parciais por parcela.
-- Contas a receber e contas a pagar com filtros por situação e mês.
-- Cadastro de funcionários e caminhões, ativação/desativação, vínculos e ações em lote.
-- Relatórios por período e motorista e exportação CSV.
-- Modelo/importação de planilhas, prévia/validação de dados e leitura auxiliar por foto/OCR.
-- Autocompletar cidades, ordenação de tabelas, diálogos, notificações e layouts responsivos.
-- Tela separada para redefinição de senha e identidade visual/logotipo.
+- Reformatado o CSS React principal em regras legíveis.
+- Removidas declarações repetidas e conflitantes do resumo financeiro em `styles.css`.
+- Consolidado o resumo financeiro em uma única seção identificada de `styles/screens.css`, com um breakpoint mobile explícito.
+- Corrigido o total de custos exibido no resumo React para usar a função de domínio `freightCost`, incluindo comissão, bônus, pedágio, combustível real e outros custos.
+- Implementado o fluxo de recuperação de senha como página React adicional, preservando a URL pública `redefinir-senha.html`.
+- Atualizados os workflows para validar sintaxe de configuração, estrutura React, testes e build sem depender da versão antiga.
+- Substituída a auditoria estática dos IDs do HTML antigo por verificações da estrutura React.
+- Preparada a remoção dos pontos de entrada, CSS, sincronização e configuração que pertenciam à aplicação legada.
 
-## Regras financeiras de referência
+## Limites de validação
 
-As funções legadas foram encontradas em `app.js` e foram reproduzidas sem alteração em `react-app/src/domain/freightCalculations.js` para iniciar a migração com testes:
+A revisão de código não equivale a uma validação visual em navegador. É necessário que o workflow execute `npm test` e `npm run build`; depois, conferir em desktop e celular o painel, formulários, resumo financeiro, menu responsivo, login e recuperação de senha. A autenticação e o controle de permissões devem ser testados com contas de teste antes da publicação.
 
-- Base da comissão = valor do frete menos descontos gerais; subtrai também o pedágio apenas quando `deductToll` está marcado; a base mínima é zero.
-- Comissão fixa é um valor; comissão percentual é calculada sobre a base.
-- Bônus é separado da base da comissão.
-- A fórmula legada de custo soma comissão, bônus, pedágio, combustível real e outros custos.
-- A fórmula legada de lucro subtrai descontos, pedágio, combustível real, comissão, bônus e outros custos do valor do frete.
-- A função legada `freightNet` tem sua própria fórmula e foi mantida literalmente, sem “corrigir” ou unificar regras por conta própria.
-
-O módulo novo ainda não está conectado às telas e não substitui as funções legadas. Isso evita uma alteração financeira invisível antes de comparar os resultados em cenários reais.
-
-## Verificações estáticas realizadas
-
-- Foram identificados 193 atributos `id` no HTML principal, todos únicos.
-- Os formulários encontrados incluem login, funcionário, caminhão, categoria, frete, despesa e pagamento.
-- Foram identificados os sete painéis principais: dashboard, fretes, despesas, contas a receber, contas a pagar, cadastros e relatórios.
-- Existe uma referência em `app.js` a `ocrRawText` que não aparece como ID literal no HTML; pode ser elemento criado dinamicamente e precisa ser validado no fluxo de OCR.
-- Não foram executados login real, chamadas ao Supabase, importação XLSX, OCR, testes de navegador ou build de produção nesta auditoria.
-- As políticas SQL foram lidas estaticamente, mas não foram executadas nem testadas no projeto Supabase real.
-
-## Critérios obrigatórios antes de considerar a migração concluída
-
-1. Migrar todas as telas e formulários para componentes React sem remover recursos do legado.
-2. Separar domínio financeiro, componentes, formulários, relatórios, autenticação e persistência em módulos pequenos.
-3. Integrar a camada de dados React à API Supabase existente, mantendo compatibilidade com os dados e o cache atuais.
-4. Comparar os cálculos antigos e novos com casos de teste representativos e dados de exemplo sem sobrescrever dados reais.
-5. Validar login, redefinição de senha, perfil visitante, sincronização, recuperação de conexão e prevenção de gravações por visitante.
-6. Verificar cada tela em computador e celular, incluindo os ajustes visuais já solicitados.
-7. Testar importação/exportação, OCR, filtros, pagamentos parciais, parcelas e CRUD de cadastros.
-8. Executar testes automatizados e build de produção; revisar erros de console e caminhos dos assets.
-9. Só depois da validação, trocar a entrada publicada para React. Manter uma rota/plano de retorno para o HTML antigo até a aprovação.
-
-## Limite desta etapa
-
-Esta branch inicia a migração segura das regras financeiras e adiciona testes de regressão, sem alterar a aplicação legada. Ela **não representa uma migração completa nem comprova funcionamento em navegador ou Supabase**.
+Nenhum dado, tabela ou política do Supabase foi alterado por esta refatoração. A configuração pública continua sendo fornecida por `banco-de-dados/supabase/app-config.js`.
