@@ -30,6 +30,10 @@ const vite = read("vite.config.js");
 const app = read("react-app/src/App.jsx");
 const main = read("react-app/src/main.jsx");
 const resetMain = read("react-app/reset-main.jsx");
+const globalStyles = read("react-app/src/styles.css");
+const screenStyles = read("react-app/src/styles/screens.css");
+const freightForm = read("react-app/src/screens/FreightForm.jsx");
+const editablePage = read("react-app/src/EditablePage.jsx");
 
 if (!mainHtml.includes("./src/main.jsx")) failures.push("A entrada principal não carrega src/main.jsx.");
 if (!resetHtml.includes("./reset-main.jsx")) failures.push("A página de recuperação não carrega reset-main.jsx.");
@@ -37,6 +41,14 @@ if (!main.includes("./styles.css") || !main.includes("./styles/screens.css")) fa
 if (!resetMain.includes("./src/styles.css") || !resetMain.includes("./src/styles/screens.css")) failures.push("A página de recuperação não compartilha os estilos React.");
 if (!vite.includes("react-app/redefinir-senha.html")) failures.push("O build Vite não inclui a página React de recuperação.");
 if (!app.includes("redefinir-senha.html")) failures.push("O fluxo de recuperação de senha não aponta para a página React publicada.");
+
+// Guardas contra o retorno das duplicidades visuais encontradas na auditoria.
+if (globalStyles.includes("freight-summary")) failures.push("O resumo financeiro do frete deve ter estilos apenas em styles/screens.css.");
+if ((screenStyles.match(/\.freight-editor \.freight-summary \{/g) || []).length !== 1) failures.push("O resumo financeiro deve possuir exatamente um bloco CSS base.");
+if (globalStyles.includes("!important") || screenStyles.includes("!important")) failures.push("Evite !important nos estilos React; corrija a cascata na regra responsável.");
+if (freightForm.includes("Intl.NumberFormat")) failures.push("FreightForm deve reutilizar o formatador de moeda compartilhado.");
+if (editablePage.includes("Intl.NumberFormat") || editablePage.includes("const dateLabel =")) failures.push("EditablePage deve reutilizar os formatadores compartilhados.");
+if (!freightForm.includes("freightCost(calculationInput)")) failures.push("O resumo de frete deve usar a função de domínio freightCost.");
 
 const legacyPaths = [
   "index.html",
