@@ -37,8 +37,7 @@ function Login({ onLogin, onReset, busy, error }) {
   const [resetMessage, setResetMessage] = useState("");
   return <main className="login-page"><form className="login-card" onSubmit={(e) => { e.preventDefault(); onLogin(username, password); }}>
     <img className="login-logo" src="./imagens/logo-rr-figueredo-transportes.png" alt="R&R Figueredo Transportes" />
-    <p className="eyebrow">SISTEMA DE GESTÃO</p><h1>Acesse sua conta</h1>
-    <p className="muted">Entre para consultar os dados da transportadora.</p>
+    <h1>Tela de login</h1>
     <label htmlFor="login-username">Usuário</label><input id="login-username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" placeholder="Digite seu usuário" required />
     <label htmlFor="login-password">Senha</label><input id="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" placeholder="Digite sua senha" required />
     {error && <p className="error-message" role="alert">{error}</p>}
