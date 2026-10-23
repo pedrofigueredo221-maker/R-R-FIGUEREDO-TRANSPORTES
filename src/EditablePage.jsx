@@ -37,7 +37,7 @@ function Actions({ onEdit, onDelete }) {
   return <div className="record-actions"><button className="secondary-button" type="button" title="Editar registro" aria-label="Editar registro" onClick={onEdit}>✎</button><button className="danger-button" type="button" title="Excluir registro" aria-label="Excluir registro" onClick={onDelete}>▤</button></div>;
 }
 
-export default function EditablePage({ page, data, onSave, readOnly, loading, version, onRefresh }) {
+export default function EditablePage({ page, data, onSave, readOnly, loading, version, onRefresh, recordNavigation }) {
   const [form, setForm] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [formVersion, setFormVersion] = useState(version);
@@ -64,6 +64,21 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     if (readOnly) return;
     setError(""); setEditingId(record.id); setFormVersion(version); setForm(kind === "freight" ? { ...blankFreight(), ...record, value: String(record.value ?? ""), discount: String(record.discount ?? 0), toll: String(record.toll ?? 0), bonus: String(record.bonus ?? 0), commission: String(record.commission ?? 13), received: String(record.received ?? 0) } : kind === "expense" ? { ...blankExpense(), ...record, value: String(record.value ?? ""), installmentsCount: String((record.installments || []).length || 1) } : { ...record });
   };
+  // Ao chegar por duplo clique em outra tela, localiza o registro original
+  // e abre o mesmo formulário de edição já utilizado pela listagem.
+  useEffect(() => {
+    if (!recordNavigation || recordNavigation.page !== page) return;
+    const key = page === "freights" ? "freights" : page === "expenses" ? "expenses" : null;
+    const kind = page === "freights" ? "freight" : "expense";
+    const record = key && (data[key] || []).find((item) => String(item.id) === String(recordNavigation.recordId));
+    if (!record) { setError("Registro não encontrado."); return; }
+    setQuery("");
+    setMonth("");
+    if (!readOnly) startEdit(kind, record);
+  // O requestId muda apenas em uma nova navegação solicitada pelo usuário.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recordNavigation?.requestId, page]);
+
   const commit = async (next, expectedVersion = (form ? formVersion : version)) => {
     if (readOnly) { setError("Perfil visitante: alterações não são permitidas."); return; }
     setSaving(true); setError("");
