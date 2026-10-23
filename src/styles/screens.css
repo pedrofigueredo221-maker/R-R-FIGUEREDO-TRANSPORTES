@@ -824,3 +824,30 @@
   .form-dialog-backdrop { padding: 8px; }
   .form-dialog { max-height: 96vh; }
 }
+
+/* Identidade oficial: marca branca e laranja sobre o menu escuro. */
+.sidebar-brand img {
+  max-width: 195px;
+  max-height: 83px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.sidebar-brand { min-height: 113px; }
+/* Seleção neutra, sem faixa verde. */
+.sidebar .nav-item.active {
+  background: #484848;
+  border-color: #575757;
+  box-shadow: none;
+}
+.sidebar .nav-item:hover { background: #393939; }
+/* Marca branca deve contrastar também na tela de login. */
+.login-card .login-logo {
+  display: block;
+  box-sizing: content-box;
+  width: min(150px, 100%);
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #262626;
+}
