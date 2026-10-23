@@ -61,7 +61,7 @@ function updateFreightCalc(){
  balanceEl.classList.toggle("input-error",mismatch);valueEl.classList.toggle("input-error",mismatch);receivedEl.classList.toggle("input-error",mismatch);
  const validation=$("balanceValidation");validation.hidden=!mismatch;validation.textContent=mismatch?"Os valores não conferem: frete deve ser igual a adiantamento + saldo atual + descontos. Corrija os campos em vermelho.":"";
  $("fuelEstimate").textContent=money(estimated);
- const totalCost=discount+t+fuelActual+commission+bonus,tripProfit=v-totalCost;
+ const totalCost=t+fuelActual+commission+bonus,tripProfit=v-discount-totalCost;
  const calcItems=[["Valor do frete",money(v)],["Pagamento ao motorista",money(commission+bonus)],["Adiantamento recebido",money(received)],["Saldo a receber",money(currentBalance)],["Custos totais da viagem",money(totalCost)],["Lucro estimado",money(tripProfit)]];
  $("freightCalc").innerHTML='<div class="freight-calculations-grid">'+calcItems.map(([label,val],i)=>'<div class="freight-calculation-item'+(i===4?' cost-total':'')+(i===5?' profit-total':'')+'"><span>'+label+'</span><strong>'+val+'</strong></div>').join("")+'</div>';
 }
