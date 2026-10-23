@@ -92,4 +92,7 @@
 .freight-editor .freight-summary-item:last-child{border-top-color:#666}
 .freight-editor .freight-summary-item:last-child span{color:#fff;font-weight:700}
 .freight-editor .freight-summary-item:last-child strong{font-size:16px}
-@media(max-width:600px){.employee-modal{padding:20px 16px}.employee-form-grid{grid-template-columns:minmax(0,1fr);gap:14px;padding:13px}.employee-modal-actions{bottom:-20px;margin:18px -16px -20px;padding:14px 16px 18px}.freight-editor .freight-summary-grid{grid-template-columns:minmax(0,1fr)}.freight-editor .freight-summary-item{padding:10px 0}}
+@media(max-width:600px){.employee-modal{padding:20px 16px}.employee-form-grid{grid-template-columns:minmax(0,1fr);gap:14px;padding:13px}.employee-modal-actions{bottom:-20px;margin:18px -16px -20px;padding:14px 16px 18px}.freight-editor .freight-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:12px}.freight-editor .freight-summary-item{padding:10px 0;align-items:flex-start;flex-direction:column;gap:4px}.freight-editor .freight-summary-item strong{font-size:13px;white-space:normal;text-align:left}}
+
+/* Mantém o resumo do frete em duas colunas em desktop e mobile. */
+.freight-editor .freight-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:20px}
