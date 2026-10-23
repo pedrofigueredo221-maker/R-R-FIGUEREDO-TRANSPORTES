@@ -1,7 +1,7 @@
-import { freightProfit, freightDriverPayment, freightOperatingCosts } from "../domain/freightCalculations.js";
+import { freightProfit, freightDriverPayment, freightCost } from "../domain/freightCalculations.js";
+import { money } from "../lib/formatters.js";
 
 const amount = (value) => Math.max(0, Number(value) || 0);
-const money = (value) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(value) || 0);
 
 function FreightField({ label, value, onChange, type = "text", required = false, min, step, options, placeholder, readOnly = false }) {
   return <label className={`editor-field ${type === "checkbox" ? "checkbox-field" : ""}`}>
@@ -22,7 +22,7 @@ export default function FreightForm({ title, value, setValue, onSubmit, onCancel
     ["Pagamento estimado ao motorista", money(freightDriverPayment(calculationInput))],
     ["Adiantamento recebido", money(value.received)],
     ["Saldo a receber", money(Math.max(0, amount(value.value) - amount(value.received) - amount(value.discount)))],
-    ["Custos totais da viagem", money(freightOperatingCosts(calculationInput) + amount(value.bonus))],
+    ["Custos totais da viagem", money(freightCost(calculationInput))],
     ["Lucro estimado", money(freightProfit(calculationInput))]
   ];
   const fields = [

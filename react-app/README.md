@@ -1,23 +1,20 @@
-# Versão React — migração gradual
+# Aplicação React
 
-A aplicação React é construída separadamente da versão estável em HTML. A raiz do repositório continua sendo a versão publicada até que as telas e fluxos tenham sido migrados e validados.
+Este diretório contém a interface única do sistema R&R Figueredo Transportes.
 
-## Executar localmente
-Requer Node.js 18 ou superior.
-1. Na raiz do repositório, execute `npm install`.
-2. Execute `npm run dev`.
-3. Abra o endereço informado pelo Vite.
+## Desenvolvimento
+Na raiz do repositório, execute `npm install` e depois `npm run dev`.
 
-## Escopo desta etapa
-- Login pelo Supabase Auth, restauração da sessão ao atualizar e recuperação de senha por e-mail.
-- Leitura do registro compartilhado `public.app_state`, sem criar, editar ou sobrescrever dados.
-- Painel com faturamento mensal, lucro estimado, valores a receber, contas a pagar e fretes recentes.
-- Identificação do perfil visitante como somente leitura.
-- Consultas somente leitura para fretes, despesas, contas a receber, contas a pagar, relatórios e cadastros, com filtros e tabelas responsivas.
-- Formulários de criação/edição, registro de pagamentos/recebimentos e exclusões ainda permanecem na versão HTML estável; esta etapa React não grava dados.
+## Páginas
+- `index.html`: sistema de gestão.
+- `redefinir-senha.html`: fluxo de recuperação de senha, também renderizado em React.
 
-## Segurança
-A chave publicável do Supabase é destinada ao cliente; nunca adicionar `service_role` ou senha de banco. A proteção dos dados depende das políticas RLS. Não inclua backups reais nem dados de clientes no GitHub.
+## Código
+- `src/App.jsx`: autenticação e navegação.
+- `src/screens/`: telas do sistema.
+- `src/components/`: componentes reutilizáveis.
+- `src/domain/`: regras de negócio e testes.
+- `src/styles.css`: estilos globais e componentes comuns.
+- `src/styles/screens.css`: estilos específicos de telas.
 
-## Validação pendente
-Executar `npm run build` e testar o login e as políticas RLS no projeto Supabase real com usuário autorizado e visitante. Esta etapa não substitui testes reais de autenticação/permissões.
+Os dados continuam no Supabase configurado em `banco-de-dados/supabase/app-config.js`. Não altere tabelas, políticas ou dados de produção como parte de uma refatoração visual.

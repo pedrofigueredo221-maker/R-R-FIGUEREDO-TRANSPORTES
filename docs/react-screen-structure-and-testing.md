@@ -1,51 +1,54 @@
-# Migração React: telas, layout e roteiro de validação
+# Estrutura das telas React e roteiro de validação
 
-Esta branch é uma etapa empilhada sobre a PR #18. O CI do projeto deve compilar a versão React e executar os testes automatizados nesta PR. A PR #18 precisa ser aceita antes de esta branch poder ser integrada à `main`; não mesclar esta branch diretamente na `main`.
+A aplicação tem uma única interface de gestão em React. A página de recuperação de senha também é renderizada em React, mas é uma entrada separada para que os links de e-mail do Supabase continuem funcionando.
 
-## Organização
+## Organização do código
 
-- `react-app/src/screens/OverviewPage.jsx`: visão geral e indicadores mensais.
-- `react-app/src/screens/FreightsPage.jsx`: ponto de entrada da área de fretes.
-- `react-app/src/screens/FreightForm.jsx`: formulário especializado de fretes e resumo financeiro ao vivo.
-- `react-app/src/screens/ExpensesPage.jsx`: ponto de entrada de despesas e manutenção.
-- `react-app/src/screens/ReceivablesPage.jsx`: ponto de entrada de contas a receber.
-- `react-app/src/screens/PayablesPage.jsx`: ponto de entrada de contas a pagar.
-- `react-app/src/screens/ReportsPage.jsx`: relatórios gerenciais.
-- `react-app/src/screens/CadastrosPage.jsx`: ponto de entrada dos cadastros.
-- `react-app/src/components/DataTable.jsx` e `StatCard.jsx`: componentes reutilizáveis.
-- `react-app/src/lib/formatters.js`: formatação de valores e datas.
-- `react-app/src/styles.css`: estilos base existentes.
-- `react-app/src/styles/screens.css`: refinamentos responsivos e estilos específicos do React.
+- `react-app/src/App.jsx`: autenticação, sessão, navegação e coordenação geral.
+- `react-app/src/EditablePage.jsx`: fluxo de edição compartilhado entre telas.
+- `react-app/src/screens/`: fretes, despesas, contas, cadastros, relatórios e visão geral.
+- `react-app/src/components/`: componentes reutilizáveis, como cartões e tabelas.
+- `react-app/src/domain/`: cálculos financeiros e regras de recebíveis, com testes.
+- `react-app/src/lib/formatters.js`: formatação de moeda e datas.
+- `react-app/src/styles.css`: estilos globais, layout comum, botões, campos e formulários.
+- `react-app/src/styles/screens.css`: regras específicas das telas e layouts responsivos.
+- `react-app/src/PasswordReset.jsx`: validação do link de recuperação e alteração de senha.
+- `react-app/reset-main.jsx`: ponto de entrada da página de recuperação.
+- `vite.config.js`: build das duas páginas React e cópia dos recursos compartilhados.
 
-Para preservar as operações já migradas, o estado compartilhado e algumas rotinas de edição continuam centralizados em `EditablePage.jsx nesta etapa. A separação da camada de apresentação foi iniciada; a extração completa de toda a lógica de formulário em hooks/serviços independentes é uma etapa posterior, após validação funcional.
+## Convenções de apresentação
 
-## Ajustes de interface incluídos
+1. Cada componente visual deve ter um arquivo principal de estilos responsável por sua aparência.
+2. Regras específicas de tela ficam em `styles/screens.css`; estilos globais não devem redefinir o mesmo componente sem uma razão clara.
+3. Breakpoints devem ser explícitos e organizados por finalidade. Evitar `!important` para vencer regras anteriores.
+4. Resumos financeiros e cartões devem ter uma regra base e ajustes mobile pontuais, sem blocos repetidos no final do arquivo.
+5. Componentes compartilhados devem ser reutilizados em vez de copiar o mesmo markup/estilo para cada tela.
+6. Antes de remover regras CSS, comparar a tela em desktop, tablet e celular para confirmar que a cascata resultante mantém a aparência desejada.
 
-- Formulário de frete com grade de três colunas em telas largas e adaptação para telas menores.
-- Gasto estimado de combustível ao lado do gasto real; estimativa calculada por litros × preço do diesel.
-- Resumo financeiro em duas colunas, com valores brancos em negrito e maior destaque.
-- Checkbox de desconto de pedágio compacto e alinhado, com explicação da regra.
-- Destaque verde para saldo a receber e vermelho para saldo a pagar.
-- Ajustes de foco por teclado, espaçamento dos campos, navegação lateral e tabelas com rolagem horizontal em telas estreitas.
-- O salvamento usa apenas as colunas `data` e `version` de `public.app_state`, compatíveis com o esquema documentado; não presume a existência de `updated_at`.
+## Ajustes de layout desta auditoria
 
-## Testes manuais necessários antes de produção
+- Resumo financeiro de frete centralizado em uma única seção CSS, sem versões claras/grafite concorrentes e sem `!important`.
+- Formulário de frete com duas colunas no layout base e uma coluna em telas estreitas.
+- Modal de cadastro com uma única definição de desktop e uma única regra mobile, removendo regras que alternavam alinhamento central/inferior.
+- Estilos de erro duplicados consolidados.
+- CSS formatado em blocos legíveis para facilitar a inspeção e manutenção.
+- Total de custos no resumo React calculado por `freightCost`, incluindo comissão, bônus, pedágio, combustível real e outros custos.
+
+## Roteiro de teste manual
 
 1. Entrar e sair; atualizar a página e verificar a restauração da sessão.
 2. Conferir a visão geral, faturamento, lucro estimado, recebíveis e contas a pagar.
-3. Criar, editar e excluir um frete sem recebimentos; conferir que o histórico com recebimentos não pode ser apagado pela tela.
-4. Conferir base e comissão com e sem a opção de descontar pedágio.
-5. Conferir gasto estimado versus gasto real de combustível.
+3. Criar, editar e excluir um frete de teste; conferir os cálculos do resumo.
+4. Conferir comissão percentual/fixa, desconto geral e opção de descontar pedágio da base.
+5. Conferir estimativa e gasto real de combustível, outros custos e bônus.
 6. Criar despesa à vista e parcelada; registrar pagamentos parciais e totais.
-7. Conferir cadastros de funcionários, caminhões e categorias, incluindo bloqueio de exclusão de categoria vinculada a despesas.
-8. Testar os relatórios por mês, os filtros e os valores financeiros.
-9. Entrar como visitante e confirmar que não consegue executar ações pela interface; após o SQL de permissões ser aplicado, testar também escrita direta no Supabase.
-10. Abrir duas sessões em computadores diferentes, editar o mesmo estado e verificar se o conflito é sinalizado sem sobrescrever silenciosamente a última gravação.
-11. Testar em largura de desktop, tablet e celular.
+7. Conferir cadastros de funcionários e caminhões, inclusive modal em telas estreitas.
+8. Conferir relatórios, filtros e valores financeiros.
+9. Entrar como visitante e confirmar que não consegue gravar; validar também as permissões RLS com uma conta de teste.
+10. Abrir duas sessões de teste e conferir a detecção de conflito de gravação.
+11. Testar a recuperação de senha com um e-mail de teste e confirmar a volta ao login.
+12. Conferir desktop, tablet e celular, inclusive rolagem horizontal das tabelas e foco por teclado.
 
-## Limitações que permanecem
+## Validação antes de produção
 
-- A interface React ainda usa `public.app_state` como um único documento JSON.
-- Modo offline completo, servidor local compartilhado e sincronização posterior ainda não estão integrados. A PR #20 contém um protótipo isolado de armazenamento local, não conectado ao sistema.
-- Nenhum backup real foi executado por esta branch e nenhuma migração SQL foi executada no banco.
-- Não publicar em produção antes de backup restaurável, configuração de permissões e testes com contas reais.
+Execute `node scripts/check-project.mjs`, `npm test` e `npm run build`. Depois teste os fluxos reais com contas de teste. Nenhuma validação estática substitui a conferência visual no navegador nem o teste de autenticação e RLS no projeto Supabase.
