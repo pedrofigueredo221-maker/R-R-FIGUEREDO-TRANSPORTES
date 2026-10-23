@@ -32,6 +32,7 @@ const main = read("src/main.jsx");
 const resetMain = read("reset-main.jsx");
 const globalStyles = read("src/styles.css");
 const screenStyles = read("src/styles/screens.css");
+const freightForm = read("src/screens/FreightForm.jsx");
 const editablePage = read("src/EditablePage.jsx");
 
 if (!mainHtml.includes('src="/src/main.jsx"')) failures.push("A entrada principal não carrega src/main.jsx.");
@@ -47,8 +48,9 @@ if (/\.freight-editor \.freight-fields\s*\{[^}]*grid-template-columns:\s*repeat\
 if (screenStyles.includes(".freight-editor .freight-fields, .fuel-grid")) failures.push("A regra mobile de combustível deve usar o seletor completo .freight-editor .fuel-grid.");
 if ((screenStyles.match(/\.freight-editor \.freight-summary \{/g) || []).length !== 1) failures.push("O resumo financeiro deve possuir exatamente um bloco CSS base.");
 if (globalStyles.includes("!important") || screenStyles.includes("!important")) failures.push("Evite !important nos estilos React; corrija a cascata na regra responsável.");
+if (freightForm.includes("Intl.NumberFormat")) failures.push("FreightForm deve reutilizar o formatador de moeda compartilhado.");
 if (editablePage.includes("Intl.NumberFormat") || editablePage.includes("const dateLabel =")) failures.push("EditablePage deve reutilizar os formatadores compartilhados.");
-if (!editablePage.includes("freightCost(calculationInput)")) failures.push("O resumo de frete em EditablePage deve usar a função de domínio freightCost.");
+if (!freightForm.includes("freightCost(calculationInput)")) failures.push("O resumo de frete deve usar a função de domínio freightCost.");
 
 const legacyPaths = [
   "react-app",
