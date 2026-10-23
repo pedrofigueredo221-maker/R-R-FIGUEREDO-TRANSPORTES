@@ -1,28 +1,28 @@
 /* Cabeçalho padronizado para tabelas das telas internas.
    Não afeta Login nem Menu Lateral, ambos congelados. */
 .content-area .table-scroll table thead th {
-  background: #303741;
+  background: #262626;
   color: #ffffff;
-  border-top: 1px solid #89939e;
-  border-right: 1px solid #737e89;
-  border-left: 1px solid #737e89;
-  border-bottom: 3px solid #89939e;
+  border-top: 1px solid #666666;
+  border-right: 1px solid #555555;
+  border-left: 1px solid #555555;
+  border-bottom: 3px solid #666666;
   padding: 16px 12px;
   text-align: center;
   font-weight: 800;
   font-size: 15px;
   white-space: nowrap;
 }
-.content-area .table-scroll table thead th:first-child { border-left-color: #89939e; }
-.content-area .table-scroll table thead th:last-child { border-right-color: #89939e; }
+.content-area .table-scroll table thead th:first-child { border-left-color: #666666; }
+.content-area .table-scroll table thead th:last-child { border-right-color: #666666; }
 
 /* Padrão compartilhado dos filtros de todas as telas internas.
    Mantém as funções existentes e não interfere nas telas congeladas. */
 .content-area .page-filters,
 .content-area .welcome-panel:has(.month-picker) {
-  border: 1px solid #3b424a;
+  border: 1px solid #3b3b3b;
   border-radius: 9px;
-  background: #303741;
+  background: #262626;
   color: #ffffff;
 }
 .content-area .page-filters {
@@ -49,17 +49,17 @@
   border: 1px solid #cfd5db;
   border-radius: 6px;
   background: #ffffff;
-  color: #202428;
+  color: #262626;
 }
 .content-area .page-filters .secondary-button {
   min-height: 42px;
-  border: 1px solid #777f87;
+  border: 1px solid #666666;
   border-radius: 6px;
-  background: #454c54;
+  background: #3b3b3b;
   color: #ffffff;
 }
 .content-area .page-filters .secondary-button:hover {
-  background: #535c66;
+  background: #4a4a4a;
 }
 .content-area .welcome-panel:has(.month-picker) {
   gap: 16px;
@@ -82,3 +82,38 @@
     min-width: 0;
   }
 }
+
+/* Superfícies neutras: unifica bordas e evita tons azulados nas áreas internas. */
+.content-area .panel,
+.content-area .stat-card {
+  border-color: #dedede;
+  background: #ffffff;
+}
+.content-area .panel-heading h3,
+.content-area .stat-card > span {
+  color: #262626;
+}
+.content-area .table-scroll table tbody td {
+  border-color: #d6d6d6;
+}
+/* Mantém cores funcionais dos valores financeiros e das situações de pagamento. */
+
+/* Botão de atualização: somente ícone azul, igual em todas as telas internas. */
+.content-area .rr-refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #d5d9df;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1764c0;
+  cursor: pointer;
+}
+.content-area .rr-refresh-button:hover:not(:disabled) { background: #edf4ff; border-color: #a9c7ec; }
+.content-area .rr-refresh-button:focus-visible { outline: 2px solid #1764c0; outline-offset: 2px; }
+.content-area .rr-refresh-button:disabled { opacity: .5; cursor: wait; }
+.content-area .rr-refresh-control { display: flex; justify-content: flex-end; margin-bottom: 12px; }
