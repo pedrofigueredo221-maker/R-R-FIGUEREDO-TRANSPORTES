@@ -870,3 +870,86 @@
 .table-scroll .record-actions button:hover { background: #edf0f3; }
 .table-scroll .record-actions .danger-button:hover { background: #fff0f0; }
 .table-scroll table tbody tr[hidden] { display: none; }
+
+
+/* Login: fundo branco, cartão escuro e espaçamento ampliado.
+   Escopo limitado à tela de autenticação; não altera outros formulários. */
+.login-page {
+  background: #fff;
+  padding: 28px 16px;
+}
+.login-page .login-card {
+  width: min(100%, 470px);
+  padding: 44px 38px;
+  border: 1px solid #34383d;
+  border-radius: 20px;
+  background: #202123;
+  color: #fff;
+  box-shadow: 0 16px 44px #00000024;
+}
+.login-page .login-card .login-logo {
+  box-sizing: border-box;
+  width: min(205px, 100%);
+  height: 205px;
+  object-fit: contain;
+  margin: 0 auto 54px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.login-page .login-card h1 {
+  margin: 0 0 54px;
+  color: #fff;
+  font-size: 28px;
+  text-align: center;
+}
+.login-page .login-card label {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 14px;
+}
+.login-page .login-card input {
+  min-height: 52px;
+  margin: 0 0 36px;
+  padding: 12px 14px;
+  border: 1px solid #77818d;
+  border-radius: 9px;
+  background: #2c2e32;
+  color: #fff;
+}
+.login-page .login-card input::placeholder { color: #b4bdc9; }
+.login-page .login-card input:focus {
+  outline: 2px solid #a4b2c4;
+  outline-offset: 1px;
+}
+.login-page .login-card .login-submit {
+  min-height: 50px;
+  margin: 0 0 22px;
+  font-size: 15px;
+}
+.login-page .login-card .login-submit.primary-button {
+  background: #145746;
+  color: #fff;
+}
+.login-page .login-card .login-submit.primary-button:hover { background: #1b6954; }
+.login-page .login-card .login-submit.secondary-button {
+  border: 1px solid #818a95;
+  background: transparent;
+  color: #fff;
+}
+.login-page .login-card .login-submit.secondary-button:hover { background: #34383d; }
+.login-page .login-card .login-note {
+  margin-top: 20px;
+  color: #b4bdc9;
+}
+.login-page .login-card .reset-message { color: #d5e6e0; }
+@media (max-width: 520px) {
+  .login-page .login-card { padding: 32px 22px; }
+  .login-page .login-card .login-logo {
+    width: min(185px, 100%);
+    height: 185px;
+    margin-bottom: 42px;
+  }
+  .login-page .login-card h1 { margin-bottom: 42px; }
+}
