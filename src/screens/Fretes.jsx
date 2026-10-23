@@ -19,6 +19,7 @@ export default function Fretes({ controller }) {
     {showError}
     {!readOnly && form && <FormDialog label="FRETE" onClose={() => setForm(null)}><FreightForm value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}
     {toolbar}
+    <p className="freight-search-count" role="status">{filteredFreights.length} {filteredFreights.length === 1 ? "viagem encontrada" : "viagens encontradas"} nos filtros selecionados.</p>
     <div className="table-scroll"><table className="rr-freight-table"><thead><tr><th>Data</th><th>Motorista</th><th>Trajeto</th><th>Valor</th><th>Custo total</th><th>Comissão</th><th>Lucro</th><th>Pagamento</th>{!readOnly && <th>Ações</th>}</tr></thead><tbody>
       {filteredFreights.map((freight) => {
 
