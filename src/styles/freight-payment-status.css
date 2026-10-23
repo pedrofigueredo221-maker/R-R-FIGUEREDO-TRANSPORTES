@@ -1,24 +1,21 @@
-/* Situação do pagamento na tabela de Fretes. Escopo restrito à coluna de pagamento. */
-.freight-payment-status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 30px;
-  padding: 6px 10px;
-  border: 1px solid transparent;
-  border-radius: 6px;
+/* Destaque discreto aplicado à célula inteira da coluna Pagamento em Fretes. */
+td.freight-payment-cell {
+  text-align: center;
+  vertical-align: middle;
   font-size: 12px;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.4;
   white-space: nowrap;
+  border-left: 1px solid #d6dce0;
+  border-right: 1px solid #d6dce0;
 }
-.freight-payment-status.is-paid {
+td.freight-payment-cell.is-paid,
+tbody tr:hover td.freight-payment-cell.is-paid {
   background: #e8f5ec;
-  border-color: #c7e5d1;
   color: #24653c;
 }
-.freight-payment-status.is-pending {
+td.freight-payment-cell.is-pending,
+tbody tr:hover td.freight-payment-cell.is-pending {
   background: #fff0ef;
-  border-color: #f0d0cb;
   color: #963b35;
 }
