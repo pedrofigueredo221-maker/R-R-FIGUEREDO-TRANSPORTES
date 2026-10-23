@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { money as formatMoney, dateLabel, todayISO as today } from "./lib/formatters.js";
 import Fretes from "./screens/Fretes.jsx";
 import Despesas from "./screens/Despesas.jsx";
@@ -45,6 +45,14 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
   const [tab, setTab] = useState("employees");
   const [payment, setPayment] = useState(null);
+  // Ao navegar entre telas, retornar sempre à consulta, sem formulário herdado.
+  useEffect(() => {
+    setForm(null);
+    setEditingId(null);
+    setPayment(null);
+    setError("");
+  }, [page]);
+
 
   const startCreate = (kind) => {
     if (readOnly) return;
