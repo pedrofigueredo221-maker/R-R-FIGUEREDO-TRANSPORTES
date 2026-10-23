@@ -270,7 +270,7 @@
           <div>
             <h2>Contas a receber</h2><p>Fretes faturados e lançamentos manuais a receber.</p>
           </div>
-          <div class="import-actions"><button class="refresh-btn" data-refresh id="refreshReceivables" title="Atualizar dados"><span aria-hidden="true">↻</span></button><button class="btn btn-primary" id="addManualReceivable" type="button">＋ Lançar conta a receber</button></div>
+          <button class="refresh-btn" data-refresh id="refreshReceivables" title="Atualizar dados"><span aria-hidden="true">↻</span></button>
         </div>
 
         <div class="filters">
@@ -606,8 +606,7 @@
     </form>
   </dialog>
 
-  <dialog id="manualReceivableDialog" class="modal small-modal"><form id="manualReceivableForm" method="dialog"><div class="modal-header"><div><h2 id="manualReceivableTitle">Lançar conta a receber</h2><p>Registre um recebimento que não veio de um frete.</p></div><button type="button" class="icon-btn" data-close="manualReceivableDialog">✕</button></div><input type="hidden" id="manualReceivableId"><div class="form-grid"><div class="full-width"><label for="mrDescription">Descrição *</label><input id="mrDescription" required maxlength="120" placeholder="Ex.: serviço, reembolso..."></div><div><label for="mrCustomer">Cliente / origem</label><input id="mrCustomer" maxlength="120"></div><div><label for="mrDate">Data *</label><input id="mrDate" type="date" required></div><div><label for="mrValue">Valor total (R$) *</label><input id="mrValue" type="number" min="0.01" step="0.01" required></div><div><label for="mrReceived">Valor já recebido (R$)</label><input id="mrReceived" type="number" min="0" step="0.01" value="0"></div></div><div class="modal-actions"><button type="button" class="btn btn-secondary" data-close="manualReceivableDialog">Cancelar</button><button type="submit" class="btn btn-primary">Salvar conta</button></div></form></dialog>
-<dialog id="payDialog" class="modal small-modal">
+  <dialog id="payDialog" class="modal small-modal">
     <form id="payForm" method="dialog">
       <div class="modal-header">
         <div><h2>Registrar pagamento</h2><p id="paySubtitle">Confirme os dados do pagamento.</p></div>
