@@ -1,5 +1,6 @@
 import RefreshButton from "../components/RefreshButton.jsx";
 import RouteDisplay from "../components/RouteDisplay.jsx";
+import "../styles/freight-table-standard.css";
 import "../styles/corporate-table-headings.css";
 import { useMemo, useState } from "react";
 import { freightCommission, freightOperatingCosts, freightProfit } from "../domain/freightCalculations.js";
