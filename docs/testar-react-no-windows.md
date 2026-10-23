@@ -5,7 +5,7 @@ Este roteiro permite testar a interface usando dados fictícios, sem enviar alte
 ## 1. Baixe o código
 
 Abra o ZIP da branch de auditoria:
-https://github.com/pedrofigueredo221-maker/RR-FIGUEREDO-TRANSPORTES/archive/refs/heads/audit/duplicidade-layout-css-2026-10-23.zip
+https://github.com/pedrofigueredo221-maker/RR-FIGUEREDO-TRANSPORTES/archive/refs/heads/main.zip
 
 Extraia o ZIP para uma pasta fácil de encontrar.
 

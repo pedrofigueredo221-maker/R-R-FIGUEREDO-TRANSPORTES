@@ -7,7 +7,7 @@ import { dirname, resolve, sep } from "node:path";
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  root: resolve(projectRoot, "react-app"),
+  root: projectRoot,
   base: "./",
   plugins: [react(), {
     name: "copy-shared-images",
@@ -44,8 +44,8 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(projectRoot, "react-app", "index.html"),
-        reset: resolve(projectRoot, "react-app", "redefinir-senha.html")
+        main: resolve(projectRoot, "index.html"),
+        reset: resolve(projectRoot, "redefinir-senha.html")
       }
     }
   }
