@@ -1280,3 +1280,10 @@ select::-ms-expand{display:none}
   #freightDialog .freight-section-fields { grid-template-columns: 1fr; }
   #freightDialog .freight-calculations-grid { grid-template-columns: 1fr 1fr; }
 }
+
+
+/* Respeita o atributo hidden nos controles do topo, inclusive com os estilos compactos. */
+.top-actions #quickAdd[hidden],
+.top-actions #logoutButton[hidden] {
+  display: none !important;
+}
