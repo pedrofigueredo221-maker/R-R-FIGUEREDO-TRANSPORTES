@@ -97,3 +97,23 @@
   border-color: #d6d6d6;
 }
 /* Mantém cores funcionais dos valores financeiros e das situações de pagamento. */
+
+/* Botão de atualização: somente ícone azul, igual em todas as telas internas. */
+.content-area .rr-refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #d5d9df;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1764c0;
+  cursor: pointer;
+}
+.content-area .rr-refresh-button:hover:not(:disabled) { background: #edf4ff; border-color: #a9c7ec; }
+.content-area .rr-refresh-button:focus-visible { outline: 2px solid #1764c0; outline-offset: 2px; }
+.content-area .rr-refresh-button:disabled { opacity: .5; cursor: wait; }
+.content-area .rr-refresh-control { display: flex; justify-content: flex-end; margin-bottom: 12px; }
