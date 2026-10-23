@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./styles.css";
 import "./styles/screens.css";
+import "./styles/freight-payment-status.css";
 
 const rootElement = document.getElementById("react-root");
 
