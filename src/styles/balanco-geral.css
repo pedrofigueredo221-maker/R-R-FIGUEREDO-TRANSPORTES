@@ -31,3 +31,7 @@
 .content-area .welcome-panel .balance-period-input input[type="month"]:focus { outline: none; box-shadow: none; }
 .content-area .balance-period-input input[type="month"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: .8; }
 @media (max-width: 720px) { .content-area .welcome-panel .balance-period-picker { width: 100%; min-width: 0; } }
+
+/* Indicação discreta de linhas navegáveis nos relatórios e últimas viagens. */
+.content-area .balance-data-row, .balance-dialog .balance-data-row { cursor: pointer; }
+.content-area .balance-data-row:hover td, .balance-dialog .balance-data-row:hover td { background: #f1f4f7; }
