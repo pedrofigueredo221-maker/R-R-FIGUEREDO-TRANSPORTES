@@ -1042,3 +1042,7 @@ textarea:required:focus {
 
 /* Mobile: manter a mesma identificação dos botões do desktop */
 @media(max-width:650px){.top-actions .btn{font-size:12px!important;padding:10px 12px!important}.top-actions .btn::first-letter{font-size:inherit}.brand-logo{max-width:145px;max-height:68px;object-fit:contain;background:#f1f2f3;border-radius:8px;padding:5px}.topbar .today{display:none}}
+
+/* Remover setas visuais dos campos de seleção e número, mantendo sua funcionalidade. */
+select, input[type=number]{appearance:none;-webkit-appearance:none;-moz-appearance:textfield;background-image:none!important}
+select::-ms-expand{display:none}
