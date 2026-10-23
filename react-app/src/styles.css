@@ -1033,3 +1033,21 @@ tbody tr:hover {
     padding:14px 16px 18px
   }
 }
+
+
+/* Recuperação de senha: mantém a ação final alinhada ao formulário React. */
+.reset-back-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: #285b4b;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.reset-back-link:hover {
+  text-decoration: underline;
+}
+.reset-card form {
+  display: grid;
+  gap: 8px;
+}
