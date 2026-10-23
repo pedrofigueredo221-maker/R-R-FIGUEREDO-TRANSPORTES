@@ -1103,3 +1103,72 @@ select::-ms-expand{display:none}
 
 /* Revisão final: resumo de frete sem cartões grandes e controles alinhados também no celular. */
 @media(max-width:760px){#freightDialog .freight-calculations-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 10px}#freightDialog .freight-calculation-item{align-items:flex-start;flex-direction:column;gap:3px}#freightDialog .freight-calculation-item strong{text-align:left}}
+
+
+/* Camada de acabamento corporativo: tokens neutros e componentes consistentes. */
+:root{--ink:#20252b;--muted:#68717c;--line:#dfe3e8;--bg:#f4f5f7;--green:#30363d;--green2:#f0f2f4;--white:#fff;--orange:#737b84;--red:#a83c42;--blue:#414951;--shadow:0 1px 3px rgba(20,28,38,.045)}
+body{font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:13px;line-height:1.45;background:#f4f5f7;color:#20252b}
+.sidebar{background:#fff;color:#20252b;border-right:1px solid #e0e3e7;padding:22px 14px}
+.sidebar .brand{padding-bottom:25px}
+.sidebar .nav-label{color:#858c95;font-size:9px;letter-spacing:1.1px;font-weight:700}
+.sidebar .nav-item{margin:2px 0;padding:10px 12px;min-height:39px;border-radius:6px;color:#444b53;font-size:12px;font-weight:550;gap:10px}
+.sidebar .nav-item:hover,.sidebar .nav-item.active{background:#f0f2f4;color:#171b20;box-shadow:inset 2px 0 #4b535c}
+.sidebar .sidebar-bottom{border-top:1px solid #e6e8eb}
+.sidebar .sidebar-bottom small{color:#7d858e}
+.main{background:#f4f5f7}
+.topbar{height:70px;background:#fff;border-bottom:1px solid #e0e3e7;padding:0 26px}
+.topbar h1{font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:19px;font-weight:650;letter-spacing:-.35px;color:#20252b}
+.eyebrow{font-size:9px;letter-spacing:.8px;color:#858c95}
+.content{padding:22px 26px 36px;max-width:1500px}
+.welcome{background:#fff;border:1px solid #e0e3e7;border-radius:8px;padding:18px 21px;margin-bottom:18px}
+.welcome h2{font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:18px;font-weight:650;letter-spacing:-.25px;margin:0}
+.welcome p,.section-top p,.panel-heading p{font-size:12px;color:#737b85}
+.welcome-logo{max-width:94px;max-height:48px;object-fit:contain}
+.stats-grid{gap:11px;margin-bottom:16px}
+.stat-card,.panel,.report-controls,.table-panel,.dashboard-panel{border:1px solid #e0e3e7;border-radius:8px;box-shadow:none;background:#fff}
+.stat-card{padding:15px 16px;min-width:0}
+.stat-card>strong{font-size:22px;font-weight:650;letter-spacing:-.45px}
+.stat-card small{font-size:11px;color:#737b85}
+.stat-head{font-size:11px;color:#626b75}
+.dashboard-grid{gap:12px}
+.panel-heading{padding:14px 16px;border-bottom:1px solid #e9ebee}
+.panel-heading h3,.section-top h2{font-size:15px;font-weight:650;letter-spacing:-.15px;color:#252a30}
+.section-top{align-items:center;margin-bottom:15px}
+.section-top h2{margin:0}
+.section-top p{margin-top:3px}
+.toolbar,.filters,.report-controls{gap:10px}
+.filters{padding:12px;background:#fff;border:1px solid #e0e3e7;border-radius:8px;margin-bottom:12px}
+.filters input,.filters select,.toolbar input,.report-controls input,.report-controls select{min-height:34px;border-color:#d9dee4;border-radius:5px;background:#fff;font-size:12px}
+.btn{border-radius:5px;min-height:33px;padding:7px 11px;font-size:12px;font-weight:600;box-shadow:none;transition:background .15s,border-color .15s}
+.btn-primary{background:#343a40;border:1px solid #343a40;color:#fff}
+.btn-primary:hover{background:#20252b;border-color:#20252b}
+.btn-secondary{background:#fff;color:#343a40;border:1px solid #d6dbe1}
+.btn-secondary:hover{background:#f1f3f5;border-color:#c4cad1}
+.btn-subtle-danger{background:#fff;color:#a13d43;border:1px solid #e2cdd0}
+.text-btn{color:#414951;font-weight:600;font-size:11px}
+.refresh-btn,.icon-btn{width:32px;height:32px;min-width:32px;border:1px solid #dfe3e8;border-radius:5px;background:#fff;color:#4b535c;box-shadow:none}
+.refresh-btn:hover,.icon-btn:hover{background:#f0f2f4;color:#20252b}
+.sync-status{height:32px;min-height:32px;padding:0 10px}
+.top-actions{gap:7px}
+.top-actions .btn,.top-actions .sync-status{height:32px;min-height:32px;padding:0 10px;font-size:11px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}
+thead th,th{background:#f3f4f6;color:#454c54;font-size:10px;font-weight:700;text-transform:none;letter-spacing:.1px;border-bottom:1px solid #dfe3e8}
+td,th{padding:10px 12px;border-bottom:1px solid #edf0f2}
+tbody tr:hover{background:#fafbfc}
+.status-pill,.badge{font-size:10px;font-weight:600;border-radius:4px}
+.empty-state{padding:24px 14px;color:#7a828b;font-size:12px;text-align:center}
+.notice{font-size:11px;color:#737b85;background:#f0f2f4;border:1px solid #e0e3e7;border-radius:6px;padding:9px 12px}
+.modal{border:1px solid #dfe3e8;border-radius:9px;box-shadow:0 18px 55px rgba(18,24,32,.18)}
+.modal::backdrop{background:rgba(22,28,35,.42)}
+.modal-header{padding-bottom:12px;border-bottom:1px solid #e7eaed}
+.modal-header h2{font-size:18px;font-weight:650;letter-spacing:-.2px}
+.modal-header p{font-size:11px;color:#737b85}
+.modal .form-grid label,.modal label{font-size:11px;font-weight:600;color:#4e565f}
+.modal input:not([type=checkbox]),.modal select,.modal textarea{border:1px solid #d8dde3;border-radius:5px;background:#fff;font-size:12px}
+.modal input:focus,.modal select:focus,.modal textarea:focus{outline:2px solid rgba(73,82,91,.15);border-color:#8b949e}
+.registration-tabs{border-bottom:1px solid #dfe3e8;gap:4px}
+.registration-tab{border-radius:5px 5px 0 0;font-size:12px;padding:10px 14px;color:#646d77}
+.registration-tab.active{background:#fff;color:#20252b;border-color:#dfe3e8;border-bottom-color:#fff;font-weight:650}
+.action-menu-content{border:1px solid #dfe3e8;border-radius:7px;box-shadow:0 8px 22px rgba(20,28,38,.1);background:#fff}
+@media(max-width:1000px){.content{padding:18px 16px 30px}.topbar{padding:0 16px}.stats-grid{gap:8px}.stat-card{padding:12px}}
+@media(max-width:650px){.topbar{height:auto;min-height:64px;padding:12px 14px}.content{padding:14px 12px 24px}.welcome{padding:14px;margin-bottom:12px}.welcome-logo{max-width:72px;max-height:38px}.section-top{align-items:flex-start;gap:10px}.section-top .import-actions{flex-wrap:wrap;justify-content:flex-end}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card>strong{font-size:18px}.filters{padding:9px}.top-actions{gap:5px}}
