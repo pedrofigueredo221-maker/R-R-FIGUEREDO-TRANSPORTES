@@ -693,7 +693,24 @@
   background: #303030;
 }
 .login-logo {
-  width: min(260px, 100%);
+  width: min(130px, 100%);
+  margin-bottom: 36px;
+}
+.login-card {
+  font-family: Calibri, "Carlito", Arial, sans-serif;
+}
+.login-card h1 {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.login-card label {
+  margin-top: 28px;
+}
+.login-card h1 + label {
+  margin-top: 0;
+}
+.login-card .login-submit {
+  margin-top: 30px;
 }
 .sidebar-brand {
   min-height: 82px;
