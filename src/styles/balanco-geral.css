@@ -47,12 +47,7 @@
 /* Ajuste do cabeçalho do Balanço Geral: título no topo e filtro compacto. */
 .content-area .welcome-panel:has(.balance-heading) { align-items: flex-start; }
 .content-area .welcome-panel .balance-heading { align-self: flex-start; }
-.content-area .welcome-panel .rr-standard-month-filter.balance-period-picker { min-width: 0; width: 190px; max-width: 100%; gap: 5px; }
-.content-area .welcome-panel .balance-period-picker .rr-standard-month-input { min-height: 36px; gap: 6px; padding: 0 8px; }
-.content-area .welcome-panel .balance-period-picker .rr-standard-month-input > svg { flex-basis: 15px; width: 15px; height: 15px; }
-.content-area .welcome-panel .balance-period-picker .rr-standard-month-input input[type="month"] { min-height: 34px; font-size: 13px; }
-@media (max-width: 720px) { .content-area .welcome-panel .rr-standard-month-filter.balance-period-picker { width: 190px; max-width: 100%; } }
-
+@media (max-width: 720px) { 
 /* Compatibilidade com o filtro mensal efetivamente presente na main. */
 .content-area .welcome-panel .month-picker.balance-period-picker { min-width: 0; width: 190px; max-width: 100%; gap: 5px; }
 .content-area .welcome-panel .balance-period-picker .balance-period-input { min-height: 36px; gap: 6px; padding: 0 8px; }
