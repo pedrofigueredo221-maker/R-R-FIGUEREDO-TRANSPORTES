@@ -22,7 +22,7 @@ export default function Fretes({ controller }) {
         const balance = freightReceivableBalance(freight, number);
         return <tr key={freight.id} className={!readOnly ? "editable-row" : undefined} title={!readOnly ? "Dê duplo clique para editar este frete" : undefined} onDoubleClick={!readOnly ? () => startEdit("freight", freight) : undefined}>
           <td>{dateLabel(freight.date)}</td><td className="numeric">{money(freightCommission(freight))}</td><td>{[freight.origin, freight.destination].filter(Boolean).join(" → ") || "—"}</td>
-          <td className="numeric">{money(freight.value)}</td><td className="numeric">{money(freightDriverPayment(freight))}</td><td className="numeric">{money(freightOperatingCosts(freight))}</td><td><span className={`freight-payment-status ${balance <= 0 ? "is-paid" : "is-pending"}`}>{balance <= 0 ? "Pagamento realizado" : `Saldo restante: ${money(balance)}`}</span></td>
+          <td className="numeric">{money(freight.value)}</td><td className="numeric">{money(freightDriverPayment(freight))}</td><td className="numeric">{money(freightOperatingCosts(freight))}</td><td className={`freight-payment-cell ${balance <= 0 ? "is-paid" : "is-pending"}`}>{balance <= 0 ? "Pagamento realizado" : `Saldo restante: ${money(balance)}`}</td>
 
           {!readOnly && <td><div className="record-actions"><Actions onEdit={() => startEdit("freight", freight)} onDelete={() => remove("freights", freight)} />{freightReceivableBalance(freight, number) > 0 && <button className="secondary-button" type="button" disabled={saving} onClick={() => openReceipt(freight)} title="Registrar recebimento" aria-label="Registrar recebimento">▣</button>}</div></td>}
         </tr>;
