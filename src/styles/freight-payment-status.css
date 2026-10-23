@@ -1,0 +1,24 @@
+/* Situação do pagamento na tabela de Fretes. Escopo restrito à coluna de pagamento. */
+.freight-payment-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.freight-payment-status.is-paid {
+  background: #e8f5ec;
+  border-color: #c7e5d1;
+  color: #24653c;
+}
+.freight-payment-status.is-pending {
+  background: #fff0ef;
+  border-color: #f0d0cb;
+  color: #963b35;
+}
