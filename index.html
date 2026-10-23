@@ -54,15 +54,14 @@
       <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">Menu</button>
 
       <div>
-        <div class="eyebrow">CONTROLE DA TRANSPORTADORA</div>
-        <h1 id="pageTitle">Visão geral</h1>
+        
+        <h1 id="pageTitle">Balanço geral</h1>
       </div>
 
       <div class="top-actions">
         <span class="today" id="today"></span>
         <span id="syncStatus" class="sync-status">Conectando…</span>
         <button class="btn btn-secondary" id="logoutButton" type="button" hidden>Sair</button>
-        <button class="btn btn-primary" id="quickAdd">＋ Novo lançamento</button>
       </div>
     </header>
 
@@ -72,8 +71,8 @@
       <section class="page active" id="page-dashboard">
         <div class="welcome">
           <div>
-            <h2>Seu negócio, em uma visão.</h2>
-            <p>Fretes, pagamentos e despesas organizados em um só lugar.</p>
+            <h2>Balanço geral da empresa</h2>
+            
           </div>
           <img class="welcome-logo" src="imagens/logo-rr-figueredo-transportes.png?v=1" alt="" aria-hidden="true">
         </div>
@@ -160,42 +159,23 @@
         <div class="section-top">
           <div>
             <h2>Controle de fretes</h2>
-            <p>Registre viagens, calcule comissão e acompanhe recebimentos.</p>
           </div>
           <div class="import-actions">
             <button class="refresh-btn" data-refresh title="Atualizar dados"><span aria-hidden="true">↻</span></button>
             <button class="btn btn-primary" id="addFreight">＋ Cadastrar frete</button>
+             <button class="btn btn-secondary" id="quickAdd" type="button">＋ Novo lançamento</button>
+             <details class="action-menu freight-tools-menu">
+               <summary class="btn btn-secondary">Diversos <span aria-hidden="true">▾</span></summary>
+               <div class="action-menu-content">
+                 <button class="btn btn-secondary" type="button" id="downloadFreightTemplate">Baixar modelo Excel</button>
+                 <label class="btn btn-secondary file-button" for="freightExcelFile">Importar planilha</label>
+                 <label class="btn btn-secondary file-button" for="freightPhotoFile">Escolher foto</label>
+               </div>
+             </details>
           </div>
         </div>
 
-        <article class="panel import-panel">
-          <div class="panel-heading">
-            <div>
-              <h3>Importação de fretes em lote</h3>
-              <p>As ferramentas ficam reunidas em Diversos para liberar espaço na tela.</p>
-            </div>
-            <details class="action-menu">
-              <summary class="btn btn-secondary">Diversos <span aria-hidden="true">▾</span></summary>
-              <div class="action-menu-content">
-                <button class="btn btn-secondary" type="button" id="downloadFreightTemplate">Baixar modelo Excel</button>
-                <label class="btn btn-secondary file-button" for="freightExcelFile">Importar planilha</label>
-                <label class="btn btn-secondary file-button" for="freightPhotoFile">Escolher foto</label>
-              </div>
-            </details>
-          </div>
-          <input id="freightExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden>
-          <input id="freightPhotoFile" type="file" accept="image/*" capture="environment" hidden>
-
-          <p class="form-hint">Use uma linha por frete. Para fotos, letra cursiva pode ser reconhecida incorretamente; revise datas e valores.</p>
-          <div id="ocrStatus" class="import-status" hidden></div>
-
-          <div id="importReview" class="import-review" hidden>
-            <div class="panel-heading">
-              <div>
-                <h3>Conferir antes de importar</h3>
-                <p>Corrija os dados na prévia. Não serão salvos automaticamente.</p>
-              </div>
-            </div>
+        <article class="panel import-panel import-tools-content">
             <label for="importText">Prévia (campos separados por ponto e vírgula)</label>
             <textarea id="importText" rows="7" spellcheck="false"></textarea>
             <div class="import-actions">
@@ -288,10 +268,9 @@
       <section class="page" id="page-receivables">
         <div class="section-top">
           <div>
-            <h2>Contas a receber</h2>
-            <p>Recebíveis gerados automaticamente pelos fretes, com saldos parciais e pendentes.</p>
+            <h2>Contas a receber</h2><p>Fretes faturados e lançamentos manuais a receber.</p>
           </div>
-          <button class="refresh-btn" data-refresh id="refreshReceivables" title="Atualizar dados"><span aria-hidden="true">↻</span></button>
+          <div class="import-actions"><button class="refresh-btn" data-refresh id="refreshReceivables" title="Atualizar dados"><span aria-hidden="true">↻</span></button><button class="btn btn-primary" id="addManualReceivable" type="button">＋ Lançar conta a receber</button></div>
         </div>
 
         <div class="filters">
@@ -440,10 +419,10 @@
               </div>
             </div>
 
-            <form id="categoryForm" class="inline-register">
+            <button class="btn btn-primary category-add-toggle" id="showCategoryForm" type="button">＋ Adicionar categoria</button><form id="categoryForm" class="inline-register" hidden>
               <input type="hidden" id="categoryId">
               <label for="categoryName">Nome da categoria</label>
-              <input id="categoryName" required maxlength="60" placeholder="Ex.: Pneus, oficina, óleo">
+              <input id="categoryName" required maxlength="60" placeholder="Ex.: Pneus, oficina, óleo"><label for="categoryDescription">Descrição (opcional)</label><input id="categoryDescription" maxlength="120" placeholder="Descrição de até 120 caracteres">
 
               <div class="import-actions">
                 <button class="btn btn-primary" type="submit" id="categorySave">＋ Adicionar categoria</button>
@@ -542,7 +521,6 @@
           <div class="form-section-heading"><span class="section-step">01</span><div><strong>Dados do frete</strong><small>Identificação, rota e valor combinado</small></div></div>
           <div class="freight-section-fields">
             <div><label for="fDate">Data do frete *</label><input type="date" id="fDate" required></div>
-            <div><label for="fCustomer">Cliente (opcional)</label><input id="fCustomer" placeholder="Empresa / cliente"></div>
             <div><label for="fOrigin">Cidade de origem *</label><input id="fOrigin" required placeholder="Ex.: Campinas"></div>
             <div><label for="fDestination">Cidade de destino *</label><input id="fDestination" required placeholder="Ex.: São Paulo"></div>
             <div><label for="fValue">Valor do frete (R$) *</label><input type="number" id="fValue" min="0.01" step="0.01" required placeholder="0,00"></div>
@@ -612,9 +590,9 @@
         <div><label for="eDiscount">Desconto (R$)</label><input type="number" id="eDiscount" min="0" step="0.01" value="0"></div>
         <div><label for="eAdditional">Adicional / taxa (R$)</label><input type="number" id="eAdditional" min="0" step="0.01" value="0"></div>
         <div><label for="eMethod">Meio de pagamento</label><select id="eMethod"><option>Pix</option><option>Dinheiro</option><option>Transferência</option><option>Boleto</option><option>Cartão</option><option>Outro</option></select></div>
-        <div><label for="eType">Forma de pagamento</label><select id="eType"><option value="avista">À vista</option><option value="parcelado">Parcelado</option></select></div>
-        <div><label for="eInstallments">Número de parcelas</label><select id="eInstallments"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>10</option><option>12</option><option>24</option></select></div>
-        <div><label for="eFirstDue">Vencimento da 1ª parcela *</label><input type="date" id="eFirstDue" required></div>
+        
+        <div id="installmentsField" hidden><label for="eInstallments">Número de parcelas</label><select id="eInstallments"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></div>
+        <div><label for="eFirstDue">Vencimento inicial *</label><input type="date" id="eFirstDue" required></div><div class="full-width" id="installmentDates" hidden></div>
         <div><label for="ePaidInitial">Valor já pago (R$)</label><input type="number" id="ePaidInitial" min="0" step="0.01" value="0"></div>
         <div class="full-width"><label for="eNotes">Observações</label><textarea id="eNotes" rows="2" placeholder="Número do boleto, placa, detalhes..."></textarea></div>
       </div>
