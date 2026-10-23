@@ -30,7 +30,7 @@ export default function PainelInicial({ data, onRefresh, loading }) {
   }, [data, month]);
   return <>
     <section className="welcome-panel"><div><h2 className="balance-heading">PAINEL DA TRANSPORTADORA</h2></div>
-      <label className="month-picker balance-period-picker"><span className="balance-period-label">PERÍODO DE REFERÊNCIA</span><span className="balance-period-input"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><input aria-label="Período do balanço geral" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></span></label></section>
+      <label className="month-picker balance-period-picker"><span className="balance-period-label">PERÍODO</span><span className="balance-period-input"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><input aria-label="Período do balanço geral" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></span></label></section>
     <div className="stats-grid">
       <button type="button" className="balance-stat-action" onClick={() => setDetail("revenue")} aria-label="Ver detalhamento do faturamento do mês"><StatCard label="Faturamento do mês" value={money(summary.revenue)} /></button>
       <button type="button" className="balance-stat-action" onClick={() => setDetail("profit")} aria-label="Ver detalhamento do lucro estimado"><StatCard label="Lucro estimado do mês" value={money(summary.profit)} tone="positive" /></button>
