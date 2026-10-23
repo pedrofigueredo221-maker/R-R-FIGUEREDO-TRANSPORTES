@@ -1,0 +1,17 @@
+/* Cabeçalho padronizado para tabelas das telas internas.
+   Não afeta Login nem Menu Lateral, ambos congelados. */
+.content-area .table-scroll table thead th {
+  background: #303741;
+  color: #ffffff;
+  border-top: 1px solid #89939e;
+  border-right: 1px solid #737e89;
+  border-left: 1px solid #737e89;
+  border-bottom: 3px solid #89939e;
+  padding: 16px 12px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 15px;
+  white-space: nowrap;
+}
+.content-area .table-scroll table thead th:first-child { border-left-color: #89939e; }
+.content-area .table-scroll table thead th:last-child { border-right-color: #89939e; }
