@@ -35,7 +35,7 @@ O objetivo é manter uma única interface de aplicação: React. A versão HTML/
 - Implementado o fluxo de recuperação de senha como página React adicional, preservando a URL pública `redefinir-senha.html`.
 - Atualizados os workflows para validar sintaxe de configuração, estrutura React, testes e build sem depender da versão antiga.
 - Substituída a auditoria estática dos IDs do HTML antigo por verificações da estrutura React.
-- Preparada a remoção dos pontos de entrada, CSS, sincronização e configuração que pertenciam à aplicação legada.
+- Removidos os pontos de entrada, CSS, sincronização e configurações que pertenciam à aplicação legada; a verificação estrutural agora falha se esses caminhos voltarem a existir.
 
 ## Limites de validação
 
