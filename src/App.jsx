@@ -218,7 +218,7 @@ export default function App() {
   if (!session) return <Login onLogin={login} onReset={resetPassword} busy={busy} error={authError} />;
 
   return <div className={`app-shell ${readOnly ? "read-only" : ""}`}>
-    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo-oficial-rr.svg" alt="R&R Figueredo Transportes" /></div>
+    <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo-menu-rr.svg" alt="R&R Figueredo Transportes" /></div>
       <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><MenuIcon name={p.symbol} />{p.label}</button>)}</nav>
       <div className="sidebar-bottom"><span className="sidebar-user-email" title={session.user?.email}>{session.user?.email}</span><button type="button" className="sidebar-logout" onClick={logout}>Sair</button></div>
     </aside>
