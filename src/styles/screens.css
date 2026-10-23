@@ -686,3 +686,35 @@
     padding: 11px;
   }
 }
+
+/* Correções solicitadas para login e menu lateral.
+   Sobrescreve somente os elementos citados, sem alterar outros componentes. */
+.login-page {
+  background: radial-gradient(circle at top left, #343434, transparent 42%), #202020;
+}
+.login-logo {
+  width: min(130px, 100%);
+}
+.sidebar-brand {
+  min-height: 82px;
+  padding: 10px 8px 16px;
+}
+.sidebar-brand img {
+  width: auto;
+  max-width: 150px;
+  max-height: 48px;
+  padding: 2px;
+  border-radius: 4px;
+}
+.nav-label {
+  margin: 25px 12px 12px;
+  font-size: 11px;
+  letter-spacing: 1.1px;
+}
+.nav-item {
+  min-height: 44px;
+  padding: 10px 12px;
+  gap: 12px;
+  border-radius: 7px;
+  font-size: 14px;
+}
