@@ -220,12 +220,12 @@ export default function App() {
   return <div className={`app-shell ${readOnly ? "read-only" : ""}`}>
     <aside className={`sidebar ${menuOpen ? "open" : ""}`}><div className="sidebar-brand"><img src="./imagens/logo-oficial-rr.svg" alt="R&R Figueredo Transportes" /></div>
       <p className="nav-label">MENU PRINCIPAL</p><nav aria-label="Menu principal">{pages.map((p) => <button key={p.id} className={`nav-item ${activePage === p.id ? "active" : ""}`} onClick={() => { setActivePage(p.id); setMenuOpen(false); }}><MenuIcon name={p.symbol} />{p.label}</button>)}</nav>
-      <div className="sidebar-bottom"><span className="session-dot" /> Sessão autenticada</div>
+      <div className="sidebar-bottom"><span className="sidebar-user-email" title={session.user?.email}>{session.user?.email}</span><button type="button" className="sidebar-logout" onClick={logout}>Sair</button></div>
     </aside>
     {menuOpen && <button className="mobile-overlay" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}
     <main className="main-area"><header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir ou fechar menu">☰</button>
       <div><p className="eyebrow">R&amp;R FIGUEREDO TRANSPORTES</p><h1>{titles[activePage]}</h1></div>
-      <div className="top-actions"><span className="user-label">{session.user?.email}</span><button className="secondary-button" onClick={logout}>Sair</button></div>
+
     </header>
     {demoMode && <div className="demo-notice" role="status"><strong>Modo de demonstração.</strong> Dados fictícios salvos somente neste navegador; nenhuma alteração é enviada ao Supabase da empresa.</div>}
     {readOnly && <div className="read-only-notice" role="status">Modo visitante: consulta somente leitura. Não há ações de cadastro nesta versão.</div>}
