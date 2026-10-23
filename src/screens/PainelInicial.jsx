@@ -28,10 +28,10 @@ export default function PainelInicial({ data, onRefresh, loading }) {
     <section className="welcome-panel"><div><p className="eyebrow">PAINEL DA TRANSPORTADORA</p></div>
       <label className="month-picker"><input aria-label="Período do painel" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></label></section>
     <div className="stats-grid">
-      <StatCard label="Faturamento do mês" value={money(summary.revenue)} hint={`${summary.selected.length} frete(s) no período`} />
-      <StatCard label="Lucro estimado do mês" value={money(summary.profit)} hint="Estimativa calculada a partir dos fretes" tone="positive" />
-      <StatCard label="Valores a receber" value={money(summary.receivable)} hint="Saldo estimado dos fretes" tone="attention" />
-      <StatCard label="Contas a pagar" value={money(summary.payable)} hint="Parcelas ainda não pagas" tone="negative" />
+      <StatCard label="Faturamento do mês" value={money(summary.revenue)} />
+      <StatCard label="Lucro estimado do mês" value={money(summary.profit)} tone="positive" />
+      <StatCard label="Valores a receber" value={money(summary.receivable)} tone="attention" />
+      <StatCard label="Contas a pagar" value={money(summary.payable)} tone="negative" />
     </div>
     <section className="panel"><div className="panel-heading"><div><h3>Fretes recentes</h3></div><button className="secondary-button" onClick={onRefresh} disabled={loading}>{loading ? "Atualizando…" : "↻ Atualizar"}</button></div>
       {summary.recent.length === 0 ? <div className="empty-state"><strong>Nenhum frete encontrado</strong><p>Os fretes cadastrados no Supabase aparecerão aqui.</p></div> :
