@@ -40,7 +40,7 @@ Levantamento estático dos arquivos atuais:
 ### P2 — Cobertura automatizada era insuficiente para as regras financeiras
 
 - O script `npm test` usa `node --test`, mas não havia um conjunto de testes financeiros localizado no caminho convencional consultado.
-- **Correção aplicada nesta branch:** adicionada uma suíte de testes unitários para as regras centrais de comissão, custo, lucro e tratamento de valores ausentes. É necessário executar `npm test` no ambiente do projeto e conferir o resultado no CI.
+- **Correção aplicada nesta branch:** adicionada uma suíte de testes unitários para as regras centrais de comissão, custo, lucro e tratamento de valores ausentes. Sete casos passaram em um harness isolado com Node.js; como o checkout completo e as dependências não puderam ser baixados neste ambiente, a execução de `npm test` no repositório real e a confirmação no CI continuam pendentes.
 
 ### P2 — Validação automatizada do merge não foi comprovada
 
@@ -69,7 +69,7 @@ Levantamento estático dos arquivos atuais:
 - [x] Revisão estática de arquivos centrais e histórico recente.
 - [x] Problema de divergência do custo total identificado e corrigido na branch.
 - [x] Testes unitários financeiros adicionados.
-- [ ] Testes executados no repositório real.
+- [x] Sete testes unitários executados com Node.js em um harness isolado equivalente ao módulo de cálculo; execução de `npm test` no checkout completo ainda pendente.
 - [ ] Build React executado.
 - [ ] Comparação visual real no navegador.
 - [ ] Auditoria de todas as pastas e referências concluída.
