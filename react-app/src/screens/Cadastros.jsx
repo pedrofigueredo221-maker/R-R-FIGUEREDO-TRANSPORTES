@@ -1,4 +1,4 @@
-import EmployeeForm from "./EmployeeForm.jsx";
+import FormularioFuncionario from "./FormularioFuncionario.jsx";
 
 export default function Cadastros({ controller }) {
   const {
@@ -84,7 +84,7 @@ export default function Cadastros({ controller }) {
       </div>
 
       {!readOnly && form && tab === "employees" && (
-        <EmployeeForm
+        <FormularioFuncionario
           title={editingId ? "Editar funcionário" : "Adicionar funcionário"}
           fields={employeeFields} value={form} setValue={setForm} saving={saving}
           onCancel={() => { setForm(null); setEditingId(null); }}
