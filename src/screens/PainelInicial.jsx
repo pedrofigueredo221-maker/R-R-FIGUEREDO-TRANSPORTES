@@ -1,4 +1,5 @@
 import RefreshButton from "../components/RefreshButton.jsx";
+import RouteDisplay from "../components/RouteDisplay.jsx";
 import "../styles/corporate-table-headings.css";
 import { useMemo, useState } from "react";
 import { freightCommission, freightOperatingCosts, freightProfit } from "../domain/freightCalculations.js";
@@ -39,8 +40,8 @@ export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }
     </div>
     <section className="panel"><div className="panel-heading"><div><h3>ÚLTIMAS VIAGENS</h3></div><RefreshButton onRefresh={onRefresh} loading={loading} /></div>
       {summary.recent.length === 0 ? <div className="empty-state"><strong>Nenhum frete encontrado</strong><p>Os fretes cadastrados no Supabase aparecerão aqui.</p></div> :
-      <div className="table-scroll"><table><thead><tr><th>Data</th><th>Motorista</th><th>Trajeto</th><th>Valor</th><th>Custo total</th><th>Comissão</th><th>Lucro</th></tr></thead><tbody>
-        {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`} className="balance-data-row" title="Duplo clique para abrir o frete" onDoubleClick={() => onOpenRecord?.("freights", f.id)}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td><span className="balance-route">{f.origin && <span className="balance-route-place">{f.origin}</span>}{f.origin && f.destination && <span className="balance-route-arrow" aria-label="para">→</span>}{f.destination && <span className="balance-route-place">{f.destination}</span>}{!f.origin && !f.destination && "—"}</span></td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></tr>)}
+      <div className="table-scroll"><table className="rr-freight-table rr-balance-freight-table"><thead><tr><th>Data</th><th>Motorista</th><th>Trajeto</th><th>Valor</th><th>Custo total</th><th>Comissão</th><th>Lucro</th></tr></thead><tbody>
+        {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`} className="balance-data-row" title="Duplo clique para abrir o frete" onDoubleClick={() => onOpenRecord?.("freights", f.id)}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td><RouteDisplay origin={f.origin} destination={f.destination} /></td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></tr>)}
       </tbody></table></div>}
     </section>
     {detail && <BalanceDetailDialog type={detail} month={month} data={data} onOpenRecord={onOpenRecord} onClose={() => setDetail(null)} />}
