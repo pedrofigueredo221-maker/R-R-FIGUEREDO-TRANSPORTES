@@ -5,6 +5,8 @@ import { freightCommission, freightOperatingCosts, freightProfit } from "../doma
 import { money, dateLabel, currentMonth } from "../lib/formatters.js";
 import StatCard from "../components/StatCard.jsx";
 import BalanceDetailDialog from "../components/BalanceDetailDialog.jsx";
+import StandardMonthFilter from "../components/StandardMonthFilter.jsx";
+import StandardRecordRow from "../components/StandardRecordRow.jsx";
 import "../styles/balanco-geral.css";
 
 export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }) {
@@ -30,7 +32,7 @@ export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }
   }, [data, month]);
   return <>
     <section className="welcome-panel"><div><h2 className="balance-heading">PAINEL DA TRANSPORTADORA</h2></div>
-      <label className="month-picker balance-period-picker"><span className="balance-period-label">PERÍODO</span><span className="balance-period-input"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><input aria-label="Período do balanço geral" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></span></label></section>
+      <StandardMonthFilter value={month} onChange={setMonth} className="balance-period-picker" /></section>
     <div className="stats-grid">
       <button type="button" className="balance-stat-action" onClick={() => setDetail("revenue")} aria-label="Ver detalhamento do faturamento do mês"><StatCard label="Faturamento do mês" value={money(summary.revenue)} /></button>
       <button type="button" className="balance-stat-action" onClick={() => setDetail("profit")} aria-label="Ver detalhamento do lucro estimado"><StatCard label="Lucro estimado do mês" value={money(summary.profit)} tone="positive" /></button>
@@ -40,7 +42,7 @@ export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }
     <section className="panel"><div className="panel-heading"><div><h3>ÚLTIMAS VIAGENS</h3></div><RefreshButton onRefresh={onRefresh} loading={loading} /></div>
       {summary.recent.length === 0 ? <div className="empty-state"><strong>Nenhum frete encontrado</strong><p>Os fretes cadastrados no Supabase aparecerão aqui.</p></div> :
       <div className="table-scroll"><table><thead><tr><th>Data</th><th>Motorista</th><th>Trajeto</th><th>Valor</th><th>Custo total</th><th>Comissão</th><th>Lucro</th></tr></thead><tbody>
-        {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`} className="balance-data-row" title="Duplo clique para abrir o frete" onDoubleClick={() => onOpenRecord?.("freights", f.id)}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td>{[f.origin, f.destination].filter(Boolean).join(" → ") || "—"}</td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></tr>)}
+        {summary.recent.map((f, i) => <StandardRecordRow key={f.id ?? `${f.date}-${i}`} record={f} className="balance-data-row" onOpen={(record) => onOpenRecord?.("freights", record.id)}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td>{[f.origin, f.destination].filter(Boolean).join(" → ") || "—"}</td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></StandardRecordRow>)}
       </tbody></table></div>}
     </section>
     {detail && <BalanceDetailDialog type={detail} month={month} data={data} onOpenRecord={onOpenRecord} onClose={() => setDetail(null)} />}
