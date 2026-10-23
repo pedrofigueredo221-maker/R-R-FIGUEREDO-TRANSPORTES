@@ -117,3 +117,8 @@
 .content-area .rr-refresh-button:focus-visible { outline: 2px solid #1764c0; outline-offset: 2px; }
 .content-area .rr-refresh-button:disabled { opacity: .5; cursor: wait; }
 .content-area .rr-refresh-control { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+
+/* Rodapé institucional: canto inferior direito da área interna, sem sobrepor conteúdo. */
+.content-area { display: flex; flex-direction: column; min-height: calc(100dvh - 88px); }
+.content-area > .app-footer { margin-top: auto; align-self: flex-end; max-width: 100%; padding-top: 24px; text-align: right; }
+@media (max-width: 720px) { .content-area > .app-footer { font-size: 11px; } }
