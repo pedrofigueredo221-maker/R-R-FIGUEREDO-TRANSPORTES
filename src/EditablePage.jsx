@@ -1,3 +1,4 @@
+import RefreshButton from "./components/RefreshButton.jsx";
 import "./styles/corporate-table-headings.css";
 import { useEffect, useState } from "react";
 import { money as formatMoney, dateLabel, todayISO as today } from "./lib/formatters.js";
@@ -36,7 +37,7 @@ function Actions({ onEdit, onDelete }) {
   return <div className="record-actions"><button className="secondary-button" type="button" title="Editar registro" aria-label="Editar registro" onClick={onEdit}>✎</button><button className="danger-button" type="button" title="Excluir registro" aria-label="Excluir registro" onClick={onDelete}>▤</button></div>;
 }
 
-export default function EditablePage({ page, data, onSave, readOnly, loading, version }) {
+export default function EditablePage({ page, data, onSave, readOnly, loading, version, onRefresh }) {
   const [form, setForm] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [formVersion, setFormVersion] = useState(version);
@@ -135,7 +136,7 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
     return commit({ ...data, expenses: editingId ? allExpenses.map((e) => e.id === editingId ? expense : e) : [expense, ...allExpenses] });
   };
 
-  const toolbar = <div className="page-filters"><input aria-label="Buscar registros" placeholder="Buscar registros..." value={query} onChange={(e) => setQuery(e.target.value)} /><label>Período<input aria-label="Filtrar por mês" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></label><button className="secondary-button" onClick={() => { setQuery(""); setMonth(""); }} type="button">Limpar filtros</button></div>;
+  const toolbar = <div className="page-filters"><input aria-label="Buscar registros" placeholder="Buscar registros..." value={query} onChange={(e) => setQuery(e.target.value)} /><label>Período<input aria-label="Filtrar por mês" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></label><button className="secondary-button" onClick={() => { setQuery(""); setMonth(""); }} type="button">Limpar filtros</button><RefreshButton onRefresh={onRefresh} loading={loading} /></div>;
   const showError = error && <div className="error-banner" role="alert">{error}</div>;
 
   const controller = {
