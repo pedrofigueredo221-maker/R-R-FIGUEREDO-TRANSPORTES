@@ -32,7 +32,7 @@ function RecordForm({ title, fields, value, setValue, onSubmit, onCancel, saving
 }
 
 function Actions({ onEdit, onDelete }) {
-  return <div className="record-actions"><button className="secondary-button" type="button" title="Editar registro" onClick={onEdit}>✏️ Editar</button><button className="danger-button" type="button" title="Excluir registro" onClick={onDelete}>Excluir</button></div>;
+  return <div className="record-actions"><button className="secondary-button" type="button" title="Editar registro" aria-label="Editar registro" onClick={onEdit}>✎</button><button className="danger-button" type="button" title="Excluir registro" aria-label="Excluir registro" onClick={onDelete}>▤</button></div>;
 }
 
 export default function EditablePage({ page, data, onSave, readOnly, loading, version }) {
