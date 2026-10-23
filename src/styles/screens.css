@@ -690,7 +690,7 @@
 /* Correções solicitadas para login e menu lateral.
    Sobrescreve somente os elementos citados, sem alterar outros componentes. */
 .login-page {
-  background: radial-gradient(circle at top left, #343434, transparent 42%), #202020;
+  background: #303030;
 }
 .login-logo {
   width: min(130px, 100%);
