@@ -1228,7 +1228,7 @@ select::-ms-expand{display:none}
 #freightDialog .freight-calculation-item.profit-total{border-top-color:#666}
 #freightDialog .freight-calculation-item.profit-total span{color:#fff;font-weight:700}
 #freightDialog .freight-calculation-item.profit-total strong{font-size:16px}
-@media(max-width:600px){#freightDialog .freight-calculations-grid{grid-template-columns:minmax(0,1fr)}#freightDialog .freight-calculation-item{padding:10px 0}#freightDialog .freight-calculation-item strong{font-size:13px}}
+@media(max-width:600px){#freightDialog .freight-calculations-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:16px}#freightDialog .freight-calculation-item{padding:10px 0;align-items:flex-start;flex-direction:column;gap:4px}#freightDialog .freight-calculation-item strong{font-size:13px;text-align:left;white-space:normal}}
 
 
 /* Formulário de caminhão da versão React: mesmo padrão dos demais cadastros. */
@@ -1243,3 +1243,6 @@ select::-ms-expand{display:none}
 .record-editor:not(.freight-editor) .editor-actions{display:flex;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid #e2e4e6}
 .record-editor:not(.freight-editor) .editor-actions button{min-height:41px;padding:10px 17px;border-radius:6px}
 @media(max-width:600px){.record-editor:not(.freight-editor){padding:16px}.record-editor:not(.freight-editor) .editor-grid{grid-template-columns:minmax(0,1fr);gap:14px;padding:13px}.record-editor:not(.freight-editor) .editor-heading{align-items:flex-start}.record-editor:not(.freight-editor) .editor-heading h3{font-size:18px}}
+
+/* Garante o resumo financeiro em duas colunas também em telas estreitas. */
+#freightDialog .freight-calculations-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:20px}
