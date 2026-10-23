@@ -1,35 +1,62 @@
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
-const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
-const html = read("index.html");
-const app = read("app.js");
-const sync = read("sync.js");
+const root = new URL("../", import.meta.url);
+const read = (path) => readFileSync(new URL(path, root), "utf8");
 const failures = [];
-const ids = [...html.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => match[1]);
-const idSet = new Set(ids);
-const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
-if (duplicates.length) failures.push(`IDs duplicados no index.html: ${duplicates.join(", ")}`);
 
-const appRefs = [...app.matchAll(/\$\(["']([^"']+)["']\)/g)].map((match) => match[1]);
-const dynamicIds = new Set(["ocrRawText"]); // criado dinamicamente após OCR da foto
-const missingApp = [...new Set(appRefs.filter((id) => !idSet.has(id) && !dynamicIds.has(id)))];
-if (missingApp.length) failures.push(`IDs usados em app.js ausentes no HTML: ${missingApp.join(", ")}`);
+const requiredFiles = [
+  "package.json",
+  "vite.config.js",
+  "react-app/index.html",
+  "react-app/redefinir-senha.html",
+  "react-app/src/main.jsx",
+  "react-app/reset-main.jsx",
+  "react-app/src/App.jsx",
+  "react-app/src/PasswordReset.jsx",
+  "react-app/src/styles.css",
+  "react-app/src/styles/screens.css",
+  "react-app/src/domain/freightCalculations.js",
+  "react-app/src/domain/freightCalculations.test.js",
+  "banco-de-dados/supabase/app-config.js"
+];
 
-const syncRefs = [...sync.matchAll(/\bel\(["']([^"']+)["']\)/g)].map((match) => match[1]);
-const missingSync = [...new Set(syncRefs.filter((id) => !idSet.has(id)))];
-if (missingSync.length) failures.push(`IDs usados em sync.js ausentes no HTML: ${missingSync.join(", ")}`);
+for (const path of requiredFiles) {
+  if (!existsSync(new URL(path, root))) failures.push(`Arquivo React necessário ausente: ${path}`);
+}
 
-const requiredFiles = ["styles.css", "banco-de-dados/supabase/config.js", "app.js", "sync.js", "imagens/logo-rr-figueredo-transportes.png", "imagens/logo-rr-simbolo.png", "redefinir-senha.html"];
-for (const path of requiredFiles) if (!existsSync(new URL(`../${path}`, import.meta.url))) failures.push(`Arquivo necessário ausente: ${path}`);
+const mainHtml = read("react-app/index.html");
+const resetHtml = read("react-app/redefinir-senha.html");
+const vite = read("vite.config.js");
+const app = read("react-app/src/App.jsx");
+const main = read("react-app/src/main.jsx");
+const resetMain = read("react-app/reset-main.jsx");
 
-if (!sync.includes('lastScreen = sessionStorage.getItem("rr_screen_state")') || !sync.includes("showLogin(true, false)")) {
-  failures.push("A restauração da sessão precisa preservar rr_screen_state antes de exibir o login.");
+if (!mainHtml.includes("./src/main.jsx")) failures.push("A entrada principal não carrega src/main.jsx.");
+if (!resetHtml.includes("./reset-main.jsx")) failures.push("A página de recuperação não carrega reset-main.jsx.");
+if (!main.includes("./styles.css") || !main.includes("./styles/screens.css")) failures.push("A entrada React principal não importa os dois arquivos CSS esperados.");
+if (!resetMain.includes("./src/styles.css") || !resetMain.includes("./src/styles/screens.css")) failures.push("A página de recuperação não compartilha os estilos React.");
+if (!vite.includes("react-app/redefinir-senha.html")) failures.push("O build Vite não inclui a página React de recuperação.");
+if (!app.includes("redefinir-senha.html")) failures.push("O fluxo de recuperação de senha não aponta para a página React publicada.");
+
+const legacyPaths = [
+  "index.html",
+  "app.js",
+  "sync.js",
+  "styles.css",
+  "config.js",
+  "redefinir-senha.html",
+  "js/core/startup.js",
+  "js/core/utils.js",
+  "banco-de-dados/supabase/config.js"
+];
+for (const path of legacyPaths) {
+  if (existsSync(new URL(path, root))) failures.push(`Arquivo legado ainda presente: ${path}`);
 }
 
 if (failures.length) {
-  console.error("Falhas na auditoria estática:");
+  console.error("Falhas na auditoria estrutural React:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exitCode = 1;
 } else {
-  console.log(`Auditoria estática OK: ${idSet.size} IDs únicos, ${appRefs.length} referências de app.js e ${syncRefs.length} referências de sync.js verificadas.`);
+  console.log(`Auditoria estrutural React OK: ${requiredFiles.length} arquivos essenciais presentes, entradas verificadas e ${legacyPaths.length} caminhos legados ausentes.`);
 }
