@@ -7,3 +7,8 @@
 .content-area .page-filters .rr-period-range-caption { color: #262626; font: 300 12px "Calibri Light", Calibri, Carlito, Arial, sans-serif; font-variant-numeric: tabular-nums; }
 .content-area .page-filters .rr-period-range-error { color: #a11; font-size: 12px; }
 @media(max-width: 720px) { .content-area .page-filters .rr-period-range-fields label { width: 150px; } }
+
+/* Mesmo padrão compacto de datas nas demais telas de dados. */
+.content-area .page-filters .rr-period-range { gap: 0; }
+.content-area .page-filters .rr-period-range-fields input[type="date"] { font-size: 14px; font-weight: 400; padding: 0 5px; }
+.content-area .page-filters .rr-period-range-fields input[type="date"]::-webkit-calendar-picker-indicator { margin-left: 0; padding: 0; }
