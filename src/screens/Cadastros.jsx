@@ -19,10 +19,15 @@ export default function Cadastros({ controller }) {
         .map((name) => ({ id: name, name }));
   const kind = tab === "employees" ? "employee" : tab === "trucks" ? "truck" : "category";
 
+  const formNames = { employees: "funcionário", trucks: "caminhão", categories: "categoria" };
+  const formTitle = (editingId ? "Editar " : "Adicionar ") + formNames[tab];
+  const closeForm = () => { setForm(null); setEditingId(null); };
+
   const employeeFields = [
     { key: "name", label: "Nome completo", required: true, placeholder: "Nome e sobrenome" },
     { key: "role", label: "Função", options: ["Motorista", "Diretor", "Gerente", "Outro"] },
     { key: "phone", label: "Telefone", placeholder: "(00) 00000-0000" },
+    ...(form?.role === "Motorista" ? [{ key: "truckId", label: "Caminhão vinculado", options: [{ value: "", label: "Não vinculado" }, ...(data.trucks || []).map((truck) => ({ value: truck.id, label: truck.name }))] }] : []),
     { key: "commissionType", label: "Tipo de comissão", options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] },
     { key: "commissionValue", label: "Comissão (% ou R$)", type: "number", min: "0", step: "0.01" },
     { key: "active", label: "Funcionário ativo", type: "checkbox" }
@@ -37,8 +42,16 @@ export default function Cadastros({ controller }) {
 
   const saveRecord = () => {
     if (tab === "employees") {
-      const row = { ...form, id: editingId || uid(), commissionValue: number(form.commissionValue) };
-      return commit({ ...data, employees: editingId
+      const employeeId = editingId || uid();
+      const { truckId: selectedTruckId, ...employeeForm } = form;
+      const row = { ...employeeForm, id: employeeId, commissionValue: number(form.commissionValue) };
+      // Referência canônica do vínculo: truck.driverId.
+      const nextTrucks = (data.trucks || []).map((truck) => {
+        if (truck.driverId === employeeId && (row.role !== "Motorista" || truck.id !== selectedTruckId)) return { ...truck, driverId: "" };
+        if (row.role === "Motorista" && truck.id === selectedTruckId) return { ...truck, driverId: employeeId };
+        return truck;
+      });
+      return commit({ ...data, trucks: nextTrucks, employees: editingId
         ? (data.employees || []).map((employee) => employee.id === editingId ? row : employee)
         : [row, ...(data.employees || [])] });
     }
@@ -85,22 +98,18 @@ export default function Cadastros({ controller }) {
         <button type="button" role="tab" aria-selected={tab === "categories"} className={tab === "categories" ? "active" : ""} onClick={() => { setForm(null); setTab("categories"); }}>Categorias ({categories.length})</button>
       </div>
 
-      {!readOnly && form && tab === "employees" && (
-        <FormDialog label={editingId ? "Editar funcionário" : "Adicionar funcionário"} onClose={() => { setForm(null); setEditingId(null); }}><FormularioFuncionario
-          title={editingId ? "Editar funcionário" : "Adicionar funcionário"}
-          fields={employeeFields} value={form} setValue={setForm} saving={saving}
-          onCancel={() => { setForm(null); setEditingId(null); }}
-          onSubmit={saveRecord}
-        /></FormDialog>
-      )}
-      {!readOnly && form && tab !== "employees" && (
-        <FormDialog label="Cadastro" onClose={() => { setForm(null); setEditingId(null); }}><RecordForm
-          title={editingId ? (tab === "trucks" ? "Editar caminhão" : "Editar categoria") : (tab === "trucks" ? "Adicionar caminhão" : "Adicionar categoria")}
-          value={form} setValue={setForm} saving={saving}
-          onCancel={() => { setForm(null); setEditingId(null); }}
-          onSubmit={saveRecord}
-          fields={tab === "trucks" ? truckFields : categoryFields}
-        /></FormDialog>
+      {!readOnly && form && (
+        <FormDialog label={formTitle} onClose={closeForm}>
+          {tab === "employees" ? (
+            <FormularioFuncionario title={formTitle} fields={employeeFields}
+              value={{ ...form, truckId: form.truckId ?? (data.trucks || []).find((truck) => truck.driverId === editingId)?.id ?? "" }}
+              setValue={setForm} saving={saving} onCancel={closeForm} onSubmit={saveRecord} />
+          ) : (
+            <RecordForm title={formTitle} value={form} setValue={setForm}
+              saving={saving} onCancel={closeForm} onSubmit={saveRecord}
+              fields={tab === "trucks" ? truckFields : categoryFields} />
+          )}
+        </FormDialog>
       )}
 
       {toolbar}
