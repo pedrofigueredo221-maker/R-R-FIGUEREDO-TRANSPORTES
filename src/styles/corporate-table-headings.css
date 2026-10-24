@@ -137,3 +137,27 @@
 .content-area { display: flex; flex-direction: column; min-height: calc(100dvh - 88px); }
 .content-area > .app-footer { margin-top: auto; align-self: flex-end; max-width: 100%; padding-top: 24px; text-align: right; }
 @media (max-width: 720px) { .content-area > .app-footer { font-size: 11px; } }
+
+/* Padrão de cores do cabeçalho: mesmo grafite do menu lateral (#262626).
+   Linha de destaque inferior preta, sem alterar o menu protegido. */
+.content-area .table-scroll table thead th {
+  background-color: #262626;
+  border-bottom: 3px solid #000;
+}
+
+/* Tipografia dos filtros de todas as telas internas: Calibri Light, 2px menor.
+   O escopo não inclui Login, Menu Lateral nem campos dos formulários. */
+.content-area .page-filters,
+.content-area .page-filters label,
+.content-area .page-filters input,
+.content-area .page-filters select,
+.content-area .page-filters button {
+  font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
+  font-weight: 300;
+}
+.content-area .page-filters label { font-size: 10px; }
+.content-area .page-filters input,
+.content-area .page-filters select,
+.content-area .page-filters button { font-size: 12px; }
+.content-area .welcome-panel .balance-range .balance-period-label { font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif; font-weight: 300; font-size: 9px; }
+.content-area .welcome-panel .balance-range .balance-period-input input[type="date"] { font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif; font-weight: 300; font-size: 12px; }
