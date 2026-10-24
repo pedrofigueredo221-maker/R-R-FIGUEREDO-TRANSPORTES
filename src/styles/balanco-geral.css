@@ -134,3 +134,15 @@
 @media (max-width: 480px) {
   .content-area .welcome-panel .balance-range .balance-period-picker { width: 150px; }
 }
+
+/* Tipografia leve dos dois filtros de datas: redução de 2px. */
+.content-area .welcome-panel .balance-range .balance-period-label {
+  font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 300;
+}
+.content-area .welcome-panel .balance-range .balance-period-input input[type="date"] {
+  font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+}
