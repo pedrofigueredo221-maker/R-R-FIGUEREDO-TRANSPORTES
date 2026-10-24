@@ -52,3 +52,6 @@
 .content-area .page-filters .rr-period-range-fields label { width: 132px; max-width: 132px; }
 .content-area .page-filters .rr-period-range-fields input[type="date"] { width: 100%; padding-inline: 4px; font-size: 14px; }
 @media (max-width: 720px) { .content-area .page-filters .rr-period-range-fields label { width: 132px; max-width: 132px; } }
+
+.content-area .page-filters .rr-period-range-fields { gap: 4px; }
+.content-area .page-filters .rr-period-range-fields input[type="date"] { font-size: 16px; }
