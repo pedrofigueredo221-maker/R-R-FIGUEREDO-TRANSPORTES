@@ -152,3 +152,9 @@
 .content-area .welcome-panel .balance-range .balance-period-input { height: 52px; min-height: 52px; padding: 0 6px; }
 .content-area .welcome-panel .balance-range .balance-period-input input[type="date"] { font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif; font-size: 14px; font-weight: 400; letter-spacing: -.2px; }
 .content-area .welcome-panel .balance-range .balance-period-input input[type="date"]::-webkit-calendar-picker-indicator { margin-left: 0; padding: 0; }
+
+/* Campos mais estreitos sem reduzir texto ou calendário. */
+.content-area .welcome-panel .balance-range-controls { gap: 8px; }
+.content-area .welcome-panel .balance-range .balance-period-picker { width: 132px; }
+.content-area .welcome-panel .balance-range .balance-period-input { padding-inline: 5px; }
+@media (max-width: 480px) { .content-area .welcome-panel .balance-range .balance-period-picker { width: 132px; } }
