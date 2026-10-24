@@ -9,3 +9,29 @@
   .content-area .table-scroll table.rr-freight-table th:nth-child(3),
   .content-area .table-scroll table.rr-freight-table td:nth-child(3) { min-width: 155px; max-width: 195px; }
 }
+
+/* Três ações alinhadas na última coluna, com dimensões consistentes. */
+.content-area .rr-freight-table td.freight-actions-cell { text-align: center; white-space: nowrap; }
+.content-area .rr-freight-table td.freight-actions-cell .record-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+.content-area .rr-freight-table td.freight-actions-cell .record-actions button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 34px;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Feedback discreto da pesquisa de viagens. */
+.content-area .freight-search-count { margin: 8px 0 12px; color: #59616b; font-size: 12px; font-weight: 600; }
