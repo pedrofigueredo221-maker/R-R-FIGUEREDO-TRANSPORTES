@@ -1,5 +1,5 @@
 import "../styles/freight-required-fields.css";
-import { freightProfit, freightDriverPayment, freightCost, freightCommission } from "../domain/freightCalculations.js";
+import { freightProfit, freightCost, freightCommission } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
 import { FREIGHT_LABELS } from "../lib/freightLabels.js";
 
@@ -22,8 +22,6 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
   const summary = [
     [FREIGHT_LABELS.value, money(value.value)],
     [FREIGHT_LABELS.commission, money(freightCommission(calculationInput))],
-    ["Total motorista", money(freightDriverPayment(calculationInput))],
-    ["Adiantamento ao motorista", money(value.advance)],
     ["Saldo pendente", money(Math.max(0, amount(value.value) - amount(value.received)))],
     [FREIGHT_LABELS.totalCost, money(freightCost(calculationInput))],
     [FREIGHT_LABELS.profit, money(freightProfit(calculationInput))]
