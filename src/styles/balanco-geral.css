@@ -158,3 +158,7 @@
 .content-area .welcome-panel .balance-range .balance-period-picker { width: 132px; }
 .content-area .welcome-panel .balance-range .balance-period-input { padding-inline: 5px; }
 @media (max-width: 480px) { .content-area .welcome-panel .balance-range .balance-period-picker { width: 132px; } }
+
+.content-area .welcome-panel .balance-range-controls { gap: 4px; }
+.content-area .welcome-panel .balance-range .balance-period-input input[type="date"] { font-size: 16px; }
+@media (max-width: 480px) { .content-area .welcome-panel .balance-range-controls { gap: 4px; } }
