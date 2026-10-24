@@ -43,7 +43,13 @@ export default function Cadastros({ controller }) {
   const saveRecord = () => {
     if (tab === "employees") {
       const employeeId = editingId || uid();
-      const { truckId: selectedTruckId, ...employeeForm } = form;
+      const { truckId, ...employeeForm } = form;
+      // Formulários antigos não guardam truckId no funcionário: preserve o vínculo
+      // existente quando a pessoa salva uma edição sem mudar o seletor.
+      // A escolha explícita de "Não vinculado" (string vazia) continua removendo-o.
+      const selectedTruckId = truckId === undefined
+        ? (data.trucks || []).find((truck) => truck.driverId === employeeId)?.id || ""
+        : truckId;
       const row = { ...employeeForm, id: employeeId, commissionValue: number(form.commissionValue) };
       // Referência canônica do vínculo: truck.driverId.
       const nextTrucks = (data.trucks || []).map((truck) => {
