@@ -1,17 +1,22 @@
+import { useState } from "react";
+import AddRecordButton from "../components/AddRecordButton.jsx";
 import FreightReceiptPanel from "../components/FreightReceiptPanel.jsx";
 import FreightForm from "./FreightForm.jsx";
 import FormDialog from "../components/FormDialog.jsx";
 import { freightReceivableBalance, freightReceivableStatus } from "../domain/freightReceivables.js";
 
 export default function ContasAReceber({ controller }) {
+  const [choosingFreight, setChoosingFreight] = useState(false);
   const { data, readOnly, loading, saving, showError, toolbar, filteredFreights, dateLabel, money, payment, setPayment, form, setForm, editingId, setEditingId, startEdit, saveFreight, allFreights, number, commit } = controller;
   const openReceipt = (freight) => {
     setForm(null);
     setEditingId(null);
+    setChoosingFreight(false);
     setPayment({ kind: "receive", record: freight });
   };
   return <section className="panel">
-    <div className="panel-heading"><div><h3>Contas a receber</h3><p>Cada frete gera um recebível vinculado ao mesmo registro. O status é atualizado conforme os pagamentos.</p></div></div>
+    <div className="panel-heading"><div><h3>Contas a receber</h3><p>Cada frete gera um recebível vinculado ao mesmo registro. O status é atualizado conforme os pagamentos.</p></div>{!readOnly && <AddRecordButton disabled={saving} onClick={() => setChoosingFreight(true)} title="Adicionar recebimento" />}</div>
+    {!readOnly && choosingFreight && <FormDialog label="Selecionar frete para recebimento" onClose={() => setChoosingFreight(false)}><div className="rr-receivable-picker"><p>Selecione o frete que receberá o pagamento. Os valores serão registrados no histórico existente.</p>{allFreights.filter((freight) => freightReceivableBalance(freight, number) > 0).map((freight) => <button key={freight.id} type="button" className="secondary-button" onClick={() => openReceipt(freight)}>{dateLabel(freight.date)} — {freight.customer || freight.driver || "Sem cliente"} — {money(freightReceivableBalance(freight, number))} em aberto</button>)}{!allFreights.some((freight) => freightReceivableBalance(freight, number) > 0) && <p>Não há fretes com saldo em aberto.</p>}</div></FormDialog>}
     {showError}{!readOnly && form && <FormDialog label="Editar frete" onClose={() => { setForm(null); setEditingId(null); }}><FreightForm title={editingId ? "Editar frete" : "Novo frete"} value={form} setValue={setForm} saving={saving} onCancel={() => { setForm(null); setEditingId(null); }} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}{toolbar}
     <div className="table-scroll"><table><thead><tr><th>Data</th><th>Cliente</th><th>Rota</th><th>Valor do frete</th><th>Recebido</th><th>Saldo em aberto</th><th>Situação</th>{!readOnly && <th>Ação</th>}</tr></thead><tbody>
       {filteredFreights.map((freight) => {
