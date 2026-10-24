@@ -18,7 +18,12 @@
 
 /* Padrão compartilhado dos filtros de todas as telas internas.
    Mantém as funções existentes e não interfere nas telas congeladas. */
-.content-area .page-filters,
+.content-area .page-filters {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #262626;
+}
 .content-area .welcome-panel:has(.month-picker) {
   border: 1px solid #3b3b3b;
   border-radius: 9px;
@@ -31,12 +36,16 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 18px;
-  padding: 14px 16px;
+  padding: 0;
 }
 .content-area .page-filters > input {
   flex: 1 1 240px;
 }
-.content-area .page-filters label,
+.content-area .page-filters label {
+  color: #262626;
+  font-size: 12px;
+  font-weight: 700;
+}
 .content-area .welcome-panel .month-picker {
   color: #ffffff;
   font-size: 12px;
@@ -53,13 +62,21 @@
 }
 .content-area .page-filters .secondary-button {
   min-height: 42px;
-  border: 1px solid #666666;
+  border: 1px solid #262626;
   border-radius: 6px;
-  background: #3b3b3b;
-  color: #ffffff;
+  background: transparent;
+  color: #262626;
 }
 .content-area .page-filters .secondary-button:hover {
-  background: #4a4a4a;
+  background: #f1f1f1;
+}
+.content-area .page-filters .rr-refresh-button {
+  border: 1px solid #262626;
+  background: transparent;
+}
+.content-area .page-filters .rr-refresh-button:hover:not(:disabled) {
+  background: #f1f1f1;
+  border-color: #262626;
 }
 .content-area .welcome-panel:has(.month-picker) {
   gap: 16px;
@@ -71,10 +88,8 @@
   color: #ffffff;
 }
 @media (max-width: 720px) {
-  .content-area .page-filters,
-  .content-area .welcome-panel:has(.month-picker) {
-    padding: 14px;
-  }
+  .content-area .page-filters { padding: 0; }
+  .content-area .welcome-panel:has(.month-picker) { padding: 14px; }
   .content-area .page-filters > input,
   .content-area .page-filters label,
   .content-area .page-filters .secondary-button {

@@ -1,5 +1,6 @@
 import "./../styles/freight-payment-status.css";
 import FreightForm from "./FreightForm.jsx";
+import AddRecordButton from "../components/AddRecordButton.jsx";
 import RouteDisplay from "../components/RouteDisplay.jsx";
 import "../styles/freight-table-standard.css";
 import FormDialog from "../components/FormDialog.jsx";
@@ -15,7 +16,7 @@ export default function Fretes({ controller }) {
     setPayment({ kind: "receive", record: freight });
   };
   return <section className="panel">
-    <div className="panel-heading"><div><h3>VIAGENS</h3><p>Cadastre viagens e acompanhe custos, comissão e recebimentos.</p></div>{!readOnly && <button className="primary-button" disabled={loading || saving} onClick={() => startCreate("freight")}>+ Novo frete</button>}</div>
+    <div className="panel-heading"><div><h3>VIAGENS</h3><p>Cadastre viagens e acompanhe custos, comissão e recebimentos.</p></div>{!readOnly && <AddRecordButton disabled={loading || saving} onClick={() => startCreate("freight")} title="Adicionar frete" />}</div>
     {showError}
     {!readOnly && form && <FormDialog label="FRETE" onClose={() => setForm(null)}><FreightForm value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}
     {toolbar}
