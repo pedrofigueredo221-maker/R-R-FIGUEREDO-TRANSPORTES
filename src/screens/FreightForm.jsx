@@ -1,5 +1,5 @@
 import "../styles/freight-required-fields.css";
-import { freightProfit, freightDriverPayment, freightCost, freightCommission } from "../domain/freightCalculations.js";
+import { freightProfit, freightCost, freightCommission } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
 import { FREIGHT_LABELS } from "../lib/freightLabels.js";
 
@@ -22,10 +22,7 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
   const summary = [
     [FREIGHT_LABELS.value, money(value.value)],
     [FREIGHT_LABELS.commission, money(freightCommission(calculationInput))],
-    ["Pagamento estimado ao motorista", money(freightDriverPayment(calculationInput))],
-    ["Recebido do cliente", money(value.received)],
-    ["Adiantamento ao motorista", money(value.advance)],
-    ["Saldo a receber", money(Math.max(0, amount(value.value) - amount(value.received) - amount(value.discount)))],
+    ["Saldo pendente", money(Math.max(0, amount(value.value) - amount(value.received)))],
     [FREIGHT_LABELS.totalCost, money(freightCost(calculationInput))],
     [FREIGHT_LABELS.profit, money(freightProfit(calculationInput))]
   ];
@@ -42,7 +39,7 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
     { key: "commissionType", label: "Tipo de comissão", options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] },
     { key: "commission", label: `${FREIGHT_LABELS.commission} (% ou R$)`, type: "number", min: "0", step: "0.01" },
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01" },
-    { key: "otherCosts", label: "Outros custos da viagem (R$)", type: "number", min: "0", step: "0.01" },
+    { key: "otherCosts", label: "Outros custos (R$)", type: "number", min: "0", step: "0.01" },
     { key: "km", label: "Quilometragem", type: "number", min: "0", step: "1" },
     { key: "advance", label: "Adiantamento ao motorista (R$)", type: "number", min: "0", step: "0.01" },
     { key: "currentBalance", label: "Saldo atual informado (R$)", type: "number", min: "0", step: "0.01" },
