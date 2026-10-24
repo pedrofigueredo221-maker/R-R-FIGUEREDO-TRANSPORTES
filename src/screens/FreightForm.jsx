@@ -1,6 +1,7 @@
 import "../styles/freight-required-fields.css";
-import { freightProfit, freightDriverPayment, freightCost } from "../domain/freightCalculations.js";
+import { freightProfit, freightDriverPayment, freightCost, freightCommission } from "../domain/freightCalculations.js";
 import { money } from "../lib/formatters.js";
+import { FREIGHT_LABELS } from "../lib/freightLabels.js";
 
 const amount = (value) => Math.max(0, Number(value) || 0);
 
@@ -19,26 +20,27 @@ export default function FreightForm({ value, setValue, onSubmit, onCancel, savin
   const estimatedFuel = amount(value.liters) * amount(value.dieselPrice);
   const calculationInput = { ...value, value: amount(value.value), discount: amount(value.discount), toll: amount(value.toll), commission: amount(value.commission), bonus: amount(value.bonus), fuelActual: amount(value.fuelActual) };
   const summary = [
-    ["Valor do frete", money(value.value)],
+    [FREIGHT_LABELS.value, money(value.value)],
+    [FREIGHT_LABELS.commission, money(freightCommission(calculationInput))],
     ["Pagamento estimado ao motorista", money(freightDriverPayment(calculationInput))],
     ["Recebido do cliente", money(value.received)],
     ["Adiantamento ao motorista", money(value.advance)],
     ["Saldo a receber", money(Math.max(0, amount(value.value) - amount(value.received) - amount(value.discount)))],
-    ["Custos totais da viagem", money(freightCost(calculationInput))],
-    ["Lucro estimado", money(freightProfit(calculationInput))]
+    [FREIGHT_LABELS.totalCost, money(freightCost(calculationInput))],
+    [FREIGHT_LABELS.profit, money(freightProfit(calculationInput))]
   ];
   const fields = [
-    { key: "date", label: "Data do frete", type: "date", required: true },
+    { key: "date", label: FREIGHT_LABELS.date, type: "date", required: true },
     { key: "customer", label: "Cliente", placeholder: "Nome do cliente" },
-    { key: "driver", label: "Motorista", required: true, options: [{ value: "", label: "Selecione o motorista" }, ...employees.filter((employee) => employee.role === "Motorista" && employee.active !== false).map((employee) => ({ value: employee.name, label: employee.name }))] },
+    { key: "driver", label: FREIGHT_LABELS.driver, required: true, options: [{ value: "", label: "Selecione o motorista" }, ...employees.filter((employee) => employee.role === "Motorista" && employee.active !== false).map((employee) => ({ value: employee.name, label: employee.name }))] },
     { key: "truck", label: "Caminhão", required: true, options: [{ value: "", label: "Selecione o caminhão" }, ...trucks.filter((truck) => truck.active !== false).map((truck) => ({ value: truck.name, label: truck.name }))] },
     { key: "origin", label: "Origem", required: true, placeholder: "Cidade de origem" },
     { key: "destination", label: "Destino", required: true, placeholder: "Cidade de destino" },
-    { key: "value", label: "Valor do frete (R$)", type: "number", min: "0", step: "0.01", required: true },
+    { key: "value", label: `${FREIGHT_LABELS.value} (R$)`, type: "number", min: "0", step: "0.01", required: true },
     { key: "discount", label: "Descontos gerais (R$)", type: "number", min: "0", step: "0.01" },
     { key: "toll", label: "Pedágio (R$)", type: "number", min: "0", step: "0.01" },
     { key: "commissionType", label: "Tipo de comissão", options: [{ value: "percent", label: "Percentual" }, { value: "fixed", label: "Valor fixo" }] },
-    { key: "commission", label: "Comissão (% ou R$)", type: "number", min: "0", step: "0.01" },
+    { key: "commission", label: `${FREIGHT_LABELS.commission} (% ou R$)`, type: "number", min: "0", step: "0.01" },
     { key: "bonus", label: "Bônus (R$)", type: "number", min: "0", step: "0.01" },
     { key: "otherCosts", label: "Outros custos da viagem (R$)", type: "number", min: "0", step: "0.01" },
     { key: "km", label: "Quilometragem", type: "number", min: "0", step: "1" },

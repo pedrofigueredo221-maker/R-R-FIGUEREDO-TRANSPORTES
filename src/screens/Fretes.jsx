@@ -1,5 +1,6 @@
 import "./../styles/freight-payment-status.css";
 import FreightForm from "./FreightForm.jsx";
+import { FREIGHT_LABELS } from "../lib/freightLabels.js";
 import AddRecordButton from "../components/AddRecordButton.jsx";
 import RouteDisplay from "../components/RouteDisplay.jsx";
 import "../styles/freight-table-standard.css";
@@ -21,7 +22,7 @@ export default function Fretes({ controller }) {
     {!readOnly && form && <FormDialog label="FRETE" onClose={() => setForm(null)}><FreightForm value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}
     {toolbar}
     <p className="freight-search-count" role="status">{filteredFreights.length} {filteredFreights.length === 1 ? "viagem encontrada" : "viagens encontradas"} nos filtros selecionados.</p>
-    <div className="table-scroll"><table className="rr-freight-table"><thead><tr><th>Data</th><th>Motorista</th><th>Trajeto</th><th>Valor</th><th>Custo total</th><th>Comissão</th><th>Lucro</th><th>Pagamento</th>{!readOnly && <th>Ações</th>}</tr></thead><tbody>
+    <div className="table-scroll"><table className="rr-freight-table"><thead><tr><th>{FREIGHT_LABELS.date}</th><th>{FREIGHT_LABELS.driver}</th><th>{FREIGHT_LABELS.route}</th><th>{FREIGHT_LABELS.value}</th><th>{FREIGHT_LABELS.totalCost}</th><th>{FREIGHT_LABELS.commission}</th><th>{FREIGHT_LABELS.profit}</th><th>{FREIGHT_LABELS.payment}</th>{!readOnly && <th>{FREIGHT_LABELS.actions}</th>}</tr></thead><tbody>
       {filteredFreights.map((freight) => {
 
         const balance = freightReceivableBalance(freight, number);
