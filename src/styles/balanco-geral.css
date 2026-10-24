@@ -60,9 +60,39 @@
 .content-area .balance-route-arrow { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; color: #777; font-size: 16px; font-weight: 700; }
 @media (max-width: 720px) { .content-area .balance-route { column-gap: 8px; } }
 
-/* Período compacto: controle do tamanho do rótulo, sem alterar seleção mensal. */
-.content-area .welcome-panel .month-picker.balance-period-picker { width: 120px; min-width: 0; max-width: 100%; }
-.content-area .welcome-panel .balance-period-picker .balance-period-input { min-height: 60px; height: 60px; gap: 2px; padding: 0 4px; border-radius: 5px; }
+/* Período proporcional: reserva espaço para meses longos (setembro, novembro, dezembro),
+   ano e ícone do calendário nativo sem reduzir a legibilidade. */
+.content-area .welcome-panel .month-picker.balance-period-picker {
+  width: 180px;
+  min-width: 0;
+  max-width: 100%;
+}
+.content-area .welcome-panel .balance-period-picker .balance-period-input {
+  box-sizing: border-box;
+  height: 60px;
+  min-height: 60px;
+  padding: 0 12px;
+  gap: 4px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+}
 .content-area .welcome-panel .balance-period-picker .balance-period-input > svg { display: none; }
-.content-area .welcome-panel .balance-period-picker .balance-period-input input[type="month"] { min-height: 58px; height: 58px; width: 100%; font-size: 10px; font-weight: 600; }
-@media (max-width: 720px) { .content-area .welcome-panel .month-picker.balance-period-picker { width: 120px; } }
+.content-area .welcome-panel .balance-period-picker .balance-period-input input[type="month"] {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: #202020;
+  background: transparent;
+}
+@media (max-width: 720px) {
+  .content-area .welcome-panel .month-picker.balance-period-picker { width: min(180px, 100%); }
+  .content-area .welcome-panel .balance-period-picker .balance-period-input input[type="month"] { font-size: 14px; }
+}
