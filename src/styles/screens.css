@@ -989,14 +989,3 @@
 .login-page #login-password::-ms-clear {
   filter: invert(1);
 }
-
-/* Cadastro de funcionários usa o mesmo modal externo de adicionar e editar. */
-.form-dialog > .employee-modal {
-  box-sizing: border-box;
-  width: 100%;
-  max-height: none;
-  overflow: visible;
-  border: 0;
-  border-radius: inherit;
-  box-shadow: none;
-}

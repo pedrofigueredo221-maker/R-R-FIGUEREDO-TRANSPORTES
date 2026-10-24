@@ -1,0 +1,10 @@
+/* Somente modal de funcionários. Não modificar o CSS protegido do Login. */
+.form-dialog > .employee-modal {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  border-radius: inherit;
+  box-shadow: none;
+}

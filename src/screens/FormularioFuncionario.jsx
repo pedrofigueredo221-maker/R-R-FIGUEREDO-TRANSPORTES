@@ -1,3 +1,4 @@
+import "../styles/employee-modal-unified.css";
 function EmployeeField({ field, value, onChange }) {
   return (
     <label className={`editor-field ${field.type === "checkbox" ? "employee-checkbox-field" : ""}`}>
