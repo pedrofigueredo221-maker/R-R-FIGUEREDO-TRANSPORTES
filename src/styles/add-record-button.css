@@ -1,0 +1,24 @@
+/* Padrão único de inclusão nas telas internas; sem efeitos no menu ou login. */
+.content-area .rr-add-record-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 17px;
+  border: 1px solid #4b5967;
+  border-radius: 8px;
+  background: #465563;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.content-area .rr-add-record-button:hover:not(:disabled) { background: #33414e; border-color: #33414e; }
+.content-area .rr-add-record-button:focus-visible { outline: 2px solid #465563; outline-offset: 2px; }
+.content-area .rr-add-record-button:disabled { opacity: .55; cursor: not-allowed; }
+.content-area .rr-add-record-icon { font-size: 19px; line-height: 1; font-weight: 500; }
+@media (max-width: 720px) { .content-area .rr-add-record-button { min-height: 40px; } }
