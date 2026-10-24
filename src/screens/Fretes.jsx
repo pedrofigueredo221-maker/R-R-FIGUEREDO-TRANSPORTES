@@ -19,7 +19,7 @@ export default function Fretes({ controller }) {
   return <section className="panel">
     <div className="panel-heading"><div><h3>VIAGENS</h3><p>Cadastre viagens e acompanhe custos, comissão e recebimentos.</p></div>{!readOnly && <AddRecordButton disabled={loading || saving} onClick={() => startCreate("freight")} title="Adicionar frete" />}</div>
     {showError}
-    {!readOnly && form && <FormDialog label="FRETE" onClose={() => setForm(null)}><FreightForm value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}
+    {!readOnly && form && <FormDialog label={editingId ? "Editar frete" : "Adicionar frete"} onClose={() => setForm(null)}><FreightForm value={form} setValue={setForm} saving={saving} onCancel={() => setForm(null)} onSubmit={saveFreight} employees={data.employees || []} trucks={data.trucks || []} editing={Boolean(editingId)} /></FormDialog>}
     {toolbar}
     <p className="freight-search-count" role="status">{filteredFreights.length} {filteredFreights.length === 1 ? "viagem encontrada" : "viagens encontradas"} nos filtros selecionados.</p>
     <div className="table-scroll"><table className="rr-freight-table"><thead><tr><th>{FREIGHT_LABELS.date}</th><th>{FREIGHT_LABELS.driver}</th><th>{FREIGHT_LABELS.route}</th><th>{FREIGHT_LABELS.value}</th><th>{FREIGHT_LABELS.totalCost}</th><th>{FREIGHT_LABELS.commission}</th><th>{FREIGHT_LABELS.profit}</th><th>{FREIGHT_LABELS.payment}</th>{!readOnly && <th>{FREIGHT_LABELS.actions}</th>}</tr></thead><tbody>

@@ -22,8 +22,7 @@ export default function FormularioFuncionario({ title, fields, value, setValue, 
   const patch = (key, next) => setValue((current) => ({ ...current, [key]: next }));
 
   return (
-    <div className="employee-modal-backdrop">
-      <section className="employee-modal" role="dialog" aria-modal="true" aria-labelledby="employee-form-title">
+    <section className="employee-modal" aria-labelledby="employee-form-title">
         <header className="employee-modal-header">
           <div>
             <p className="eyebrow">CADASTROS DA EMPRESA</p>
@@ -43,7 +42,6 @@ export default function FormularioFuncionario({ title, fields, value, setValue, 
             <button className="primary-button" type="submit" disabled={saving}>{saving ? "Salvando…" : "Salvar funcionário"}</button>
           </footer>
         </form>
-      </section>
-    </div>
+    </section>
   );
 }
