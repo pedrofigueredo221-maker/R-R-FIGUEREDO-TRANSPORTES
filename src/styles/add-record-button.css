@@ -22,3 +22,8 @@
 .content-area .rr-add-record-button:disabled { opacity: .55; cursor: not-allowed; }
 .content-area .rr-add-record-icon { font-size: 19px; line-height: 1; font-weight: 500; }
 @media (max-width: 720px) { .content-area .rr-add-record-button { min-height: 40px; } }
+
+/* Seleção de recebível: ações discretas, alinhadas e acessíveis. */
+.content-area .rr-receivable-picker { display: flex; flex-direction: column; gap: 10px; max-height: 55vh; overflow-y: auto; }
+.content-area .rr-receivable-picker p { margin: 0 0 4px; color: #424b55; }
+.content-area .rr-receivable-picker > button { width: 100%; text-align: left; padding: 12px; white-space: normal; }
