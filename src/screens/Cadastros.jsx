@@ -1,5 +1,6 @@
 import FormularioFuncionario from "./FormularioFuncionario.jsx";
 import FormDialog from "../components/FormDialog.jsx";
+import AddRecordButton from "../components/AddRecordButton.jsx";
 
 export default function Cadastros({ controller }) {
   const {
@@ -74,7 +75,7 @@ export default function Cadastros({ controller }) {
     <section className="panel">
       <div className="panel-heading">
         <div><h3>Cadastros da empresa</h3><p>Gerencie funcionários, caminhões e categorias.</p></div>
-        {!readOnly && <button className="primary-button" type="button" onClick={() => startCreate(kind)}>+ Adicionar {tab === "employees" ? "funcionário" : tab === "trucks" ? "caminhão" : "categoria"}</button>}
+        {!readOnly && <AddRecordButton disabled={saving} onClick={() => startCreate(kind)} title={`Adicionar ${tab === "employees" ? "funcionário" : tab === "trucks" ? "caminhão" : "categoria"}`} />}
       </div>
       {showError}
 
