@@ -106,3 +106,31 @@
 .content-area .welcome-panel .balance-range-caption { font-size: 14px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
 .content-area .welcome-panel .balance-range-error { font-size: 12px; color: #ffe1e1; max-width: 380px; }
 @media(max-width: 480px) { .content-area .welcome-panel .balance-range-controls { gap: 10px; } .content-area .welcome-panel .balance-range .balance-period-picker { width: min(180px, 100%); } }
+
+/* Restaura o painel escuro da transportadora, sem afetar outras telas. */
+.content-area .welcome-panel:has(.balance-heading) {
+  background: #262626;
+  border-color: #333;
+  color: #fff;
+}
+.content-area .welcome-panel:has(.balance-heading) .balance-heading,
+.content-area .welcome-panel:has(.balance-heading) .balance-period-label,
+.content-area .welcome-panel:has(.balance-heading) .balance-range-caption { color: #fff; }
+
+/* Datas compactas: 30px a menos por seletor e calendário junto ao texto. */
+.content-area .welcome-panel .balance-range .balance-period-picker { width: 150px; }
+.content-area .welcome-panel .balance-range .balance-period-input { padding: 0 8px; }
+.content-area .welcome-panel .balance-range .balance-period-input input[type="date"] {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  letter-spacing: -.15px;
+}
+.content-area .welcome-panel .balance-range .balance-period-input input[type="date"]::-webkit-calendar-picker-indicator {
+  margin: 0 0 0 2px;
+  padding: 0;
+  cursor: pointer;
+}
+@media (max-width: 480px) {
+  .content-area .welcome-panel .balance-range .balance-period-picker { width: 150px; }
+}
