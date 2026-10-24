@@ -9,7 +9,7 @@
   border-bottom: 3px solid #666666;
   padding: 16px 12px;
   text-align: center;
-  font-weight: 800;
+  font-weight: 400;
   font-size: 15px;
   white-space: nowrap;
 }
@@ -161,3 +161,6 @@
 .content-area .page-filters button { font-size: 12px; }
 .content-area .welcome-panel .balance-range .balance-period-label { font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif; font-weight: 300; font-size: 9px; }
 .content-area .welcome-panel .balance-range .balance-period-input input[type="date"] { font-family: "Calibri Light", Calibri, Carlito, Arial, sans-serif; font-weight: 300; font-size: 12px; }
+
+/* Cabeçalhos das grades: tipografia regular em todas as telas internas. */
+.content-area .table-scroll table thead th { font-weight: 400; }
