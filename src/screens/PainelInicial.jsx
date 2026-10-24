@@ -10,32 +10,35 @@ import BalanceDetailDialog from "../components/BalanceDetailDialog.jsx";
 import "../styles/balanco-geral.css";
 
 export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }) {
-  const [month, setMonth] = useState(currentMonth());
+  const [startDate, setStartDate] = useState(() => `${currentMonth()}-01`);
+  const [endDate, setEndDate] = useState(() => { const [year, month] = currentMonth().split("-").map(Number); return `${currentMonth()}-${String(new Date(year, month, 0).getDate()).padStart(2, "0")}`; });
+  const validRange = Boolean(startDate && endDate && startDate <= endDate);
+  const inRange = (date) => validRange && Boolean(date) && String(date).slice(0, 10) >= startDate && String(date).slice(0, 10) <= endDate;
   const [detail, setDetail] = useState(null);
   const summary = useMemo(() => {
     const freights = Array.isArray(data.freights) ? data.freights : [];
     const expenses = Array.isArray(data.expenses) ? data.expenses : [];
-    const selected = freights.filter((f) => String(f.date || "").slice(0, 7) === month);
+    const selected = freights.filter((f) => inRange(f.date));
     // Usa as funções financeiras do domínio React para manter os indicadores consistentes.
-    const receivable = freights.reduce((sum, f) => sum + Math.max(0, Number(f.value || 0) - Number(f.received || 0)), 0);
-    const payable = expenses.reduce((sum, exp) => sum + Math.max(0,
+    const receivable = selected.reduce((sum, f) => sum + Math.max(0, Number(f.value || 0) - Number(f.received || 0)), 0);
+    const payable = expenses.filter((exp) => inRange(exp.created)).reduce((sum, exp) => sum + Math.max(0,
       Number(exp.value || 0) - (Array.isArray(exp.installments)
         ? exp.installments.reduce((subtotal, item) => subtotal + Number(item.paid || 0), 0)
         : Number(exp.paid || 0))), 0);
-    const expenseTotal = expenses.filter((exp) => String(exp.created || "").slice(0, 7) === month)
+    const expenseTotal = expenses.filter((exp) => inRange(exp.created))
       .reduce((sum, exp) => sum + Number(exp.value || 0), 0);
     return {
       selected, revenue: selected.reduce((sum, f) => sum + Number(f.value || 0), 0),
       profit: selected.reduce((sum, f) => sum + freightProfit(f), 0) - expenseTotal, receivable, payable,
       recent: [...selected].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 6)
     };
-  }, [data, month]);
+  }, [data, startDate, endDate]);
   return <>
     <section className="welcome-panel"><div><h2 className="balance-heading">PAINEL DA TRANSPORTADORA</h2></div>
-      <label className="month-picker balance-period-picker"><span className="balance-period-label">PERÍODO</span><span className="balance-period-input"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><input aria-label="Período do balanço geral" type="month" value={month} onChange={(e) => setMonth(e.target.value)} /></span></label></section>
+      <div className="balance-range"><div className="balance-range-controls"><label className="balance-period-picker"><span className="balance-period-label">INÍCIO DO PERÍODO</span><span className="balance-period-input"><input aria-label="Início do período" type="date" value={startDate} max={endDate || undefined} onChange={(e) => setStartDate(e.target.value)} /></span></label><label className="balance-period-picker"><span className="balance-period-label">FINAL DO PERÍODO</span><span className="balance-period-input"><input aria-label="Final do período" type="date" value={endDate} min={startDate || undefined} onChange={(e) => setEndDate(e.target.value)} /></span></label></div><strong className="balance-range-caption">{startDate ? dateLabel(startDate) : "—"} - {endDate ? dateLabel(endDate) : "—"}</strong>{!validRange && <span className="balance-range-error" role="alert">Selecione um período válido: a data final não pode ser anterior à inicial.</span>}</div></section>
     <div className="stats-grid">
-      <button type="button" className="balance-stat-action" onClick={() => setDetail("revenue")} aria-label="Ver detalhamento do faturamento do mês"><StatCard label="Faturamento do mês" value={money(summary.revenue)} /></button>
-      <button type="button" className="balance-stat-action" onClick={() => setDetail("profit")} aria-label="Ver detalhamento do lucro estimado"><StatCard label="Lucro estimado do mês" value={money(summary.profit)} tone="positive" /></button>
+      <button type="button" className="balance-stat-action" onClick={() => setDetail("revenue")} aria-label="Ver detalhamento do faturamento do mês"><StatCard label="Faturamento do período" value={money(summary.revenue)} /></button>
+      <button type="button" className="balance-stat-action" onClick={() => setDetail("profit")} aria-label="Ver detalhamento do lucro estimado"><StatCard label="Lucro estimado do período" value={money(summary.profit)} tone="positive" /></button>
       <button type="button" className="balance-stat-action" onClick={() => setDetail("receivable")} aria-label="Ver detalhamento dos valores a receber"><StatCard label="Valores a receber" value={money(summary.receivable)} tone="attention" /></button>
       <button type="button" className="balance-stat-action" onClick={() => setDetail("payable")} aria-label="Ver detalhamento das contas a pagar"><StatCard label="Contas a pagar" value={money(summary.payable)} tone="negative" /></button>
     </div>
@@ -45,7 +48,7 @@ export default function PainelInicial({ data, onRefresh, loading, onOpenRecord }
         {summary.recent.map((f, i) => <tr key={f.id ?? `${f.date}-${i}`} className="balance-data-row" title="Duplo clique para abrir o frete" onDoubleClick={() => onOpenRecord?.("freights", f.id)}><td>{dateLabel(f.date)}</td><td>{f.driver || "—"}</td><td><RouteDisplay origin={f.origin} destination={f.destination} /></td><td className="numeric">{money(f.value)}</td><td className="numeric">{money(freightOperatingCosts(f))}</td><td className="numeric">{money(freightCommission(f))}</td><td className="numeric">{money(freightProfit(f))}</td></tr>)}
       </tbody></table></div>}
     </section>
-    {detail && <BalanceDetailDialog type={detail} month={month} data={data} onOpenRecord={onOpenRecord} onClose={() => setDetail(null)} />}
+    {detail && <BalanceDetailDialog type={detail} startDate={startDate} endDate={endDate} data={data} onOpenRecord={onOpenRecord} onClose={() => setDetail(null)} />}
   </>;
 }
 
