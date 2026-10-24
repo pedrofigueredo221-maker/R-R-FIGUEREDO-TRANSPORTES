@@ -48,8 +48,12 @@ export default function EditablePage({ page, data, onSave, readOnly, loading, ve
   const [query, setQuery] = useState("");
   const [startDate, setStartDate] = useState(() => `${today().slice(0, 7)}-01`);
   const [endDate, setEndDate] = useState(() => { const d = today(); const [y, m] = d.slice(0, 7).split("-").map(Number); return `${d.slice(0, 7)}-${String(new Date(y, m, 0).getDate()).padStart(2, "0")}`; });
-  const validRange = Boolean(startDate && endDate && startDate <= endDate);
-  const inRange = (date) => validRange && Boolean(date) && String(date).slice(0, 10) >= startDate && String(date).slice(0, 10) <= endDate;
+  const inRange = (date) => {
+    if (!startDate && !endDate) return true;
+    if (startDate && endDate && startDate > endDate) return false;
+    const day = String(date || "").slice(0, 10);
+    return Boolean(day) && (!startDate || day >= startDate) && (!endDate || day <= endDate);
+  };
   const [tab, setTab] = useState("employees");
   const [payment, setPayment] = useState(null);
   // Ao navegar entre telas, retornar sempre à consulta, sem formulário herdado.
